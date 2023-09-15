@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter' 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+.ReactModal__Overlay--before-close {
+  opacity: 0 !important;
+}
+
+.ReactModal__Overlay {
+  transition: all 500ms !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+  z-index: 100;
+}
+.ReactModal__Content.ReactModal__Content--after-open {
+  inset: 0 !important;
+  margin: auto;
+  height: max-content;
+  width: max-content;
+  margin: auto;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  border: none;
+}
+
+.ant-picker {
+  padding: 10px 11px;
+}
+
+.ant-upload-wrapper .ant-upload-drag {
+  background: #ffffff;
+  border: 1px dashed #b9b9b9;
+}
+.ant-upload-wrapper .ant-upload-drag .ant-upload {
+  padding: 18px 24px;
+}
+.ant-popover-placement-bottomRight .ant-popover-arrow {
+  display: none;
+}
+.ant-popover-placement-bottomLeft .ant-popover-arrow {
+  display: none;
+}
+
+.ant-popover .ant-popover-inner {
+  padding: 12px 16px;
+}
+.ant-table-wrapper tr.ant-table-expanded-row > td {
+  background: #eff8ff;
+}
+
+.ant-picker {
+  border: 1px solid #b9b9b9;
+}
+.ant-picker:hover,
+.ant-picker-focused {
+  border-color: #b9b9b9;
+}
+.ant-steps .ant-steps-item-content {
+  cursor: pointer;
+}
+.ant-steps .ant-steps-item-process .ant-steps-item-icon {
+  cursor: pointer;
+}
+.ant-table-wrapper .ant-table-column-sorter {
+  color: unset;
+  font-size: unset;
+}
+.ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: #acd4f1;
+}
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+  display: none !important;
+}
+
+.map {
+  z-index: -1;
+}
+.ant-breadcrumb a {
+  font-family: 'Inter';
+  font-weight: 600;
+}
+.ant-breadcrumb li:last-child {
+  color: #1c75bc;
+  font-family: 'Inter';
+  font-weight: 600;
+}
+div#mLogo0 {
+  display: none;
+}
+.transitionDiv {
+  background: red;
+  height: 100px;
+  width: 200px;
+  margin: 0 auto;
+}
+
+@keyframes inAnimation {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes outAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.ant-dropdown-menu {
+  max-height: 400px;
+  overflow-y: auto;
+}
