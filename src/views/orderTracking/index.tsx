@@ -31,7 +31,7 @@ const OrderTracking: React.FC<IOrderTrackingProps> = ({ trackingDetails }) => {
       separator=">"
       items={[
         {
-          title: 'Task',
+          title: 'Order',
           href: '/dashboard',
         },
         {

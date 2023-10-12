@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-// import { Switch } from 'antd'
-
 import { useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -10,7 +8,6 @@ import { DashboardRoute } from 'constants/routes'
 import { AppContext } from 'context/payloadContext'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
-// import SelectField from 'components/SelectField'
 import { PRICE_CALCULATION_SCHEMA } from 'validations/priceCalculationValidation'
 import type { InputRef } from 'antd'
 import { Form, Input, Table } from 'antd'
@@ -29,7 +26,6 @@ import {
 } from 'styles/views/editDetails'
 import { ErrorMessage, ChargeLabel } from 'styles/views/signin'
 import { EditButtonWrapper } from 'styles/views/dashboard'
-// import { SwitchStatusWrapper, SwitchWrapper } from 'styles/views/driverFlowHome'
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null)
 
@@ -142,16 +138,8 @@ interface DataType {
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>
 
 const DashboardSettings = () => {
-  // const [isActive, setIsActive] = useState<boolean>(false)
-
   const { userInfo } = useContext(AppContext)
   const { mutateAsync } = usePost()
-  // const distanceOptions = [{ value: 'km', label: 'per kilometer' }]
-
-  // const weightOptions = [
-  //   { value: 'volumetric_weight', label: 'volumetric weight' },
-  //   { value: 'dead_weight', label: 'dead weight' },
-  // ]
 
   const {
     handleSubmit,
@@ -163,16 +151,11 @@ const DashboardSettings = () => {
     reValidateMode: 'onChange',
     resolver: yupResolver(PRICE_CALCULATION_SCHEMA),
     defaultValues: {
-      // basePrice: '',
-      // kilometrePrice: '',
-      // deliveryCharges: '',
       packingCharges: '',
       rtoCharges: '',
-      qaCharges: '',
+      qcCharges: '',
       igst: '',
       cgst: '',
-      // weight: '',
-      // kilogramPrice: '',
     },
   })
 
@@ -181,21 +164,42 @@ const DashboardSettings = () => {
     setValue('rtoCharges', userInfo?.settings?.pricePerDistance?.value)
     setValue('igst', userInfo?.settings?.pricePerDistance?.value)
     setValue('cgst', userInfo?.settings?.pricePerDistance?.value)
-    // setValue('weight', userInfo?.settings?.pricePerWeight?.type)
-    // setValue('kilogramPrice', userInfo?.settings?.pricePerWeight?.value)
   }, [userInfo])
 
   const submitData = async (data: any) => {
     const payload = {
-      pricePerDistance: {
-        unit: data?.distance,
-        value: Number(data?.kilometrePrice),
+      hyper_local: {
+        delivery_type: {
+          immediate_delivery: {
+            lesEq_1: data?.lesEq_1,
+            lesEq_3: data?.lesEq_3,
+            lesEq_5: data?.lesEq_5,
+            lesEq_7: data?.lesEq_7,
+            lesEq_10: data?.lesEq_10,
+            gtr_10: data?.gtr_10,
+          },
+          same_day_delivery: {
+            lesEq_1: data?.lesEq_1,
+            lesEq_3: data?.lesEq_3,
+            lesEq_5: data?.lesEq_5,
+            lesEq_7: data?.lesEq_7,
+            lesEq_10: data?.lesEq_10,
+            gtr_10: data?.gtr_10,
+          },
+          next_day_delivery: {
+            lesEq_1: data?.lesEq_1,
+            lesEq_3: data?.lesEq_3,
+            lesEq_5: data?.lesEq_5,
+            lesEq_7: data?.lesEq_7,
+            lesEq_10: data?.lesEq_10,
+            gtr_10: data?.gtr_10,
+          },
+        },
+        packing_charges: data?.packing_charges,
+        rto_charges: data?.rto_charges,
+        reverse_qc_charges: data?.reverse_qa_charges,
+        igst: data?.igst,
       },
-      // pricePerWeight: {
-      //   unit: 'kilogram',
-      //   value: Number(data?.kilogramPrice),
-      //   type: data?.weight,
-      // },
     }
 
     try {
@@ -323,32 +327,8 @@ const DashboardSettings = () => {
     }
   })
 
-  //need this---------
-
-  // const handleChange = async (checked: any) => {
-  //   setIsActive(checked)
-  //   await mutateAsync({
-  //     url: `${APIS.UPDATE_AGENT_TOGGLE_STATUS}`,
-  //     payload: {
-  //       isOnline: checked,
-  //     },
-  //   })
-  // }
-
-  // const handleChange = (checked: boolean) => {
-  //   setIsActive(checked)
-  //   // console.log(`switch to ${checked}`)
-  // }
-
   return (
     <MainWrapper>
-      {/* <SwitchStatusWrapper>
-        <Label>Mark All Drivers</Label>
-        <SwitchWrapper>
-          <Switch checked={isActive} onChange={handleChange} />
-          {isActive ? <span>Online</span> : <span>Offline</span>}
-        </SwitchWrapper>
-      </SwitchStatusWrapper> */}
       <HeadingWrapper>
         <MainHeading>Price Calculations</MainHeading>
         <SubHeading>Automated pricing computation for accurate cost estimation.</SubHeading>
@@ -364,47 +344,6 @@ const DashboardSettings = () => {
             pagination={false}
           />
           <ChargesDetailsWrapper>
-            {/* <InputWrapper error={errors.basePrice}>
-              <Label>Base Price*</Label>
-              <TextInput
-                type="number"
-                placeholder="Enter Base Price"
-                control={control}
-                name="basePrice"
-                error={errors.basePrice}
-                maxLength={2}
-                className="price"
-              />
-
-              <ErrorMessage>{errors?.basePrice?.message}</ErrorMessage>
-            </InputWrapper>
-            <InputWrapper error={errors.kilometrePrice}>
-              <Label>Price per kilometer *</Label>
-              <TextInput
-                type="number"
-                placeholder="Enter Price"
-                control={control}
-                name="kilometrePrice"
-                error={errors.kilometrePrice}
-                maxLength={2}
-                className="price"
-              />
-              <ErrorMessage>{errors?.kilometrePrice?.message}</ErrorMessage>
-            </InputWrapper> */}
-            {/* <ChargesInputWrapper error={errors.deliveryCharges}>
-              <ChargeLabel>Delivery Charges*</ChargeLabel>
-              <TextInput
-                type="number"
-                placeholder="Enter Delivery Charge"
-                control={control}
-                name="deliveryCharges"
-                error={errors.deliveryCharges}
-                maxLength={2}
-                className="price"
-              />
-
-              <ErrorMessage>{errors?.deliveryCharges?.message}</ErrorMessage>
-            </ChargesInputWrapper> */}
             <ChargesInputWrapper error={errors.packingCharges}>
               <ChargeLabel>Packing Charges*</ChargeLabel>
               <TextInput
@@ -413,65 +352,48 @@ const DashboardSettings = () => {
                 control={control}
                 name="packingCharges"
                 error={errors.packingCharges}
-                maxLength={2}
                 className="price"
               />
 
               <ErrorMessage>{errors?.packingCharges?.message}</ErrorMessage>
             </ChargesInputWrapper>
             <ChargesInputWrapper error={errors.rtoCharges}>
-              <ChargeLabel>RTO Charges(%) *</ChargeLabel>
+              <ChargeLabel>RTO Charges(%)*</ChargeLabel>
               <TextInput
                 type="number"
                 placeholder="Enter RTO Charges"
                 control={control}
                 name="rtoCharges"
                 error={errors.rtoCharges}
-                maxLength={2}
                 className="price"
               />
               <ErrorMessage>{errors?.rtoCharges?.message}</ErrorMessage>
             </ChargesInputWrapper>
-            <ChargesInputWrapper error={errors.qaCharges}>
-              <ChargeLabel>Reverse QA Charge(%) *</ChargeLabel>
+            <ChargesInputWrapper error={errors.qcCharges}>
+              <ChargeLabel>Reverse QC Charge(%)*</ChargeLabel>
               <TextInput
                 type="number"
-                placeholder="Enter Reverse QA Charge"
+                placeholder="Enter Reverse QC Charge"
                 control={control}
-                name="qaCharges"
-                error={errors.qaCharges}
-                maxLength={2}
+                name="qcCharges"
+                error={errors.qcCharges}
                 className="price"
               />
-              <ErrorMessage>{errors?.qaCharges?.message}</ErrorMessage>
+              <ErrorMessage>{errors?.qcCharges?.message}</ErrorMessage>
             </ChargesInputWrapper>
 
             <ChargesInputWrapper error={errors.igst}>
-              <ChargeLabel>IGST*</ChargeLabel>
+              <ChargeLabel>IGST(%)*</ChargeLabel>
               <TextInput
                 type="number"
                 placeholder="Enter IGST"
                 control={control}
                 name="igst"
                 error={errors.igst}
-                maxLength={2}
                 className="price"
               />
               <ErrorMessage>{errors?.igst?.message}</ErrorMessage>
             </ChargesInputWrapper>
-            {/* <ChargesInputWrapper error={errors.cgst}>
-              <ChargeLabel>CGST & SGST *</ChargeLabel>
-              <TextInput
-                type="number"
-                placeholder="Enter CGST & SGST"
-                control={control}
-                name="cgst"
-                error={errors.cgst}
-                maxLength={2}
-                className="price"
-              />
-              <ErrorMessage>{errors?.cgst?.message}</ErrorMessage>
-            </ChargesInputWrapper> */}
           </ChargesDetailsWrapper>
         </SettingsWrapper>
 

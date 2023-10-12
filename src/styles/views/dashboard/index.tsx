@@ -283,6 +283,6 @@ export const MainContainer = styled.div`
 export const SettingsWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
   margin-top: 15px;
 `

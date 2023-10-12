@@ -164,7 +164,7 @@ const UsersData = ({
       render: (data) => {
         return (
           <DriverStatusConatiner>
-            {data?.isAccountLocked && data?.enabled !== 1 ? (
+            {data?.isAccountLocked && data?.enabled === 1 ? (
               <BlockDriverStatusWrapper status={data?.isAccountLocked}>Blocked</BlockDriverStatusWrapper>
             ) : (
               <DriverStatusWrapper status={data?.enabled}>

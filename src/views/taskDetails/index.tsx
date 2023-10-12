@@ -74,7 +74,7 @@ const TaskDetails = () => {
     <TaskDetailContainer onSubmit={handleSubmit(submitData)}>
       <DetailsContainer>
         <DetailsWrapper>
-          <TaskHeading>Task Details</TaskHeading>
+          <TaskHeading>Order Details</TaskHeading>
           <TaskDetailsWrapper>
             <InputWrapper error={false}>
               <Label>Order Number</Label>

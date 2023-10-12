@@ -302,7 +302,7 @@ const VehicleDetails = ({ next, showModal }: VehicleDetailsProps) => {
           </InputContainer>
           <InputContainer>
             <InputWrapper error={errors.weight}>
-              <Label>Max. weight capacity*</Label>
+              <Label>Max. Weight Capacity*</Label>
               <InputWrapper error={errors?.weight}>
                 <WeightWrapper>
                   <TextInput type="number" placeholder="Enter Max. Weight Capacity" control={control} name="weight" />

@@ -1,6 +1,6 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-// import { Switch } from 'antd'
+import { Switch } from 'antd'
 import { AppContext } from 'context/payloadContext'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -13,12 +13,11 @@ import { DashboardRoute } from 'constants/routes'
 import { EditButtonWrapper } from 'styles/views/dashboard'
 import { MainWrapper, FormWrapper, SupportWrapper, DetailsWrapper, InputWrapper } from 'styles/views/editDetails'
 import { ErrorMessage, Label } from 'styles/views/signin'
-// import { SwitchStatusWrapper, SwitchWrapper } from 'styles/views/driverFlowHome'
+import { SwitchStatusWrapper, SwitchWrapper } from 'styles/views/driverFlowHome'
+import useGet from 'hooks/useGet'
 
 const Support = () => {
-  // const [isActive, setIsActive] = useState<boolean>(true)
-  //
-  const { userInfo } = useContext(AppContext)
+  const { sse, userInfo } = useContext(AppContext)
   const { mutateAsync } = usePost()
   const router = useHistory()
 
@@ -43,6 +42,16 @@ const Support = () => {
     setValue('phone', userInfo?.supportDetails[0]?.phone)
   }, [userInfo])
 
+  const { refetch: getDashboard, data: dashboardDetails } = useGet('get-dashboard', `${APIS.USERS_DASHBOARD}`)
+
+  useEffect(() => {
+    getDashboard()
+  }, [sse])
+
+  const totalOnlineDriver = dashboardDetails?.admins.onlineDriversCount || 0
+
+  const [switchState, setSwitchState] = useState(totalOnlineDriver > 0)
+
   const submitData = async (data: any) => {
     const payload = {
       phone: data?.phone,
@@ -59,22 +68,22 @@ const Support = () => {
     }
   }
 
-  //need this---------
+  const handleChange = async () => {
+    const newSwitchState = !switchState
 
-  // const handleChange = async (checked: any) => {
-  //   setIsActive(checked)
-  //   await mutateAsync({
-  //     url: `${APIS.UPDATE_AGENT_TOGGLE_STATUS}`,
-  //     payload: {
-  //       isOnline: checked,
-  //     },
-  //   })
-  // }
+    await mutateAsync({
+      url: `${APIS.UPDATE_AGENT_TOGGLE_STATUS}`,
+      payload: {
+        status: newSwitchState,
+      },
+    })
 
-  // const handleChange = (checked: boolean) => {
-  //   setIsActive(checked)
-  //   // console.log(`switch to ${checked}`)
-  // }
+    if (!newSwitchState) {
+      dashboardDetails.admins.onlineDriversCount = 0
+    }
+
+    setSwitchState(newSwitchState)
+  }
 
   const onHandleClick = () => {
     router.push(`${DashboardRoute.path}`)
@@ -82,6 +91,13 @@ const Support = () => {
 
   return (
     <MainWrapper>
+      <SwitchStatusWrapper>
+        <Label>Mark All Drivers</Label>
+        <SwitchWrapper>
+          <Switch checked={switchState} onChange={handleChange} />
+          {switchState ? <span>Online</span> : <span>Offline</span>}
+        </SwitchWrapper>
+      </SwitchStatusWrapper>
       <FormWrapper onSubmit={handleSubmit(submitData)}>
         <SupportWrapper>
           <DetailsWrapper>
@@ -107,15 +123,6 @@ const Support = () => {
               <ErrorMessage>{errors?.uri?.message}</ErrorMessage>
             </InputWrapper>
           </DetailsWrapper>
-
-          {/* -------need this  */}
-          {/* <SwitchStatusWrapper>
-            <Label>Mark All Drivers</Label>
-            <SwitchWrapper>
-              <Switch checked={isActive} onChange={handleChange} />
-              {isActive ? <span>Online</span> : <span>Offline</span>}
-            </SwitchWrapper>
-          </SwitchStatusWrapper> */}
         </SupportWrapper>
         <EditButtonWrapper>
           <Button label="Cancel" variant="contained" className="cancel" onClick={onHandleClick} />

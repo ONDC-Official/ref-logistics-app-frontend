@@ -4,7 +4,7 @@ import { theme } from 'styles/theme'
 export const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 `
 export const HeadingWrapper = styled.div`
   display: flex;
@@ -49,7 +49,7 @@ export const ChargesDetailsWrapper = styled.div`
 export const InputWrapper = styled.div<{ error: any }>`
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 3px;
   min-height: 88px;
   width: 100%;
   input::-webkit-outer-spin-button,
@@ -105,6 +105,9 @@ export const SettingsWrapper = styled.div`
   table > .ant-input {
     width: 100px;
   }
+`
+export const PriceSettingsWrapper = styled(SettingsWrapper)`
+  gap: 8px;
 `
 export const SupportWrapper = styled.div`
   display: flex;

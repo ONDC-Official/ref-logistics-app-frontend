@@ -34,7 +34,7 @@ const GPSTracker = () => {
           href: '/tasks',
         },
         {
-          title: 'Task Details',
+          title: 'Order Details',
         },
       ]}
     />
@@ -47,7 +47,7 @@ const GPSTracker = () => {
         <HeadingWrapper>
           <BreadcrumbWrapper>
             <TaskBreadcrumb />
-            <MainHeading>Task Details</MainHeading>
+            <MainHeading>Order Details</MainHeading>
           </BreadcrumbWrapper>
         </HeadingWrapper>
         <DetailContainer>

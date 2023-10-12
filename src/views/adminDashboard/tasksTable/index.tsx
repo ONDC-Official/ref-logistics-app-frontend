@@ -144,7 +144,7 @@ const TasksData = ({
       },
     },
     {
-      title: 'Ordered at',
+      title: 'Ordered At',
       dataIndex: 'orderConfirmedAt',
       key: 'time',
       width: 140,
@@ -234,7 +234,8 @@ const TasksData = ({
       render: (data: { order: { weight: { unit: string; value: string } } }) => {
         return (
           <NumberWrapper>
-            {data?.order?.weight?.value} {data?.order?.weight?.unit === 'kilogram' ? 'kg' : data?.order?.weight?.unit}
+            {data?.order?.weight?.value}{' '}
+            {data?.order?.weight?.unit === ('kilogram' || 'Kilogram') ? 'kg' : data?.order?.weight?.unit}
           </NumberWrapper>
         )
       },

@@ -9,7 +9,7 @@ import APIS from 'constants/api'
 import { DashboardRoute } from 'constants/routes'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
-import BackArrow from 'assets/svg/BackArrow'
+// import BackArrow from 'assets/svg/BackArrow'
 import { ErrorMessage } from 'styles/views/signin'
 import { Label } from 'styles/views/inviteAgentScreen/agentDetailSection'
 import {
@@ -69,7 +69,7 @@ const PersonalDetails = () => {
 
   return (
     <PersonalDetailsContainer>
-      <BackArrow />
+      {/* <BackArrow /> */}
       <PersonalDetailsWrapper onSubmit={handleSubmit(submitData)}>
         <DetailSection>
           <DetailsContainer>

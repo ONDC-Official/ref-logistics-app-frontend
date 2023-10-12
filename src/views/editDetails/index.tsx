@@ -7,8 +7,8 @@ import AdminPrivateLayout from 'components/Layouts/adminPrivateLayout'
 import { TabItem } from 'interfaces'
 import ChangePassword from 'views/editDetails/changePassword'
 import PersonalDetails from 'views/editDetails/personalDetails'
-import DashboardSettings from 'views/editDetails/dashboardSettings'
-import HyperlocalPriceCalculation from 'views/editDetails/hyperlocalPriceCalculation'
+// import DashboardSettings from 'views/editDetails/dashboardSettings'
+// import HyperlocalPriceCalculation from 'views/editDetails/hyperlocalPriceCalculation'
 import Support from 'views/editDetails/supportSection'
 
 import {
@@ -37,16 +37,16 @@ const EditDetails = () => {
       label: 'Change Password',
       children: <ChangePassword />,
     },
-    {
-      key: 'Hyperlocal',
-      label: 'Hyperlocal Price Calculation',
-      children: <HyperlocalPriceCalculation />,
-    },
-    {
-      key: 'intercity',
-      label: 'Intercity Price Calculation',
-      children: <DashboardSettings />,
-    },
+    // {
+    //   key: 'Hyperlocal',
+    //   label: 'Hyperlocal Price Calculation',
+    //   children: <HyperlocalPriceCalculation />,
+    // },
+    // {
+    //   key: 'intercity',
+    //   label: 'Intercity Price Calculation',
+    //   children: <DashboardSettings />,
+    // },
     // {
     //   key: 'settings',
     //   label: 'Settings',

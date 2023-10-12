@@ -222,11 +222,14 @@ export const SubTitle = styled.div`
   color: ${theme.GREYCOLOR};
 `
 export const OrderImageWrapper = styled.div`
-  max-width: 399px;
+  max-width: 300px;
+  min-height: 200px;
   width: 100%;
+  overflow-y: auto;
 
   img {
-    max-width: 399px;
+    max-width: 300px;
+    min-height: 200px;
     width: 100%;
   }
 `

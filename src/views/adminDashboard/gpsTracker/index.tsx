@@ -94,7 +94,7 @@ const OrderDetail = ({ details }: any) => {
       <OrderMainWrapper style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
         <MainWrapper>
           <OrderDetailWrapper>
-            <Heading>Order Detail</Heading>
+            <Heading>Order Details</Heading>
             <DataWrapper>
               <Title>Order ID</Title> <Detail>{details?.data?.task?._id}</Detail>
             </DataWrapper>

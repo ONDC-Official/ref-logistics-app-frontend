@@ -25,8 +25,8 @@ import {
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
 
 const ActionModal = ({ showModal, id, getIssues }: IActionModalProps) => {
-  const [updateValue, setUpdateValue] = useState('')
-  const [activeSchema, setActiveSchema] = useState<any>(ACTION_SCHEMA)
+  const [updateValue, setUpdateValue] = useState('NO-ACTION')
+  const selectedSchema = updateValue !== 'REFUND' ? ACTION_SCHEMA : ACTION_SCHEMA_2
 
   const { mutateAsync } = usePost()
   const {
@@ -37,14 +37,10 @@ const ActionModal = ({ showModal, id, getIssues }: IActionModalProps) => {
   } = useForm({
     mode: 'all',
     reValidateMode: 'onChange',
-    resolver: yupResolver(activeSchema),
+    resolver: yupResolver(selectedSchema),
   })
 
   const submitData = async (data: IActionIssueModal) => {
-    if (updateValue !== 'REFUND') {
-      setActiveSchema(ACTION_SCHEMA_2)
-    }
-
     const payload = {
       action_triggered: data?.actionTriggered,
       short_desc: data?.shortDescription,

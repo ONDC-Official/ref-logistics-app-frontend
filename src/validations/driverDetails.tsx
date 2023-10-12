@@ -20,9 +20,11 @@ export const DRIVER_DETAILS_SCHEMA = Yup.object().shape({
     .matches(/^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$/, 'A valid Vehicle number is required'),
   makeYear: Yup.string().required('Make Year is required'),
   weight: Yup.number()
-    .typeError('Please enter the value')
     .required('Weight is required')
-    .max(1000, 'Weight cannot be greater than 1000'),
+    .positive('Max. Weight Capacity must be a positive number.')
+    .typeError('Please enter a valid value')
+    .max(1000, 'Weight cannot be greater than 1000')
+    .moreThan(0, 'Max. Weight Capacity must be a positive number.'),
   brandName: Yup.string(),
   ownerType: Yup.string(),
   intercity: Yup.string(),
@@ -81,7 +83,7 @@ export const ACTION_SCHEMA = Yup.object().shape({
     .matches(/^(?! )[\w. ]+$/, 'First character cannot be space ')
     .min(3, 'min 3 letters'),
   longDescription: Yup.string(),
-  refundAmount: Yup.string().matches(/^\d+(\.\d{2})?$/, 'Refund amount should be valid '),
+  refundAmount: Yup.string(),
 })
 
 //Refund schema Validation

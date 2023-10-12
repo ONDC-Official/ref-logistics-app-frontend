@@ -432,7 +432,7 @@ export const Label = styled.div`
 `
 export const ChargeLabel = styled(Label)`
   width: 100%;
-  max-width: 166px;
+  max-width: 167px;
 `
 
 export const ConditionalWrapper = styled.div`

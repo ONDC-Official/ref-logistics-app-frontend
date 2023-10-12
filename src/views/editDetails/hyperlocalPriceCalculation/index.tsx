@@ -15,9 +15,9 @@ import {
   MainHeading,
   SubHeading,
   FormWrapper,
-  SettingsWrapper,
+  PriceSettingsWrapper,
   InputWrapper,
-  ChargesInputWrapper,
+  // ChargesInputWrapper,
 } from 'styles/views/editDetails'
 import { ChargeLabel, ErrorMessage, Label } from 'styles/views/signin'
 import { EditButtonWrapper } from 'styles/views/dashboard'
@@ -136,7 +136,7 @@ const HyperlocalPriceCalculation = () => {
         <SubHeading>Automated pricing computation for accurate cost estimation.</SubHeading>
       </HeadingWrapper>
       <FormWrapper onSubmit={handleSubmit(submitData)}>
-        <SettingsWrapper>
+        <PriceSettingsWrapper>
           <InputWrapper error={errors.basePrice}>
             <Label>Base Price*</Label>
             <TextInput
@@ -145,7 +145,7 @@ const HyperlocalPriceCalculation = () => {
               control={control}
               name="basePrice"
               error={errors.basePrice}
-              maxLength={2}
+              // maxLength={2}
               className="price"
             />
 
@@ -159,25 +159,25 @@ const HyperlocalPriceCalculation = () => {
               control={control}
               name="additional_charges"
               error={errors.additional_charges}
-              maxLength={2}
+              // maxLength={2}
               className="price"
             />
             <ErrorMessage>{errors?.additional_charges?.message}</ErrorMessage>
           </InputWrapper>
-          <ChargesInputWrapper error={errors.cgst_sgst}>
-            <ChargeLabel>CGST & SGST *</ChargeLabel>
+          <InputWrapper error={errors.cgst_sgst}>
+            <ChargeLabel>CGST & SGST (%) *</ChargeLabel>
             <TextInput
               type="number"
               placeholder="Enter CGST & SGST"
               control={control}
               name="cgst_sgst"
               error={errors.cgst_sgst}
-              maxLength={2}
+              // maxLength={2}
               className="price"
             />
             <ErrorMessage>{errors?.cgst_sgst?.message}</ErrorMessage>
-          </ChargesInputWrapper>
-        </SettingsWrapper>
+          </InputWrapper>
+        </PriceSettingsWrapper>
         <EditButtonWrapper>
           <Button label="Cancel" variant="contained" className="cancel" onClick={onHandleClick} />
           <Button label="Save" type="submit" variant="contained" />
