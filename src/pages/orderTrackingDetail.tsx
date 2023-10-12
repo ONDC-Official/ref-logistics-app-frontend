@@ -2,10 +2,10 @@ import { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import useGet from 'hooks/useGet'
 import { IParamId } from 'interfaces/pages'
-import Logo from 'assets/images/ondc_logo.png'
-import OrderTracking from 'views/orderTracking'
 import APIS from 'constants/api'
 import { DashboardRoute } from 'constants/routes'
+import OrderTracking from 'views/orderTracking'
+import Logo from 'assets/images/ondc_logo.png'
 import { MainWrapper, HeaderSection, LogoWrapper } from 'styles/pages/orderTrackingDetail'
 
 const OrderTrackingDetail = () => {

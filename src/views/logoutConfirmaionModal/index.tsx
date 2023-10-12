@@ -4,7 +4,7 @@ import Button from 'components/Button'
 import APIS from 'constants/api'
 import { LoginRoute, ProfileRoutes, DriverLoginRoutes } from 'constants/routes'
 import CloseIcon from 'assets/svg/CloseIcon'
-import DeleteBinIcon from 'assets/svg/DeleteBinIcon'
+import LogoutIcon from 'assets/svg/LogoutIcon'
 import { ILogoutModalProps } from 'interfaces/views'
 import {
   DeleteModalContainer,
@@ -14,6 +14,7 @@ import {
   HeadingWrapper,
   Description,
   ButtonWrap,
+  LogoutIconWrap,
 } from 'styles/views/successfulModal'
 
 const LogoutConfirmaionModal = ({ showModal }: ILogoutModalProps) => {
@@ -41,7 +42,9 @@ const LogoutConfirmaionModal = ({ showModal }: ILogoutModalProps) => {
         <CloseIcon />
       </CloseBtn>
       <ContentContainer>
-        <DeleteBinIcon />
+        <LogoutIconWrap>
+          <LogoutIcon />
+        </LogoutIconWrap>
 
         <ContentWrapper>
           <HeadingWrapper>Logout</HeadingWrapper>

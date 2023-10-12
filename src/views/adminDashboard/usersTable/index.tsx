@@ -18,6 +18,7 @@ import {
   Name,
   DriverStatusConatiner,
   DriverStatusWrapper,
+  BlockDriverStatusWrapper,
   StatusButton,
   StatusOffline,
   PopOverTitle,
@@ -52,7 +53,17 @@ const UsersData = ({
       return updatedOpen
     })
   }
-  const actionsContent = (id: string, item: { userId: { enabled: number; _id: string } }, index: number) => {
+  const actionsContent = (
+    id: string,
+    item: {
+      userId: {
+        isAccountLocked: boolean
+        enabled: number
+        _id: string
+      }
+    },
+    index: number,
+  ) => {
     return (
       <ContentWrapper onClick={() => handleActionClick(index)}>
         <Title
@@ -71,7 +82,7 @@ const UsersData = ({
             Activate
           </Title>
         )}
-        {item?.userId?.enabled === 2 ? (
+        {item?.userId?.enabled === 2 && item?.userId?.isAccountLocked !== true ? (
           <Title onClick={() => deleteData(id)} id={id}>
             Delete
           </Title>
@@ -106,24 +117,6 @@ const UsersData = ({
     }
   }, [searchedText])
 
-  // const newPaginationView = () => {
-  //   const val = users?.map(
-  //     (item: { name: string; email: string; mobile: string }) =>
-  //       item?.name?.includes(searchedText) ||
-  //       item?.email?.includes(searchedText) ||
-  //       item?.mobile?.includes(searchedText),
-  //   )
-  //   // if (searchedText === '' || searchedText === undefined) {
-  //   //   setShowPagination(true)
-  //   // } else if (val?.includes(true)) {
-  //   //   setShowPagination(true)
-  //   // } else setShowPagination(false)
-  // }
-
-  // useEffect(() => {
-  //   newPaginationView()
-  // }, [searchedText])
-
   const columns: ColumnsType<any> = [
     {
       title: 'Name',
@@ -139,7 +132,6 @@ const UsersData = ({
           </DriverInfoWrapper>
         )
       },
-      // filteredValue: searchedText ? [searchedText] : null,
       onFilter: (value: any, record) => {
         return (
           String(record?.userId?.name).toLowerCase().includes(value.toLowerCase()) ||
@@ -172,15 +164,20 @@ const UsersData = ({
       render: (data) => {
         return (
           <DriverStatusConatiner>
-            <DriverStatusWrapper status={data?.enabled}>
-              {data?.enabled === 1 ? 'Onboarded' : data?.enabled === 2 ? 'Blocked' : 'Ongoing'}
-            </DriverStatusWrapper>
+            {data?.isAccountLocked && data?.enabled !== 1 ? (
+              <BlockDriverStatusWrapper status={data?.isAccountLocked}>Blocked</BlockDriverStatusWrapper>
+            ) : (
+              <DriverStatusWrapper status={data?.enabled}>
+                {data?.enabled === 1 ? 'Available' : data?.enabled === 2 ? 'Inactive' : 'Ongoing'}
+                {/* {data?.enabled === 1 ? 'Onboarded' : data?.enabled === 2 ? 'Inactive' : 'Ongoing'} */}
+              </DriverStatusWrapper>
+            )}
           </DriverStatusConatiner>
         )
       },
     },
     {
-      title: 'Available',
+      title: 'Online/Offline',
       dataIndex: 'isOnline',
       key: 'isOnline',
       width: 115,
@@ -189,11 +186,11 @@ const UsersData = ({
         return (
           <div>
             {data ? (
-              <Popover placement="topLeft" content={<PopOverTitle>Available</PopOverTitle>}>
+              <Popover placement="topLeft" content={<PopOverTitle>Online</PopOverTitle>}>
                 <StatusButton />
               </Popover>
             ) : (
-              <Popover placement="topLeft" content={<PopOverTitle>Unavailable</PopOverTitle>}>
+              <Popover placement="topLeft" content={<PopOverTitle>Offline</PopOverTitle>}>
                 <StatusOffline />
               </Popover>
             )}

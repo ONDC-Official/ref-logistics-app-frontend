@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import MyProfileSection from 'views/driverFlowHome/myProfileSection'
-import LogoutConfirmaionModal from 'views/logoutConfirmaionModal'
 import Button from 'components/Button'
 import Modal from 'components/Modal'
 import DriverLayout from 'components/Layouts/driverLayout'
+import MyProfileSection from 'views/driverFlowHome/myProfileSection'
+import LogoutConfirmaionModal from 'views/logoutConfirmaionModal'
 import LogoutIcon from 'assets/svg/LogoutIcon'
 import { ProfileScreenWrapper, ButtonSection } from 'styles/views/driverFlowHome'
 

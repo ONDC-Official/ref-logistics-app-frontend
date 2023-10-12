@@ -10,11 +10,11 @@ const AddTask = () => {
       separator=">"
       items={[
         {
-          title: 'All Tasks',
+          title: 'All Orders',
           href: '/tasks',
         },
         {
-          title: 'Add New Tasks',
+          title: 'Add New Orders',
         },
       ]}
     />
@@ -27,7 +27,7 @@ const AddTask = () => {
           <BreadcrumbWrapper>
             <TaskBreadcrumb />
           </BreadcrumbWrapper>
-          <MainHeading>Add task</MainHeading>
+          <MainHeading>Add Order</MainHeading>
         </HeadingWrapper>
         <TaskDetails />
       </MainWrapper>

@@ -1,14 +1,14 @@
+import { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { PERSONAL_DETAILS_SCHEMA } from 'validations/driverDetails'
-import { useContext, useEffect } from 'react'
+import usePost from 'hooks/usePost'
 import { AppContext } from 'context/payloadContext'
 import APIS from 'constants/api'
-import usePost from 'hooks/usePost'
+import { DashboardRoute } from 'constants/routes'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
-import { DashboardRoute } from 'constants/routes'
 import BackArrow from 'assets/svg/BackArrow'
 import { ErrorMessage } from 'styles/views/signin'
 import { Label } from 'styles/views/inviteAgentScreen/agentDetailSection'
@@ -25,6 +25,8 @@ const PersonalDetails = () => {
   const { userInfo } = useContext(AppContext)
   const { mutateAsync } = usePost()
 
+  const router = useHistory()
+
   const {
     handleSubmit,
     control,
@@ -40,11 +42,6 @@ const PersonalDetails = () => {
       phone: '',
     },
   })
-  useEffect(() => {
-    setValue('name', userInfo?.name)
-    setValue('email', userInfo?.email)
-    setValue('phone', userInfo?.mobile ? userInfo?.mobile.replace('+91', '') : userInfo?.mobile)
-  }, [userInfo])
 
   const submitData = async (data: any) => {
     const payload = {
@@ -59,11 +56,16 @@ const PersonalDetails = () => {
       error
     }
   }
-  const router = useHistory()
 
   const onHandleClick = () => {
     router.push(`${DashboardRoute.path}`)
   }
+
+  useEffect(() => {
+    setValue('name', userInfo?.name)
+    setValue('email', userInfo?.email)
+    setValue('phone', userInfo?.mobile ? userInfo?.mobile.replace('+91', '') : userInfo?.mobile)
+  }, [userInfo])
 
   return (
     <PersonalDetailsContainer>
@@ -72,7 +74,7 @@ const PersonalDetails = () => {
         <DetailSection>
           <DetailsContainer>
             <InputWrapper error={errors?.name}>
-              <Label>Name</Label>
+              <Label>Name*</Label>
               <TextInput placeholder="Enter Name" control={control} name="name" error={errors?.name} />
               <ErrorMessage>{errors?.name?.message}</ErrorMessage>
             </InputWrapper>

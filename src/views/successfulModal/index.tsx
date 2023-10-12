@@ -1,7 +1,7 @@
 import Button from 'components/Button'
+import { ISuccessModalProps } from 'interfaces/views'
 import CloseIcon from 'assets/svg/CloseIcon'
 import TickIcon from 'assets/svg/TickIcon'
-import { ISuccessModalProps } from 'interfaces/views'
 import {
   SuccessfulModalContainer,
   CloseButtonWrapper,

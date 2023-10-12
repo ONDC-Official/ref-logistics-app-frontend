@@ -1,16 +1,16 @@
 import { useEffect, useState, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
-import { InviteAgentRoute } from 'constants/routes'
 import useGet from 'hooks/useGet'
-import APIS from 'constants/api'
 import { AppContext } from 'context/payloadContext'
-import { TabItem } from 'interfaces'
+import APIS from 'constants/api'
+import { InviteAgentRoute } from 'constants/routes'
 import Button from 'components/Button'
 import TextInput from 'components/TextInput'
 import AdminPrivateLayout from 'components/Layouts/adminPrivateLayout'
 import Modal from 'components/Modal'
 import CommonTabs from 'components/Tabs'
+import { TabItem } from 'interfaces'
 import AddAdminModal from 'views/addAdminModal'
 import UsersData from 'views/adminDashboard/usersTable'
 import AdminData from 'views/adminDashboard/adminTable'
@@ -24,7 +24,7 @@ import {
   InviteWrapper,
   AdminButtonWrapper,
   ActivityWrapper,
-  TitleWrapper,
+  SearchWrapper,
   InputWrapper,
   TabWrapper,
 } from 'styles/views/dashboard'
@@ -78,6 +78,7 @@ const UsersDetail = () => {
   }, [adminModal])
 
   const handleInputChange = (e: any) => {
+    setDriversCurrentPage(0)
     setSearchedText(e.target.value)
   }
 
@@ -148,7 +149,7 @@ const UsersDetail = () => {
           </InviteWrapper>
         </HeadingWrapper>
         <ActivityWrapper>
-          <TitleWrapper>
+          <SearchWrapper>
             <InputWrapper>
               <TextInput
                 placeholder="Search "
@@ -159,7 +160,7 @@ const UsersDetail = () => {
                 handleInputChange={handleInputChange}
               />
             </InputWrapper>
-          </TitleWrapper>
+          </SearchWrapper>
           <TabWrapper>
             <CommonTabs items={items} apiRefresh={refetchOnChange} />
           </TabWrapper>

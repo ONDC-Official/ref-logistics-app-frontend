@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import moment from 'moment'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import { Popover, Table } from 'antd'
@@ -8,6 +9,7 @@ import Button from 'components/Button'
 import Modal from 'components/Modal'
 import TextInput from 'components/TextInput'
 import NoRecords from 'components/RecordNotFound'
+import { ITasksData } from 'interfaces/views'
 import AssignTasksModal from 'views/assignTaskModal'
 import ItemDetails from 'views/adminDashboard/tasksTable/taskDescriptionTable'
 import ArrowIcon from 'assets/svg/ArrowIcon'
@@ -20,22 +22,6 @@ import { InputWrapper } from 'styles/views/dashboard'
 import { ButtonContainer, RightSection } from 'styles/views/adminDashboard'
 import { ContentWrapper, Title } from 'styles/components/Navbar'
 
-interface ITasksData {
-  scroll?: number
-  search?: boolean
-  assignedData?: any
-  unassignedData?: any
-  pageSize: number
-  currentPage: number
-  totalUnAssignedCount: number
-  totalAssignedCount: number
-  searchedText?: any
-  setPageSize?: any
-  setCurrentPage?: any
-  getUnassigned: () => void
-  getassigned: () => void
-}
-
 const TasksData = ({
   search,
   scroll,
@@ -45,18 +31,17 @@ const TasksData = ({
   unassignedData,
   pageSize,
   currentPage,
+  currentAssignedPage,
   setPageSize,
   searchedText,
   setCurrentPage,
+  setCurrentAssignedPage,
   getUnassigned,
   getassigned,
 }: ITasksData) => {
   const [activeIndex, setActiveIndex] = useState('Pending')
   const [taskModal, setTaskModal] = useState(false)
   const [activeTask, setActiveTask] = useState('')
-  // const [filteredStatus, setFilteredStatus] = useState('')
-  // const [showPagination, setShowPagination] = useState(true)
-  // const [showunAssignPagination, setShowUnassignPagination] = useState(true)
   const [popoverOpen, setPopoverOpen] = useState<any[]>([])
   const { control } = useForm()
   const router = useHistory()
@@ -87,7 +72,7 @@ const TasksData = ({
           View
         </Title>
         {item?.status === 'Pending' || item?.status === 'Searching-for-Agent' ? (
-          <Title onClick={() => handleClick(item?.status, item?._id)}>Assign Task</Title>
+          <Title onClick={() => handleClick(item?.status, item?._id)}>Assign Driver</Title>
         ) : null}
       </ContentWrapper>
     )
@@ -95,13 +80,13 @@ const TasksData = ({
 
   const columns1: ColumnsType<any> = [
     {
-      title: 'Item serial number',
+      title: 'Order No.',
       dataIndex: 'task_id',
       key: 'task_id',
       width: 145,
       fixed: 'left',
       render: (data: string) => {
-        return <NumberWrapper>{data}</NumberWrapper>
+        return <NumberWrapper>{data.toUpperCase().substring(0, 8)}</NumberWrapper>
       },
 
       onFilter: (value: any, record) => {
@@ -109,7 +94,18 @@ const TasksData = ({
       },
     },
     {
-      title: 'items Quantity',
+      title: 'Order Type',
+      dataIndex: 'fulfillments',
+      key: 'fulfillments',
+      width: 145,
+      // fixed: 'left',
+      render: (data: any) => {
+        const type = data?.length ? data[data?.length - 1]?.type : ''
+        return <NumberWrapper>{type}</NumberWrapper>
+      },
+    },
+    {
+      title: 'Items Quantity',
       dataIndex: 'linked_order',
       key: 'linked_order',
       width: 115,
@@ -148,6 +144,19 @@ const TasksData = ({
       },
     },
     {
+      title: 'Ordered at',
+      dataIndex: 'orderConfirmedAt',
+      key: 'time',
+      width: 140,
+
+      render: (data) => {
+        const inputDateTime = data
+        const convertedDateTime = moment(Math.floor(inputDateTime)).fromNow()
+        return <NumberWrapper>{convertedDateTime}</NumberWrapper>
+      },
+    },
+
+    {
       title: 'Action',
       dataIndex: '_id',
       key: 'x',
@@ -175,22 +184,33 @@ const TasksData = ({
 
   const columns2: ColumnsType<any> = [
     {
-      title: 'Item serial number',
+      title: 'Order No.',
       dataIndex: 'task_id',
       key: 'task_id',
       width: 145,
       fixed: 'left',
 
       render: (data: string) => {
-        return <NumberWrapper>{data}</NumberWrapper>
+        return <NumberWrapper>{data.toUpperCase().substring(0, 8)}</NumberWrapper>
       },
-
       onFilter: (value: any, record) => {
         return String(record?.status).toLowerCase().includes(value.toLowerCase())
       },
     },
+
     {
-      title: 'items Quantity',
+      title: 'Order Type',
+      dataIndex: 'fulfillments',
+      key: 'fulfillments',
+      width: 145,
+      // fixed: 'left',
+      render: (data: any) => {
+        const type = data?.length ? data[data?.length - 1]?.type : ''
+        return <NumberWrapper>{type}</NumberWrapper>
+      },
+    },
+    {
+      title: 'Items Quantity',
       dataIndex: 'linked_order',
       key: 'linked_order',
       width: 115,
@@ -211,12 +231,12 @@ const TasksData = ({
       key: 'linked_order',
       width: 80,
 
-      render: (data: { items: [{ quantity: { measure: { unit: string; value: string } } }] }) => {
-        const totalQuantityValue = data.items.reduce((total: any, item: any) => {
-          const quantityValue = item.quantity.measure.value
-          return total + quantityValue
-        }, 0)
-        return <NumberWrapper>{totalQuantityValue}</NumberWrapper>
+      render: (data: { order: { weight: { unit: string; value: string } } }) => {
+        return (
+          <NumberWrapper>
+            {data?.order?.weight?.value} {data?.order?.weight?.unit === 'kilogram' ? 'kg' : data?.order?.weight?.unit}
+          </NumberWrapper>
+        )
       },
     },
     {
@@ -230,6 +250,18 @@ const TasksData = ({
         }
       },
     },
+    {
+      title: 'Ordered at',
+      dataIndex: 'orderConfirmedAt',
+      key: 'time',
+      width: 140,
+      render: (data) => {
+        const inputDateTime = data
+        const convertedDateTime = moment(Math.floor(inputDateTime)).fromNow()
+        return <NumberWrapper>{convertedDateTime}</NumberWrapper>
+      },
+    },
+
     {
       title: 'Action',
       dataIndex: '_id',
@@ -263,22 +295,6 @@ const TasksData = ({
       setActiveTask(taskId)
     }
   }
-
-  // useEffect(() => {
-  //   if (searchedText === '' || searchedText === undefined) {
-  //     setShowPagination(true)
-  //   } else {
-  //     setShowPagination(true)
-  //   }
-  // }, [searchedText])
-
-  // useEffect(() => {
-  //   if (searchedText === '' || searchedText === undefined) {
-  //     setShowUnassignPagination(true)
-  //   } else {
-  //     setShowUnassignPagination(true)
-  //   }
-  // }, [searchedText])
 
   useEffect(() => {
     if (taskModal) {
@@ -383,12 +399,12 @@ const TasksData = ({
                 pageSizeOptions: ['5', '10', '20'],
                 showSizeChanger: true,
                 locale: { items_per_page: 'Records Per Page' },
-                current: Math.ceil(currentPage / pageSize) + 1,
+                current: Math.ceil(currentAssignedPage / pageSize) + 1,
                 pageSize: pageSize,
                 total: totalAssignedCount,
-                onChange: (currentPage, pageSize) => {
-                  const newSkipValue = (currentPage - 1) * pageSize
-                  setCurrentPage(newSkipValue)
+                onChange: (currentAssignedPage, pageSize) => {
+                  const newSkipValue = (currentAssignedPage - 1) * pageSize
+                  setCurrentAssignedPage(newSkipValue)
                   setPageSize(pageSize)
                 },
               }
@@ -397,7 +413,11 @@ const TasksData = ({
           />
         )}
         <Modal isOpen={taskModal}>
-          <AssignTasksModal showModal={(value: boolean) => setTaskModal(value)} activeTask={activeTask} />
+          <AssignTasksModal
+            showModal={(value: boolean) => setTaskModal(value)}
+            activeTask={activeTask}
+            refetchTask={getUnassigned}
+          />
         </Modal>
       </>
     </>

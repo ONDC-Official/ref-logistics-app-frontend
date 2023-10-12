@@ -78,9 +78,21 @@ export const ACTION_SCHEMA = Yup.object().shape({
   shortDescription: Yup.string()
     .required('Please enter your short description')
     .max(50, 'max 50 letters')
-    .matches(/^(?! )[a-zA-Z ]+$/, 'First character cannot be space ')
+    .matches(/^(?! )[\w. ]+$/, 'First character cannot be space ')
     .min(3, 'min 3 letters'),
-  longDescription: Yup.string().matches(/^\S/, 'First character cannot be space '),
+  longDescription: Yup.string(),
+  refundAmount: Yup.string().matches(/^\d+(\.\d{2})?$/, 'Refund amount should be valid '),
+})
 
-  refundAmount: Yup.string().matches(/^[0-9]*$/, 'Refund amount should be valid '),
+//Refund schema Validation
+export const ACTION_SCHEMA_2 = Yup.object().shape({
+  shortDescription: Yup.string()
+    .required('Please enter your short description')
+    .max(50, 'max 50 letters')
+    .matches(/^(?! )[\w. ]+$/, 'First character cannot be space ')
+    .min(3, 'min 3 letters'),
+  longDescription: Yup.string(),
+  refundAmount: Yup.string()
+    .required('Please enter Refund Amount')
+    .matches(/^\d+(\.\d{2})?$/, 'Refund amount should be valid '),
 })

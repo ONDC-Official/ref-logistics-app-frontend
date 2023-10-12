@@ -33,7 +33,7 @@ const GPSIssueTracker = () => {
       separator=">"
       items={[
         {
-          title: 'All Tasks',
+          title: 'All Orders',
           href: '/tasks',
         },
         {

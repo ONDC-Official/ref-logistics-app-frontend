@@ -1,16 +1,10 @@
 import { message, Upload } from 'antd'
-import { IModalData } from 'interfaces'
+import { IDragModalProps } from 'interfaces'
 import { DragFileHeading, DragDescription, DragImage } from 'styles/views/signin'
 
 const { Dragger } = Upload
 
-export interface IModalProps {
-  dragData: IModalData
-  Upload?: any
-  name: string
-}
-
-const DragFile = ({ Upload, dragData, name }: IModalProps) => {
+const DragFile = ({ Upload, dragData, name }: IDragModalProps) => {
   const handleBeforeUpload = (file: File) => {
     // Check file format
     const allowedFormats = ['image/jpeg', 'application/pdf', 'image/jpg']

@@ -9,12 +9,12 @@ import Button from 'components/Button'
 import AvailableTime from 'components/TimePicker'
 import TextInput from 'components/TextInput'
 import SelectField from 'components/SelectField'
-import { driverData } from 'views/taskDetails/data'
 import { IDriverData } from 'interfaces'
+import { ITaskDetailsData } from 'interfaces/views'
+import { driverData } from 'views/taskDetails/data'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
 import { ErrorMessage, TextWrapper } from 'styles/views/signin'
 import { Label, ButtonContainer, ButtonWrap, InputContainer } from 'styles/views/successfulModal'
-import { ITaskDetailsData } from 'interfaces/views'
 import {
   TaskDetailContainer,
   DetailsContainer,
@@ -120,7 +120,9 @@ const TaskDetails = () => {
                     control={control}
                     name="pickDate"
                     render={({ field: { onChange } }) => {
-                      return <DatePicker defaultValue={dayjs('01/01/2015')} format={'DD/MM/YYYY'} onChange={onChange} />
+                      return (
+                        <DatePicker defaultValue={dayjs('01/01/2015')} format={'DD MMM YYYY'} onChange={onChange} />
+                      )
                     }}
                   />
                   <ErrorMessage>{errors?.pickDate?.message}</ErrorMessage>
@@ -141,7 +143,9 @@ const TaskDetails = () => {
                     control={control}
                     name="dropDate"
                     render={({ field: { onChange } }) => {
-                      return <DatePicker defaultValue={dayjs('01/01/2015')} format={'DD/MM/YYYY'} onChange={onChange} />
+                      return (
+                        <DatePicker defaultValue={dayjs('01/01/2015')} format={'DD MMM YYYY'} onChange={onChange} />
+                      )
                     }}
                   />
                   <ErrorMessage>{errors?.dropDate?.message}</ErrorMessage>
@@ -187,11 +191,11 @@ const TaskDetails = () => {
                       <TaskNumber>{data.inProgress}</TaskNumber>
                     </TaskInfo>
                     <TaskInfo>
-                      <TaskLabel>Currrent Tasks</TaskLabel>
+                      <TaskLabel>Currrent Orders</TaskLabel>
                       <TaskNumber>{data.currentTask}</TaskNumber>
                     </TaskInfo>
                     <TaskInfo>
-                      <TaskLabel>Completed Tasks</TaskLabel>
+                      <TaskLabel>Completed Orders</TaskLabel>
                       <TaskNumber>{data.completedTask}</TaskNumber>
                     </TaskInfo>
                   </TaskInfoWrapper>

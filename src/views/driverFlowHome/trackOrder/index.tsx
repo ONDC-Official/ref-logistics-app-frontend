@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Collapse } from 'antd'
 import moment from 'moment'
@@ -10,7 +10,10 @@ import CancelOrderModal from 'views/driverFlowHome/cancelOrderModal'
 import OrderStepper from 'views/driverFlowHome/orderStepper'
 import DriverUpdateStatusModal from 'views/driverFlowHome/driverUpdateStatusModal'
 import { IParamId } from 'interfaces/pages'
+import { IButtonData } from 'interfaces/views'
 import DownloadInvoiceIcon from 'assets/svg/DownloadInvoiceIcon'
+import { AppContext } from 'context/payloadContext'
+import { maskMobileNumber } from 'utils/maskMobileNumber'
 import {
   OrderWrapper,
   NameWrapper,
@@ -33,22 +36,23 @@ import {
   TotalOrder,
   DownloadButtonSection,
   UpdateButtonWrapper,
+  CallWrapper,
 } from 'styles/views/driverFlowHome'
 
 const { Panel } = Collapse
 
-interface IButtonData {
-  buttonStatus?: boolean
-}
 const TrackOrder = ({ buttonStatus }: IButtonData) => {
   const [size, setSize] = useState(0)
 
   const [statusModal, setStatusModal] = useState(false)
   const [cancelModal, setCancelModal] = useState(false)
   const [orderDetail, setOrderDetail] = useState('')
+  // const [taskData, setTaskData] = useState<any>([])
   const router = useHistory()
   const { id }: IParamId = useParams()
-  const { refetch: getTask, data: taskDetails } = useGet('get-task', `${APIS.ALL_TASK}/${id}`)
+  const { userInfo } = useContext(AppContext)
+
+  const { refetch: getTask, data: taskDetails } = useGet('get-task', `${APIS.ALL_TASK}/${id}/agent`)
 
   useEffect(() => {
     getTask()
@@ -84,6 +88,11 @@ const TrackOrder = ({ buttonStatus }: IButtonData) => {
     }
   }, [size])
 
+  // useEffect(() => {
+  //   const taskData = taskDetails?.data?.taskStatus?.filter((obj: any) => obj?.agentId === userInfo?.agentId)
+  //   setTaskData(taskData)
+  // }, [userInfo])
+
   return (
     <>
       <TrackOrderWrapper>
@@ -99,14 +108,23 @@ const TrackOrder = ({ buttonStatus }: IButtonData) => {
                       : taskDetails?.data?.task?._id}
                   </span>
                 )}
-                {size > 400 && <span>{taskDetails?.data?.task?._id}</span>}
+                {size > 400 && <span>{taskDetails?.data?.task?.task_id.toUpperCase().substring(0, 8)}</span>}
               </TaskID>
               <TaskAssigned>{moment(`${taskDetails?.data?.task?.createdAt}`).startOf('hour').fromNow()}</TaskAssigned>
             </TaskDetailsWrap>
+            <CallWrapper>
+              {maskMobileNumber(taskDetails?.data?.task?.fulfillments[0]?.end?.contact?.phone)}
+              <a href={`tel:+91${taskDetails?.data?.task?.fulfillments[0]?.end?.contact?.phone}`}>📞 Call </a>
+            </CallWrapper>
           </NameWrapper>
-          <Status status={taskDetails?.data?.task?.status}>{taskDetails?.data?.task?.status}</Status>
+          <Status status={taskDetails?.data?.taskStatus.at(-1).status}>
+            {taskDetails?.data?.taskStatus.at(-1).status}
+          </Status>
+          {/* {userInfo?.agentId && (
+            <Status status={taskData[taskData?.length - 1]?.status}>{taskData[taskData?.length - 1]?.status}</Status>
+          )} */}
         </OrderWrapper>
-        <OrderStepper taskData={taskDetails?.data} />
+        {userInfo?.agentId && <OrderStepper taskData={taskDetails?.data} agentId={userInfo.agentId} />}
         <HistoryScreenWrapper>
           <Collapse collapsible="header" defaultActiveKey={['1']}>
             <Panel
@@ -149,8 +167,8 @@ const TrackOrder = ({ buttonStatus }: IButtonData) => {
             <Button
               label="Update Status"
               variant={
-                ['Order-delivered', 'Cancelled', 'RTO-Delivered', 'RTO-Disposed'].includes(
-                  taskDetails?.data?.task?.status,
+                ['Order-delivered', 'Cancelled', 'RTO-Delivered', 'RTO-Disposed', 'In-transit', 'Completed'].includes(
+                  taskDetails?.data?.taskStatus.at(-1).status,
                 )
                   ? 'disabled'
                   : 'contained'
@@ -175,6 +193,7 @@ const TrackOrder = ({ buttonStatus }: IButtonData) => {
           handleClick={handleClick}
           orderDetail={orderDetail}
           task={taskDetails?.data?.task}
+          taskStatus={taskDetails?.data?.taskStatus}
           getTask={() => getTask()}
         />
       </Modal>

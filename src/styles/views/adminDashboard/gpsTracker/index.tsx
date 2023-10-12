@@ -1,6 +1,16 @@
 import styled from 'styled-components'
 import { theme } from 'styles/theme'
 
+export const OrderMainWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 20px;
+  @media (max-width: 1300px) {
+    flex-wrap: wrap;
+  }
+`
+
 export const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,6 +66,14 @@ export const DetailContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 28px;
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+`
+export const TableWrapper = styled.div`
+  width: 100%;
+  max-width: 600px;
 `
 export const DataWrapper = styled.div`
   display: flex;
@@ -82,12 +100,29 @@ export const AddressDetail = styled.pre`
   font-size: 14px;
   line-height: 16px;
   color: ${theme.PRIMARYBLACKCOLOR};
+  span {
+    font-weight: 400;
+    padding-left: 6px;
+    text-transform: capitalize;
+  }
 `
 export const OrderDetailWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 28px;
   padding: 18px 0;
+`
+export const LocationOrderDetailWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 0;
+`
+export const ItemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  /* padding: 18px 0; */
 `
 export const StatusWrapper = styled.div`
   width: max-content;

@@ -180,6 +180,10 @@ export const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `
+export const SearchWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`
 export const Title = styled.h3`
   font-family: 'Inter';
   font-weight: 700;

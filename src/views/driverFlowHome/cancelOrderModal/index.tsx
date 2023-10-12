@@ -2,10 +2,18 @@ import { useForm } from 'react-hook-form'
 import APIS from 'constants/api'
 import usePost from 'hooks/usePost'
 import SelectField from 'components/SelectField'
+import { yupResolver } from '@hookform/resolvers/yup'
+
 import Button from 'components/Button'
+import { CANCEL_ACTION_SCHEMA } from 'validations/agentDetailsValidation'
+
+import { ICancelModalProps } from 'interfaces/views'
+import { filterOptions } from 'views/driverFlowHome/cancelOrderModal/data'
 import CloseIcon from 'assets/svg/CloseIcon'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
 import { TextWrapper } from 'styles/views/signin'
+import { ErrorMessage } from 'styles/views/signin'
+
 import {
   Label,
   ModalContainer,
@@ -17,17 +25,20 @@ import {
   ButtonWrapper,
 } from 'styles/views/successfulModal'
 
-export interface IModalProps {
-  showModal(value: boolean): void
-  task: any
-  getTask: () => void
-}
-
-const CancelOrderModal = ({ showModal, task, getTask }: IModalProps) => {
+const CancelOrderModal = ({ showModal, task, getTask }: ICancelModalProps) => {
   const { mutateAsync } = usePost()
-  const { handleSubmit, control } = useForm({
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
     mode: 'all',
     reValidateMode: 'onChange',
+    resolver: yupResolver(CANCEL_ACTION_SCHEMA),
+    defaultValues: {
+      description: '',
+    },
   })
 
   const submitData = async (data: any) => {
@@ -43,37 +54,6 @@ const CancelOrderModal = ({ showModal, task, getTask }: IModalProps) => {
     getTask()
   }
 
-  const filterOptions = [
-    {
-      value: 'Buyer not found or cannot be contacted',
-      label: 'Buyer not found or cannot be contacted',
-    },
-    {
-      value: 'Buyer does not want product any more',
-      label: 'Buyer does not want product any more',
-    },
-    {
-      value: 'Buyer refused to accept delivery',
-      label: 'Buyer refused to accept delivery',
-    },
-    {
-      value: 'Address not found',
-      label: 'Address not found',
-    },
-    {
-      value: 'Buyer not available at location',
-      label: 'Buyer not available at location',
-    },
-    {
-      value: 'Accident / rain / strike / vehicle issues',
-      label: 'Accident / rain / strike / vehicle issues',
-    },
-    {
-      value: 'Order delivery delayed or not possible',
-      label: 'Order delivery delayed or not possible',
-    },
-  ]
-
   return (
     <ModalContainer>
       <AddContentContainer>
@@ -84,10 +64,15 @@ const CancelOrderModal = ({ showModal, task, getTask }: IModalProps) => {
         <FormWrapper onSubmit={handleSubmit(submitData)}>
           <CancelFormContainer>
             <InputWrapper error={false}>
-              <Label> Select reason for cancellation </Label>
-
+              <Label> Reason for Cancellation* </Label>
               <TextWrapper>
-                <SelectField options={filterOptions} control={control} name="description" placeholder="Select" />
+                <SelectField
+                  options={filterOptions}
+                  control={control}
+                  name="description"
+                  placeholder="Please Select Reason for Cancellation"
+                />
+                <ErrorMessage>{errors?.description?.message}</ErrorMessage>
               </TextWrapper>
             </InputWrapper>
           </CancelFormContainer>

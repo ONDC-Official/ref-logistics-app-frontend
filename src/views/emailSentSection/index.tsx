@@ -14,6 +14,7 @@ import {
 
 const EmailSentSection = () => {
   const router = useHistory()
+
   const onHanndleClick = () => {
     router.push(`${DashboardRoute.path}`)
   }

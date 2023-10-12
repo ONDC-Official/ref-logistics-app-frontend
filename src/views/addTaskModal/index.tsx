@@ -7,6 +7,7 @@ import AvailableTime from 'components/TimePicker'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
 import SelectField from 'components/SelectField'
+import { IModalProps } from 'interfaces/views'
 import CloseIcon from 'assets/svg/CloseIcon'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
 import { ErrorMessage, TextWrapper } from 'styles/views/signin'
@@ -22,15 +23,10 @@ import {
   OrderFormContainer,
 } from 'styles/views/successfulModal'
 
-export interface IModalProps {
-  showModal(value: boolean): void
-}
-
 const AddTaskModal = ({ showModal }: IModalProps) => {
   const {
     handleSubmit,
     control,
-    // reset,
     formState: { errors },
   } = useForm({
     mode: 'all',
@@ -90,7 +86,7 @@ const AddTaskModal = ({ showModal }: IModalProps) => {
             <InputWrapper error={errors.pickLocation}>
               <Label>Pick Date</Label>
               <TextWrapper>
-                <DatePicker defaultValue={dayjs('01/01/2015')} format={'DD/MM/YYYY'} />
+                <DatePicker defaultValue={dayjs('01/01/2015')} format={'DD MMM YYYY'} />
                 <ErrorMessage>{errors?.pickLocation?.message}</ErrorMessage>
               </TextWrapper>
             </InputWrapper>
@@ -105,7 +101,7 @@ const AddTaskModal = ({ showModal }: IModalProps) => {
             <InputWrapper error={errors.pickLocation}>
               <Label>Drop Date</Label>
               <TextWrapper>
-                <DatePicker defaultValue={dayjs('01/01/2015')} format={'DD/MM/YYYY'} />
+                <DatePicker defaultValue={dayjs('01/01/2015')} format={'DD MMM YYYY'} />
                 <ErrorMessage>{errors?.pickLocation?.message}</ErrorMessage>
               </TextWrapper>
             </InputWrapper>

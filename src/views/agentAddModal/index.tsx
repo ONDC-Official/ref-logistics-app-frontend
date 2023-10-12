@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom'
 import { DashboardRoute } from 'constants/routes'
-import { IModalProps } from 'interfaces/views'
 import Button from 'components/Button'
+import { IModalProps } from 'interfaces/views'
 import CloseIcon from 'assets/svg/CloseIcon'
 import TickIcon from 'assets/svg/TickIcon'
 import {

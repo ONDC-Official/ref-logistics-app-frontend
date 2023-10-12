@@ -1,27 +1,7 @@
-import { Controller, FieldError } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { Input } from 'antd'
+import { ITeaxtinputContainer } from 'interfaces'
 import { InputWrapper } from 'styles/components/TextInput'
-interface ITeaxtinputContainer {
-  placeholder: string
-  required?: boolean
-  value?: string
-  onChange?: (e: any) => void
-  onFocus?: any
-  type?: string
-  onWheel?: (e: any) => void
-  control: any
-  name: string
-  disabled?: boolean
-  prefix?: any
-  error?: FieldError
-  className?: string
-  handleInputChange?: any
-  maxLength?: number
-  onKeyDown?: any
-  inputRef?: any
-  onKeyUp?: any
-  autocomplete?: string
-}
 
 const TextInput = ({
   placeholder,

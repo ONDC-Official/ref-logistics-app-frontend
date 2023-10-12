@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Radio } from 'antd'
-import { IDriversInfo, IAssignModalProps } from 'interfaces/views'
 import APIS from 'constants/api'
 import useGet from 'hooks/useGet'
 import usePost from 'hooks/usePost'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
 import MapComponent from 'components/MapComponent/index'
-import DriverImage from 'assets/images/driver-img.png'
+import { IDriversInfo, IAssignModalProps } from 'interfaces/views'
+import AvatarImage from 'assets/images/avatar_image.png'
 import CloseIcon from 'assets/svg/CloseIcon'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
 import { TextWrapper } from 'styles/views/signin'
@@ -33,7 +33,7 @@ import {
   AssignedFormWrapper,
 } from 'styles/views/successfulModal'
 
-const AssignTasksModal = ({ showModal, activeTask }: IAssignModalProps) => {
+const AssignTasksModal = ({ showModal, activeTask, refetchTask }: IAssignModalProps) => {
   const [checkedDriver, setIsCheckedDriver] = useState<string | null>(null)
   const { mutateAsync } = usePost()
   const [driversData, setdriversData] = useState([])
@@ -58,6 +58,7 @@ const AssignTasksModal = ({ showModal, activeTask }: IAssignModalProps) => {
             endLocation: `${data?.data?.task?.fulfillments[0]?.end?.location?.gps}`,
           },
         })
+
         if (res?.data?.agents.length !== 0) {
           toast.dismiss()
           toast.success(`${res?.data?.agents.length} driver found`)
@@ -80,24 +81,28 @@ const AssignTasksModal = ({ showModal, activeTask }: IAssignModalProps) => {
   }
 
   const submitData = async () => {
-    if (checkedDriver != null) {
-      await mutateAsync({
-        url: `${APIS.ASSIGNE_AGENT}`,
-        payload: {
-          taskId: activeTask,
-          agentId: checkedDriver,
-        },
-      })
-    } else {
-      toast.dismiss()
-      toast.error('Please Select Driver')
+    if (driversData.length !== 0) {
+      if (checkedDriver != null) {
+        await mutateAsync({
+          url: `${APIS.ASSIGNE_AGENT}`,
+          payload: {
+            taskId: activeTask,
+            agentId: checkedDriver,
+          },
+        })
+      } else {
+        toast.dismiss()
+        toast.error('Please Select Driver')
+      }
+
+      refetchTask()
     }
   }
 
   return (
     <ModalContainer>
       <HeadingContainer>
-        <HeadingWrapper>Assign Task</HeadingWrapper>
+        <HeadingWrapper>Assign Driver</HeadingWrapper>
         <CloseIcon onClick={() => showModal(false)} />
       </HeadingContainer>
       <AssignFormContainer onSubmit={handleSubmit(submitData)}>
@@ -106,7 +111,7 @@ const AssignTasksModal = ({ showModal, activeTask }: IAssignModalProps) => {
             <Label>Pick up Location</Label>
             <TextWrapper>
               <TextInput
-                placeholder={`${data?.data?.task?.fulfillments[0]?.start?.location?.address?.name}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.city}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.state}`}
+                placeholder={`${data?.data?.task?.fulfillments[0]?.start?.location?.address?.name}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.city}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.state}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.area_code}`}
                 control={control}
                 name="pickUpLocation"
                 disabled
@@ -117,7 +122,7 @@ const AssignTasksModal = ({ showModal, activeTask }: IAssignModalProps) => {
             <Label>Delivery Location</Label>
             <TextWrapper>
               <TextInput
-                placeholder={`${data?.data?.task?.fulfillments[0]?.end?.location?.address?.name}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.city}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.state}`}
+                placeholder={`${data?.data?.task?.fulfillments[0]?.end?.location?.address?.name}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.city}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.state}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.area_code}`}
                 control={control}
                 name="deliveryLocation"
                 disabled
@@ -138,7 +143,7 @@ const AssignTasksModal = ({ showModal, activeTask }: IAssignModalProps) => {
                     <DriverInfo>
                       <DriverInfoWrapper>
                         <ImageWrap>
-                          <img src={DriverImage} alt="LoginImage" />
+                          <img src={AvatarImage} alt="avatar" />
                         </ImageWrap>
                         <NameWrap>
                           <DriverName>{data?.userId?.name}</DriverName>
@@ -155,7 +160,8 @@ const AssignTasksModal = ({ showModal, activeTask }: IAssignModalProps) => {
         </AssignedFormWrapper>
         <ButtonWrapper>
           <Button label="Cancel" variant="contained" onClick={() => showModal(false)} className="cancel" />
-          <Button label="Assign" variant="contained" type="submit" />
+          {/* <Button label="Assign" variant={'contained'} type="submit" /> */}
+          <Button label="Assign" variant={driversData.length === 0 ? 'disabled' : 'contained'} type="submit" />
         </ButtonWrapper>
       </AssignFormContainer>
     </ModalContainer>

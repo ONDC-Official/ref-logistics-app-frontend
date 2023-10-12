@@ -1,7 +1,7 @@
 import styled, { keyframes } from 'styled-components'
 import { theme } from 'styles/theme'
 interface IProps {
-  status?: string
+  status?: string | boolean
   variant?: 'contained' | 'Escalate' | 'Resolved' | 'disabled' | 'inProgress' | 'Pending' | 'Active' | 'Inactive'
 }
 
@@ -143,10 +143,10 @@ export const TaskStatusWrapper = styled.div<IProps>`
       : props.status === 'Cancelled'
       ? theme.ERROR
       : theme.PRIMARYCOLOR};
-  @media (max-width: 1280px) {
+  /* @media (max-width: 1280px) {
     width: 100%;
     max-width: fit-content;
-  }
+  } */
 `
 export const ActionStatusWrapper = styled.div<IProps>`
   max-width: 100px;
@@ -181,15 +181,24 @@ export const DriverStatusConatiner = styled.div`
   justify-content: center;
   align-items: center;
   gap: 15px;
+  width: max-content;
 `
 export const DriverStatusWrapper = styled(StatusWrapper)<IProps>`
   border: 1.5px solid
     ${(props) => (props.status == '1' ? theme.PRIMARYCOLOR : props.status == '2' ? theme.ERROR : theme.WARNING)};
   color: ${(props) => (props.status == '1' ? theme.PRIMARYCOLOR : props.status == '2' ? theme.ERROR : theme.WARNING)};
 `
+export const BlockDriverStatusWrapper = styled(StatusWrapper)<IProps>`
+  border: 1.5px solid ${(props) => (props.status == true ? theme.ERROR : theme.PRIMARYCOLOR)};
+  color: ${(props) => (props.status == true ? theme.ERROR : theme.PRIMARYCOLOR)};
+`
 export const AdminStatusWrapper = styled(StatusWrapper)<IProps>`
   border: 1.5px solid ${(props) => (props.status == '1' ? theme.PRIMARYCOLOR : theme.ERROR)};
   color: ${(props) => (props.status == '1' ? theme.PRIMARYCOLOR : theme.ERROR)};
+`
+export const HubStatusWrapper = styled(StatusWrapper)<IProps>`
+  border: 1.5px solid ${(props) => (props.status == 'Active' ? theme.PRIMARYCOLOR : theme.ERROR)};
+  color: ${(props) => (props.status == 'Active' ? theme.PRIMARYCOLOR : theme.ERROR)};
 `
 
 const glowing = keyframes`
@@ -261,7 +270,7 @@ export const NumberWrapper = styled.div`
   font-family: 'Inter';
   font-weight: 600;
   font-size: 14px;
-  line-height: 17px;
+  line-height: 20px;
   color: ${theme.PRIMARYBLACKCOLOR};
 `
 export const NumberContainer = styled.div`

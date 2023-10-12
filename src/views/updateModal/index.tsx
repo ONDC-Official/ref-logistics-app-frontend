@@ -3,8 +3,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { UPDATE_SCHEMA } from 'validations/driverDetails'
 import Button from 'components/Button'
 import SelectField from 'components/SelectField'
-import CloseIcon from 'assets/svg/CloseIcon'
 import { IModalProps, IUpdateStatusData } from 'interfaces/views'
+import { filterOptions } from 'views/updateModal/data'
+import CloseIcon from 'assets/svg/CloseIcon'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
 import { TextWrapper } from 'styles/views/signin'
 import {
@@ -31,12 +32,6 @@ const UpdateStatus = ({ showModal }: IModalProps) => {
   const submitData = async (data: IUpdateStatusData) => {
     data
   }
-
-  const filterOptions = [
-    { value: 'pending', label: 'pending' },
-    { value: 'In Progress', label: 'Progress' },
-    { value: 'Resolved', label: 'Resolved' },
-  ]
 
   return (
     <ModalContainer>

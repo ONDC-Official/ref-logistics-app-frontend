@@ -12,10 +12,6 @@ import {
   ImageWrapSection,
 } from 'styles/views/signin'
 
-export interface IModalProps {
-  showModal(value: boolean): void
-}
-
 const CreatePassword = () => {
   useEffect(() => {
     localStorage.removeItem('accessToken')

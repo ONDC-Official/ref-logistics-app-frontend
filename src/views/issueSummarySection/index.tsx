@@ -35,7 +35,9 @@ import {
   DescriptionHeading,
   Description,
   ActionTakenDetails,
+  // ImageWrapper,
 } from 'styles/views/issueSummarySection'
+// import { OrderImageWrapper } from 'styles/views/orderTracking'
 
 const IssueSummarySection = () => {
   const [actionModal, setActionModal] = useState(false)
@@ -53,7 +55,6 @@ const IssueSummarySection = () => {
 
   const data = singleIssueDetail?.data?.issue?.sub_category
   const subCategoryCode = data ? ISSUE_TYPES[data as keyof typeof ISSUE_TYPES] : ''
-
   return (
     <>
       <IssueSummaryContainer>
@@ -152,6 +153,14 @@ const IssueSummarySection = () => {
             <DescriptionHeading>Long Description</DescriptionHeading>
             <Description>{singleIssueDetail?.data?.issue?.description?.long_desc}</Description>
           </OrderDescription>
+
+          {/* <ImageWrapper>
+            {singleIssueDetail?.data?.issue?.description?.images?.map((imageUrl: string[], index: number) => (
+              <OrderImageWrapper key={index}>
+                <img src={imageUrl} alt="product-image" />
+              </OrderImageWrapper>
+            ))}
+          </ImageWrapper> */}
         </OrderDetails>
         <ActionTakenDetails>
           <CustomerHeading>Action Taken</CustomerHeading>

@@ -1,10 +1,10 @@
 import TrackOrder from 'views/driverFlowHome/trackOrder'
 import ViewMapSection from 'views/driverFlowHome/viewMapSection'
 import TickIcon from 'assets/svg/TickIcon'
-import { OrderStateWrapper, CompletionWrapper, ViewWrapper } from 'styles/views/driverFlowHome'
+import { TrackOrderStateWrapper, CompletionWrapper, ViewWrapper } from 'styles/views/driverFlowHome'
 
 const OrderCompletionState = () => (
-  <OrderStateWrapper>
+  <TrackOrderStateWrapper>
     <CompletionWrapper>
       <TickIcon />
       <ViewWrapper>
@@ -12,7 +12,7 @@ const OrderCompletionState = () => (
       </ViewWrapper>
     </CompletionWrapper>
     <TrackOrder buttonStatus={false} />
-  </OrderStateWrapper>
+  </TrackOrderStateWrapper>
 )
 
 export default OrderCompletionState

@@ -53,6 +53,9 @@ export const Label = styled.div`
   font-size: 14px;
   line-height: 18px;
   text-align: start;
+  li {
+    list-style: none;
+  }
 `
 export const CloseButton = styled.div`
   width: 100%;
@@ -153,6 +156,17 @@ export const ContentContainer = styled.div`
   gap: 30px;
   @media (max-width: 514px) {
     max-width: 300px;
+  }
+`
+
+export const LogoutIconWrap = styled.div`
+  svg {
+    width: 60px;
+    height: 60px;
+    path {
+      stroke: ${theme.PRIMARYCOLOR};
+      stroke-width: 2.711;
+    }
   }
 `
 export const AddContentContainer = styled(ContentContainer)`

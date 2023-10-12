@@ -223,6 +223,16 @@ export const NotificationTitle = styled.div`
   line-height: 20px;
   color: ${theme.PRIMARYBLACKCOLOR};
 `
+export const DatePickerWrap = styled.div<{ error: any }>`
+  .ant-picker {
+    border: 1px solid ${theme.BORDERCOLOR};
+    width: 100%;
+    border-color: ${({ error }: any) => (error ? `${theme.ERROR}` : `${theme.BORDERCOLOR}`)};
+    border-radius: ${({ error }: any) => (error ? '8px 8px 2px 2px' : '8px')};
+    border-radius: ${({ error }: any) => (error ? '8px 8px 2px 2px' : '8px')};
+    box-shadow: ${({ error }: any) => (error ? `inset 0px -2px 0px ${theme.ERROR}` : '')};
+  }
+`
 export const SwitchButton = styled.div`
   .ant-switch.ant-switch-checked {
     background: ${theme.PRIMARYBLUECOLOR};

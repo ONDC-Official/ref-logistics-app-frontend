@@ -33,6 +33,18 @@ export const DetailsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
+`
+export const ChargesDetailsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* grid-template-columns: 1fr 1fr; */
+  gap: 14px;
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
 `
 export const InputWrapper = styled.div<{ error: any }>`
   display: flex;
@@ -53,14 +65,45 @@ export const InputWrapper = styled.div<{ error: any }>`
   .price {
     width: 203px;
   }
+  /* @media (max-width: 700px) {
+    .price {
+      width: 100%;
+    }
+  } */
+`
+export const ChargesInputWrapper = styled.div<{ error: any }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  gap: 5px;
+  min-height: 70px;
+  /* align-items: center; */
+  width: unset;
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+  .price {
+    width: 203px;
+  }
 `
 export const SettingsWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 20px;
   height: 43vh;
   overflow-y: scroll;
-  ::-webkit-scrollbar {
+  /* ::-webkit-scrollbar {
     display: none;
+  } */
+  table > .ant-input {
+    width: 100px;
   }
 `
 export const SupportWrapper = styled.div`

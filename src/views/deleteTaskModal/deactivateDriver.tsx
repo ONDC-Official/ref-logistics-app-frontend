@@ -1,6 +1,6 @@
 import usePost from 'hooks/usePost'
-import Button from 'components/Button'
 import APIS from 'constants/api'
+import Button from 'components/Button'
 import CloseIcon from 'assets/svg/CloseIcon'
 import { IDeleteModalProps } from 'interfaces/views'
 import {
@@ -36,7 +36,7 @@ const DeactivateDriver = ({ showModal, id, title, value, fetchDrivers }: IDelete
       <ContentContainer>
         <ContentWrapper>
           <HeadingWrapper>{title}</HeadingWrapper>
-          <Description>Are you sure, you want to {title?.toLocaleLowerCase()}</Description>
+          <Description>Are you sure you want to {title?.toLocaleLowerCase()}?</Description>
         </ContentWrapper>
         <ButtonWrap>
           <Button label="No" variant="contained" onClick={() => showModal(false)} className="cancel" />

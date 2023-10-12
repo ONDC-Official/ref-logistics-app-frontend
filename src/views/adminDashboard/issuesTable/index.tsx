@@ -9,6 +9,7 @@ import { ISSUE_TYPES } from 'constants/fulfillmentCodes'
 import { IssuesSummaryRoute } from 'constants/routes'
 import Modal from 'components/Modal'
 import NoRecords from 'components/RecordNotFound'
+import { IIssuesData } from 'interfaces/views'
 import ActionModal from 'views/issuesActionModal'
 import OptionIcon from 'assets/svg/OptionIcon'
 import { ContentWrapper, Title } from 'styles/components/Navbar'
@@ -19,18 +20,6 @@ import {
   PopoverWrapper,
 } from 'styles/views/adminDashboard/tableDescription'
 import { LocationWrapper } from 'styles/views/orderTracking'
-
-interface IIssuesData {
-  scroll?: number
-  issueDetails?: any
-  getIssues: () => void
-  pageSize: number
-  currentPage: number
-  totalCount: number
-  searchedText?: any
-  setPageSize?: any
-  setCurrentPage?: any
-}
 
 const IssuesTable = ({
   scroll,
@@ -114,7 +103,8 @@ const IssuesTable = ({
       width: 115,
       fixed: 'left',
       render: (data: string) => {
-        return <NumberContainer>{data.length > 6 ? `${data.slice(0, 6)}...` : data}</NumberContainer>
+        return <NumberContainer>{data}</NumberContainer>
+        // return <NumberContainer>{data.length > 6 ? `${data.slice(0, 6)}...` : data}</NumberContainer>
       },
       filteredValue: searchedText ? [searchedText] : null,
       onFilter: (value: any, record) => {
@@ -133,7 +123,7 @@ const IssuesTable = ({
       width: 115,
       render: (data) => {
         const inputDateTime = data
-        const outputFormat = 'DD MMM YYYY [at] h:mma'
+        const outputFormat = 'DD MMM YYYY h:mma'
         const convertedDateTime = moment(inputDateTime).format(outputFormat)
         return <LocationWrapper>{convertedDateTime}</LocationWrapper>
       },

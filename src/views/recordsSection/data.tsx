@@ -14,7 +14,7 @@ export const cardData: ICardData[] = [
     id: 2,
     icon: <OrderIcon />,
     number: '19',
-    description: 'Total Tasks Created',
+    description: 'Total Order Created',
   },
   {
     id: 3,

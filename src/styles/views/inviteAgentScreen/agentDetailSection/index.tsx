@@ -49,6 +49,13 @@ export const InputWrapper = styled.div<{ error: any }>`
   gap: 5px;
   /* min-height: 88px; */
   width: 100%;
+  ul {
+    list-style-type: none;
+  }
+`
+export const PincodeInputWrapper = styled.div`
+  display: flex;
+  width: 100%;
 `
 export const PanInputWrapper = styled.div<{ error: any }>`
   display: flex;

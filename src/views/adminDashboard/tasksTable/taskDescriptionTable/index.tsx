@@ -12,7 +12,7 @@ import {
 } from 'styles/views/adminDashboard/tableDescription'
 
 const ItemDetails = ({ record }: IItemInfo) => {
-  const { name, building, city, state } = record?.fulfillments[0]?.start?.location?.address
+  const { name, building, city, state, area_code } = record?.fulfillments[0]?.start?.location?.address
   const { phone } = record?.fulfillments[0]?.start?.contact
 
   return (
@@ -38,7 +38,7 @@ const ItemDetails = ({ record }: IItemInfo) => {
             </DetailContainer>
             <DetailContainer>
               <AddressContent>
-                {name}, {building}, {city}, {state}
+                {name}, {building}, {city}, {state} ,{area_code}
               </AddressContent>
             </DetailContainer>
             <DetailContainer>{<Content>{phone}</Content>}</DetailContainer>

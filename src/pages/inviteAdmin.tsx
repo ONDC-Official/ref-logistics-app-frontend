@@ -3,9 +3,9 @@ import { DashboardRoute } from 'constants/routes'
 import Button from 'components/Button'
 import InviteAdminSection from 'views/inviteAdminSection'
 import AgentLeftSection from 'views/inviteScreen/leftSection'
-import { MobileLogoWrapper } from 'styles/views/signin'
 import Arrow from 'assets/svg/Arrow'
 import OndcLogo from 'assets/images/ondc_logo.png'
+import { MobileLogoWrapper } from 'styles/views/signin'
 import { InviteMainContainer, AdminRightSection, ButtonSection } from 'styles/pages/inviteScreen'
 
 const InviteAdmin = () => {

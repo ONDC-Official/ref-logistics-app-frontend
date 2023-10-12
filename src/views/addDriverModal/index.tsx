@@ -7,14 +7,14 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import moment from 'moment'
 import { toast, ToastContainer } from 'react-toastify'
+import { UPDATE_DRIVER_DETAIL_SCHEMA } from 'validations/agentDetailsValidation'
 import usePost from 'hooks/usePost'
-import APIS from 'constants/api'
 import { IUpdateModalProps } from 'interfaces/views'
 import { IParamId } from 'interfaces/pages'
+import APIS from 'constants/api'
 import TextInput from 'components/TextInput'
 import Spinner from 'components/Loader'
 import SelectField from 'components/SelectField'
-import { UPDATE_DRIVER_DETAIL_SCHEMA } from 'validations/agentDetailsValidation'
 import Button from 'components/Button'
 import CloseIcon from 'assets/svg/CloseIcon'
 
@@ -81,14 +81,18 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
       if (response.data[0]?.Status === 'Error') {
         toast.error('Invalid Pin code')
         setLoader(false)
+        setValue('locality', '')
+        setValue('state', '')
+        setValue('city', '')
+        setValue('country', '')
       } else if (response.data && response.data[0] && response.data[0].PostOffice) {
-        const { State, Block, Country } = response.data[0].PostOffice[0]
+        const { State, Block, Country, District } = response.data[0].PostOffice[0]
         const postOffices = response.data[0].PostOffice
         const nameList = postOffices.map((postOffice: { Name: string }) => postOffice.Name)
         setLocality(nameList)
         setValue('locality', nameList[0])
         setValue('state', State)
-        setValue('city', Block)
+        setValue('city', Block === 'NA' ? District : Block)
         setValue('country', Country)
         clearErrors('locality')
         clearErrors('state')
@@ -101,6 +105,27 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
       err.response.data.error
     }
   }
+
+  useEffect(() => {
+    setValue('firstName', agentDetails?.firstName)
+    setValue('lastName', agentDetails?.lastName)
+    setValue('deliveryExperience', agentDetails?.deliveryExperience)
+    setValue('vehicleNumber', agentDetails?.vehicleDetails?.vehicleNumber)
+    setValue('makeYear', agentDetails?.vehicleDetails?.makeYear)
+    setValue('weight', agentDetails?.vehicleDetails?.maxWeightCapacity?.weight)
+    setValue('deliveryType', agentDetails.deliveryType)
+    setValue('accountNumber', agentDetails?.bankDetails?.accountNumber)
+    setValue('IFSCcode', agentDetails?.bankDetails?.IFSCcode)
+    setValue('branchName', agentDetails?.bankDetails?.branchName)
+    setValue('bankName', agentDetails?.bankDetails?.bankName)
+    setValue('holderName', agentDetails?.bankDetails?.accountHolderName)
+    setValue('building', agentDetails?.addressDetails?.building)
+    setValue('locality', agentDetails?.addressDetails?.locality)
+    setValue('city', agentDetails?.addressDetails?.city)
+    setValue('state', agentDetails?.addressDetails?.state)
+    setValue('country', agentDetails?.addressDetails?.country)
+    setValue('pincode', agentDetails?.addressDetails?.pincode)
+  }, [agentDetails])
 
   useEffect(() => {
     if (pincode?.length === 6) {
@@ -173,7 +198,7 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
         branchName: data?.branchName,
       },
     }
-
+    // setPayloadData(payload)
     const res = await mutateAsync({
       url: `${APIS.UPDATE_DRIVER}/${id}/update`,
       payload: payload,
@@ -260,7 +285,14 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
                 </InputWrapper>
                 <InputWrapper error={errors.pincode}>
                   <Label>Pincode*</Label>
-                  <TextInput placeholder="Enter Pincode" control={control} name="pincode" error={errors.pincode} />
+                  <TextInput
+                    placeholder="Enter Pincode"
+                    control={control}
+                    name="pincode"
+                    error={errors.pincode}
+                    type="number"
+                    maxLength={6}
+                  />
                   <ErrorMessage>{errors?.pincode?.message}</ErrorMessage>
                 </InputWrapper>
 
@@ -342,7 +374,7 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
                   </InputWrapper>
                 </InputWrapper>
                 <InputWrapper error={errors.deliveryType}>
-                  <Label>Delivery Methos*</Label>
+                  <Label>Delivery Methods*</Label>
                   <TextWrapper>
                     <SelectField
                       options={deliveryMethods}

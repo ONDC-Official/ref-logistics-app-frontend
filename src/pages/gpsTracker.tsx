@@ -30,7 +30,7 @@ const GPSTracker = () => {
       separator=">"
       items={[
         {
-          title: 'All Tasks',
+          title: 'All Orders',
           href: '/tasks',
         },
         {
