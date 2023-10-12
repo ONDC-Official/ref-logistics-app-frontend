@@ -1,11 +1,12 @@
 import { useContext, useEffect } from 'react'
 import { BrowserRouter, Route, Switch, Redirect, useHistory } from 'react-router-dom'
 import useGet from 'hooks/useGet'
-import routes, { IRoute, LoginRoute, DashboardRoute } from 'constants/routes'
+import routes, { LoginRoute, DashboardRoute } from 'constants/routes'
 import APIS from 'constants/api'
 import { AppContext } from 'context/payloadContext'
 import PublicLayout from 'components/Layouts/public'
 import PrivateLayout from 'components/Layouts/private'
+import { IRoute } from 'interfaces'
 
 export const CustomRoutes = ({ restricted, component: Component, ...rest }: IRoute) => {
   const navigate = useHistory()
@@ -28,11 +29,6 @@ export const CustomRoutes = ({ restricted, component: Component, ...rest }: IRou
   useEffect(() => {
     if (userInfoData?.data?.user?.role?.name) {
       const accessToken = localStorage.getItem('accessToken')
-
-      // alert(userInfoData?.data?.user?.role?.name)
-      // alert(restricted)
-      // alert(accessToken)
-
       if (restricted && !accessToken) navigate.push(LoginRoute.path)
       else if (!restricted && accessToken && !window.location.href.includes('create-password')) {
         navigate.push(DashboardRoute.path)

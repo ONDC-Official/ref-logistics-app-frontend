@@ -25,19 +25,6 @@ const AdminData = ({
   const [value, setValue] = useState<number>(0)
   const [popoverOpen, setPopoverOpen] = useState<any[]>([])
 
-  // const newPaginationView = () => {
-  //   const val = users?.map(
-  //     (item: { name: string; email: string; mobile: string }) =>
-  //       item?.name?.includes(searchedText) ||
-  //       item?.email?.includes(searchedText) ||
-  //       item?.mobile?.includes(searchedText),
-  //   )
-  //   if (searchedText === '' || searchedText === undefined) {
-  //     setShowPagination(true)
-  //   } else if (val?.includes(true)) {
-  //     setShowPagination(true)
-  //   } else setShowPagination(false)
-  // }
   const handleActionClick = (index: number) => {
     setPopoverOpen((prevOpen) => {
       const updatedOpen = [...prevOpen]
@@ -167,6 +154,7 @@ const AdminData = ({
         <AdminStatusModal
           showModal={(value: boolean) => setAdminStatusModal(value)}
           id={adminId}
+          subTitle={value === 1 ? 'Activate Admin' : 'Inactivate Admin'}
           title={value === 1 ? 'Active Admin' : 'Inactive Admin'}
           value={value}
           fetchAdmin={fetchAdmin}

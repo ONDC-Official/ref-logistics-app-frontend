@@ -9,6 +9,10 @@ export const TrackingDetailWrapper = styled.div`
 `
 export const HeadingWrapper = styled.div`
   display: flex;
+  justify-content: space-between;
+  > div {
+    width: 15%;
+  }
 `
 export const MainHeading = styled.h3`
   font-family: 'Inter';
@@ -129,6 +133,7 @@ export const OrderStepperWrapper = styled.div`
   /***** STEPPER CSS *****/
   .ant-steps.ant-steps-dot .ant-steps-item-content {
     max-width: 210px;
+    min-width: 210px;
     width: 100%;
     font-family: 'Inter';
     font-weight: 500;
@@ -136,6 +141,28 @@ export const OrderStepperWrapper = styled.div`
     line-height: 20px;
   }
   .ant-steps .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+    max-width: 210px;
+    width: 100%;
+  }
+`
+export const OrderTrackingStepperWrapper = styled.div`
+  height: auto;
+  display: flex;
+  padding: 44px 74px;
+  overflow: auto;
+
+  /***** STEPPER CSS *****/
+  .ant-steps.ant-steps-dot .ant-steps-item-content {
+    min-width: 210px;
+    max-width: 210px;
+    width: 100%;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .ant-steps .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+    min-width: 210px;
     max-width: 210px;
     width: 100%;
   }
@@ -195,11 +222,14 @@ export const SubTitle = styled.div`
   color: ${theme.GREYCOLOR};
 `
 export const OrderImageWrapper = styled.div`
-  max-width: 399px;
+  max-width: 300px;
+  min-height: 200px;
   width: 100%;
+  overflow-y: auto;
 
   img {
-    max-width: 399px;
+    max-width: 300px;
+    min-height: 200px;
     width: 100%;
   }
 `

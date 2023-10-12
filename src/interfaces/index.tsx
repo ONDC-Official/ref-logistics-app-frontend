@@ -1,4 +1,5 @@
 import { ReactElement, ReactNode } from 'react'
+import { FieldError } from 'react-hook-form'
 
 export interface IButtonProps {
   label: ReactElement | string
@@ -14,13 +15,86 @@ export interface ISidebarData {
   id: number
   data: string
 }
-
 export interface IModalData {
   heading?: string
   detail: string
   url?: string
   span?: string
   icon?: ReactElement | null
+}
+export interface IShowModalProps {
+  showModal(value: boolean): void
+  singleHubDetail?: any
+}
+export interface IUpdateModalProps {
+  showModal(value: boolean): void
+  id: string
+  getHubs: () => void
+  hubDetails: any
+}
+
+export interface IModalProps {
+  isOpen: boolean
+  children?: JSX.Element
+  className?: string
+}
+
+// Drag Component
+export interface IDragModalProps {
+  dragData: IModalData
+  Upload?: any
+  name: string
+}
+
+// Select Field component
+
+export interface SelectFieldProps {
+  options: any[]
+  defaultValue?: any
+  control: any
+  name: string
+  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
+  props?: any
+  mode?: string
+  loading?: boolean
+  onSearch?: (value: string) => void
+  placeholder?: string
+  handleValue?: (value: any) => void
+  error?: FieldError
+  value?: string
+  suffixIcon?: ReactElement
+  onChange?: any
+  disabled?: boolean
+  showSearch?: boolean
+}
+
+// UploadButton component
+export interface UploadButtonProps {
+  customRequest: (options: any) => void
+  onRemove: any
+  onPreview: any
+}
+// TextInput component
+export interface ITeaxtinputContainer {
+  placeholder: string
+  required?: boolean
+  value?: string
+  onChange?: (e: any) => void
+  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
+  type?: string
+  onWheel?: (e: any) => void
+  control: any
+  name: string
+  disabled?: boolean
+  prefix?: any
+  error?: FieldError
+  className?: string
+  handleInputChange?: any
+  maxLength?: number
+  onKeyDown?: any
+  inputRef?: any
+  onKeyUp?: any
+  autocomplete?: string
 }
 export interface ITableDetails {
   title?: string
@@ -31,6 +105,11 @@ export interface ITableData {
   tableDetails?: ITableDetails[]
 }
 
+// Map Component
+export interface ICoordinates {
+  liveAgentTracking?: any
+  taskEndpoints?: any
+}
 export interface IDriverData {
   id: number
   driverImage: string
@@ -40,17 +119,13 @@ export interface IDriverData {
   completedTask: string
 }
 
+//Tabs Component
 export interface TabItem {
   key: string
   label: string
   children: ReactNode
 }
 
-export interface TabItem {
-  key: string
-  label: string
-  children: ReactNode
-}
 export interface CommonTabsProps {
   items: TabItem[]
   apiRefresh: (key: string) => void
@@ -146,4 +221,12 @@ export interface IItemProps {
 }
 export interface IStatusProp {
   status?: string
+}
+
+//for constants
+export interface IRoute {
+  component: () => ReactElement
+  path: string
+  exact: boolean
+  restricted: boolean
 }

@@ -5,25 +5,25 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import moment from 'moment'
 import { DatePicker, message } from 'antd'
 import dayjs from 'dayjs'
+import { DRIVER_DETAILS_SCHEMA } from 'validations/driverDetails'
+import usePost from 'hooks/usePost'
 import APIS from 'constants/api'
 import { DashboardRoute, InviteAgentRoute } from 'constants/routes'
 import { AppContext } from 'context/payloadContext'
-import { DRIVER_DETAILS_SCHEMA } from 'validations/driverDetails'
-import usePost from 'hooks/usePost'
 import Button from 'components/Button'
 import DragFile from 'components/Drag'
 import { dragData } from 'components/Drag/data'
 import SelectField from 'components/SelectField'
 import TextInput from 'components/TextInput'
 import Modal from 'components/Modal'
-import { vehichleDetailsOptions } from 'views/vehicleDetails/data'
 import { IVehicleDetails, VehicleDetailsProps } from 'interfaces/views'
+import { vehichleDetailsOptions } from 'views/vehicleDetails/data'
 import DocumentViewModal from 'views/documentViewModal'
 import EyeIcon from 'assets/svg/EyeIcon'
 import DeleteIcon from 'assets/svg/DeleteIcon'
 import { Label, InputContainer, DriverFormContainer } from 'styles/views/successfulModal'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
-import { ErrorMessage, TextWrapper, FileWrapper, FileIconWrapper } from 'styles/views/signin'
+import { ErrorMessage, TextWrapper, FileWrapper, FileIconWrapper, UploadedFileName } from 'styles/views/signin'
 import {
   AgentDetailWrapper,
   HeadingWrapper,
@@ -216,6 +216,12 @@ const VehicleDetails = ({ next, showModal }: VehicleDetailsProps) => {
     }
   }, [viewModal])
 
+  const showFileName = (fileUrl: any) => {
+    const parts = fileUrl.split('/')
+    const fileName = parts[parts.length - 1]
+    return fileName
+  }
+
   return (
     <>
       <AgentDetailWrapper>
@@ -268,7 +274,7 @@ const VehicleDetails = ({ next, showModal }: VehicleDetailsProps) => {
               </TextWrapper>
             </InputWrapper>
             <InputWrapper error={errors.makeYear}>
-              <Label>Make year*</Label>
+              <Label>Make Year*</Label>
               <TextWrapper>
                 <Controller
                   control={control}
@@ -296,7 +302,7 @@ const VehicleDetails = ({ next, showModal }: VehicleDetailsProps) => {
           </InputContainer>
           <InputContainer>
             <InputWrapper error={errors.weight}>
-              <Label>Max. weight capacity*</Label>
+              <Label>Max. Weight Capacity*</Label>
               <InputWrapper error={errors?.weight}>
                 <WeightWrapper>
                   <TextInput type="number" placeholder="Enter Max. Weight Capacity" control={control} name="weight" />
@@ -344,6 +350,7 @@ const VehicleDetails = ({ next, showModal }: VehicleDetailsProps) => {
                   <FileIconWrapper>
                     <EyeIcon onClick={handlePreviewClick} />
                     <DeleteIcon onClick={() => handleRemove('vehicleRegistrationDocument')} />
+                    <UploadedFileName>{showFileName(values?.vehicleRegistrationDocument)}</UploadedFileName>
                   </FileIconWrapper>
                 ) : null}
               </FileWrapper>

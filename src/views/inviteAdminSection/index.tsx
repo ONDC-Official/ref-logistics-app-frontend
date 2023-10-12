@@ -47,12 +47,6 @@ const InviteAdminSection = () => {
     name: 'admins',
   })
 
-  useEffect(() => {
-    if (inviteList.length != 0) {
-      append({ name: '', mobile: '', email: '' })
-    }
-  }, [inviteList])
-
   const submitData = async (payload: IAdminsData) => {
     const res = await mutateAsync({
       url: APIS.INVITE_ADMIN,
@@ -72,6 +66,12 @@ const InviteAdminSection = () => {
   const handleRemove = (id: number) => {
     remove(id)
   }
+
+  useEffect(() => {
+    if (inviteList.length != 0) {
+      append({ name: '', mobile: '', email: '' })
+    }
+  }, [inviteList])
 
   return (
     <InviteAdminMainSection>

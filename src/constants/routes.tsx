@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+// import { ReactElement } from 'react'
 import Login from 'views/login'
 import Dashboard from 'pages/dashboard'
 import InviteScreen from 'pages/inviteScreen'
@@ -31,13 +31,8 @@ import OrderCompletionState from 'views/driverFlowHome/orderCompletionState'
 import IssueSummary from 'pages/issueSummary'
 import DriverProfile from 'pages/driverProfile'
 import GPSIssueTracker from 'pages/issueTaskTracker'
-
-export interface IRoute {
-  component: () => ReactElement
-  path: string
-  exact: boolean
-  restricted: boolean
-}
+import HUbsDetails from 'pages/hubsData'
+import HubDetail from 'pages/hubDetail'
 
 export const LoginRoute = {
   component: Login,
@@ -124,6 +119,12 @@ export const TasksRoute = {
   exact: true,
   restricted: true,
 }
+export const HubsRoute = {
+  component: HUbsDetails,
+  path: '/hubs',
+  exact: true,
+  restricted: true,
+}
 export const IssuesRoutes = {
   component: IssuesDetails,
   path: '/complaints',
@@ -168,7 +169,7 @@ export const OrderStateRoutes = {
 }
 export const SettingsRoute = {
   component: EditDetails,
-  path: '/dashboard/settings',
+  path: '/settings',
   exact: true,
   restricted: true,
 }
@@ -232,6 +233,12 @@ export const DriverProfileRoute = {
   exact: true,
   restricted: true,
 }
+export const HubsProfileDetails = {
+  component: HubDetail,
+  path: '/hubs/hub-details/:id',
+  exact: true,
+  restricted: true,
+}
 
 const ROUTES = [
   LoginRoute,
@@ -248,6 +255,7 @@ const ROUTES = [
   UserRoute,
   TasksRoute,
   IssuesRoutes,
+  HubsRoute,
   SettingsRoute,
   HomeRoutes,
   HistoryRoutes,
@@ -266,6 +274,7 @@ const ROUTES = [
   OrderCompletionStateRoute,
   IssuesSummaryRoute,
   DriverProfileRoute,
+  HubsProfileDetails,
 ]
 
 export default ROUTES

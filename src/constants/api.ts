@@ -15,7 +15,8 @@ enum APIS {
   MMI_TOKEN = '/v1/auth/mmi/token',
   ADMINS_LIST = '/v1/admins/list',
   DRIVERS_LIST = '/v1/drivers/list',
-  PRICE_CALCULATION = '/v1/users/settings',
+  UPDATE_PRICE_CALCULATION = '/v1/pricing/update',
+  GET_PRICE_CALCULATION = '/v1/pricing',
   CHANGE_PASSWORD = '/v1/auth/changePassword',
   AGENT_LOCATION = '/v1/agent/location',
   AGENT_SSE = '/v1/agent/sse',
@@ -43,5 +44,11 @@ enum APIS {
   DRIVER_HISTORY = '/v1/agent/taskHistory',
   LOGOUT = '/v1/auth/logout',
   AGENT_LIVE_LOCATION = '/v1/agent/liveLocation',
+  HUBS_LIST = '/v1/hub/hubList',
+  GET_HUB_DETAIL = '/v1/hub',
+  UPDATE_HUB = '/v1/hub/update',
+  CREATE_HUB = '/v1/hub/create',
+  DELETE_HUB = '/v1/hub/delete',
+  UPDATE_AGENT_TOGGLE_STATUS = '/v1/agent/updateAgentStatus',
 }
 export default APIS

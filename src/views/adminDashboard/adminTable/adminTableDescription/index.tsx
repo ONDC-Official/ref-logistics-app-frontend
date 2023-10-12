@@ -14,12 +14,12 @@ const AdminDetails = () => (
       <Heading>Admin Details</Heading>
       <DetailWrapper>
         <DetailContainer>
-          <Title>No of Tasks</Title>
+          <Title>No of Orders</Title>
           <Content>20 </Content>
         </DetailContainer>
 
         <DetailContainer>
-          <Title>Completed Tasks</Title>
+          <Title>Completed Orders</Title>
           <Content>10 </Content>
         </DetailContainer>
         <DetailContainer>

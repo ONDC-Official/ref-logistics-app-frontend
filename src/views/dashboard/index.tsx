@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
+import useGet from 'hooks/useGet'
 import { AppContext } from 'context/payloadContext'
 import APIS from 'constants/api'
-import { TabItem } from 'interfaces'
 import { InviteAgentRoute } from 'constants/routes'
-import useGet from 'hooks/useGet'
 import CommonTabs from 'components/Tabs'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
+import { TabItem } from 'interfaces'
 import RecordSection from 'views/recordsSection'
 import UsersData from 'views/adminDashboard/usersTable'
 import AddAdminModal from 'views/addAdminModal'
@@ -32,6 +32,7 @@ import {
 const DashboardDetail = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const [taskCurrentPage, setTaskCurrentPage] = useState(0)
+  const [currentAssignedPage, setCurrentAssignedPage] = useState(0)
   const [adminsCurrentPage, setAdminsCurrentPage] = useState(0)
   const [driversCurrentPage, setDriversCurrentPage] = useState(0)
   const [pageSize, setPageSize] = useState(10)
@@ -54,7 +55,7 @@ const DashboardDetail = () => {
 
   const { refetch: fetchAssignedTasks, data: assignedData } = useGet(
     'get-assignedTasks',
-    `${APIS.ALL_TASK}/assigned?skip=${taskCurrentPage}&search=&limit=${taskPageSize}`,
+    `${APIS.ALL_TASK}/assigned?skip=${currentAssignedPage}&search=&limit=${taskPageSize}`,
   )
 
   const { refetch: fetchUnassignedTasks, data: unassignedData } = useGet(
@@ -87,7 +88,7 @@ const DashboardDetail = () => {
 
   useEffect(() => {
     fetchAssignedTasks()
-  }, [taskPageSize, taskCurrentPage, sse])
+  }, [taskPageSize, currentAssignedPage, sse])
 
   useEffect(() => {
     fetchUnassignedTasks()
@@ -113,15 +114,17 @@ const DashboardDetail = () => {
   const items: TabItem[] = [
     {
       key: 'tasks',
-      label: 'Tasks',
+      label: 'Orders',
       children: (
         <TasksData
           assignedData={assignedData?.data?.tasks}
           unassignedData={unassignedData?.data?.tasks}
           setCurrentPage={setTaskCurrentPage}
+          setCurrentAssignedPage={setCurrentAssignedPage}
           pageSize={taskPageSize}
           setPageSize={setTaskPageSize}
           currentPage={taskCurrentPage}
+          currentAssignedPage={currentAssignedPage}
           totalUnAssignedCount={unassignedData?.data?.taskCount}
           totalAssignedCount={assignedData?.data?.taskCount}
           getUnassigned={fetchUnassignedTasks}

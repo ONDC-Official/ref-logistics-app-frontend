@@ -4,7 +4,6 @@ import APIS from 'constants/api'
 import BellIcon from 'assets/svg/BellIcon'
 import MobileTopbar from 'components/MobileTopbar'
 import useGet from 'hooks/useGet'
-
 import {
   DriverNotificationWrapper,
   TaskHeading,

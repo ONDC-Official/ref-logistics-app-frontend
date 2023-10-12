@@ -20,12 +20,8 @@ const VALIDATION_SCHEMA = Yup.object().shape({
       new RegExp(`^[a-zA-Z0-9._-]+@(${allowedDomains.map((domain) => domain.replace('.', '\\.')).join('|')})$`),
       `Only specific domains are allowed (i.e ${allowedDomains.join(',')})`,
     ),
-  password: Yup.string()
-    .required('Password is required')
-    .matches(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/,
-      'Password must contain atleast 1 uppercase, 1 lowercase, 1 special character and 1 numerical character',
-    ),
+  password: Yup.string().required('Password is required'),
+
   captcha: Yup.string().required('Captcha is required'),
 })
 const DRIVER_LOGIN_VALIDATION_SCHEMA = Yup.object().shape({

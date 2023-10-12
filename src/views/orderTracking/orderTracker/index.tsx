@@ -1,23 +1,27 @@
 import React from 'react'
 import { Popover, Steps } from 'antd'
 import moment from 'moment'
-import OrderStatusModal from '../orderStatusModal'
+import OrderStatusModal from 'views/orderTracking/orderStatusModal'
 import { OrderStepperProps, TaskStatus } from 'interfaces/views'
-import { OrderStepperWrapper } from 'styles/views/orderTracking'
+import { OrderTrackingStepperWrapper } from 'styles/views/orderTracking'
 
 const OrderStepper: React.FC<OrderStepperProps> = ({ trackingDetails }) => {
   const { Step } = Steps
   const outputFormat = 'ddd DD MMM YYYY [at] h:mma'
 
   return (
-    <OrderStepperWrapper>
+    <OrderTrackingStepperWrapper>
       <Steps
         current={trackingDetails?.data?.taskStatus?.length - 1}
         progressDot={(dot, { index }) => {
           let popoverContent = null
           popoverContent = (
             <OrderStatusModal
-              title={trackingDetails?.data?.taskStatus[index]?.status}
+              title={
+                trackingDetails?.data?.taskStatus[index]?.status === 'Pending'
+                  ? 'Confirm'
+                  : trackingDetails?.data?.taskStatus[index]?.status
+              }
               imgSrc={trackingDetails?.data?.taskStatus[index]?.link}
             />
           )
@@ -40,7 +44,7 @@ const OrderStepper: React.FC<OrderStepperProps> = ({ trackingDetails }) => {
             )
           })}
       </Steps>
-    </OrderStepperWrapper>
+    </OrderTrackingStepperWrapper>
   )
 }
 

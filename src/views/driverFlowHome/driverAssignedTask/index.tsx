@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 import { OrderStateRoutes } from 'constants/routes'
+import { IDriverDataData } from 'interfaces/views'
 import NoTaskSection from 'views/driverFlowHome/noTask'
 import OfflineSection from 'views/driverFlowHome/offlineSection'
 import PickupPointIcon from 'assets/svg/PickupPointIcon'
@@ -23,7 +24,6 @@ import {
   DropLocationName,
   DropTimeStamp,
 } from 'styles/views/driverFlowHome'
-import { IDriverDataData } from 'interfaces/views'
 
 const DriverAssignedTask = ({ data, isActive }: IDriverDataData) => {
   const [size, setSize] = useState(0)
@@ -79,13 +79,13 @@ const DriverAssignedTask = ({ data, isActive }: IDriverDataData) => {
                             {item?._id?.length > 17
                               ? `${item?._id?.slice(0, 4)}... ${item?._id?.slice(-8)}`
                               : item?._id}
-                            <span>{moment().startOf('hour').fromNow()}</span>
+                            <span>{moment(`${item?.createdAt}`).fromNow()}</span>
                           </OrderNumber>
                         )}
                         {size > 400 && (
                           <OrderNumber>
-                            {item?._id}
-                            <span>{moment().startOf('hour').fromNow()}</span>
+                            {item?.task_id.toUpperCase().substring(0, 8)}
+                            <span>{moment(`${item?.createdAt}`).fromNow()}</span>
                           </OrderNumber>
                         )}
                       </NameWrapper>
@@ -105,6 +105,8 @@ const DriverAssignedTask = ({ data, isActive }: IDriverDataData) => {
                             {item?.fulfillments[0]?.start?.location?.address?.area_code},
                             {item?.fulfillments[0]?.start?.location?.address?.country}
                           </LocationAddress>
+                          <LocationAddress>{item?.fulfillments[0]?.start?.contact?.phone}</LocationAddress>
+
                           <PickupTimeStamp>{item?.fulfillments[0]?.start?.location?.address?.city}</PickupTimeStamp>
                         </LocationWrapper>
                         <DeliveryPointIcon />
@@ -119,6 +121,8 @@ const DriverAssignedTask = ({ data, isActive }: IDriverDataData) => {
                             {item?.fulfillments[0]?.end?.location?.address?.area_code},
                             {item?.fulfillments[0]?.end?.location?.address?.country}
                           </LocationAddress>
+                          <LocationAddress>{item?.fulfillments[0]?.end?.contact?.phone}</LocationAddress>
+
                           <DropTimeStamp>{item?.fulfillments[0]?.end?.location?.address?.city}</DropTimeStamp>
                         </LocationWrapper>
                       </LocationContainer>

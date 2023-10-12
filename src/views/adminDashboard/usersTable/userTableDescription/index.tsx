@@ -14,12 +14,12 @@ const DriverDetails = ({ users }: any) => (
       <Heading>Driver Details</Heading>
       <DetailWrapper>
         <DetailContainer>
-          <Title>No of Tasks</Title>
+          <Title>No of Orders</Title>
           <Content>{users?.totalTasks} </Content>
         </DetailContainer>
 
         <DetailContainer>
-          <Title>Completed Tasks</Title>
+          <Title>Completed Orders</Title>
           <Content>{users?.completedTasksCount} </Content>
         </DetailContainer>
         <DetailContainer>

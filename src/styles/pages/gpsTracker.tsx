@@ -53,6 +53,7 @@ export const MapWrapper = styled(MapLocationImage)`
   #map {
     height: 600px;
     max-width: 100%;
+    /* max-width: 600px; */
   }
 `
 export const ButtonWrapper = styled.div`

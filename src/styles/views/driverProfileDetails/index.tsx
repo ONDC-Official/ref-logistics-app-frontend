@@ -95,6 +95,22 @@ export const DriverInfoContainer = styled.div`
     grid-column-gap: 50px;
   }
 `
+export const HubInfoContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 40px;
+  grid-row-gap: 17px;
+
+  .addPin {
+    margin-top: 24px;
+    width: 120px;
+    height: 44px;
+    /* :hover {
+      background: ${theme.PRIMARYCOLOR};
+      color: ${theme.WHITE};
+    } */
+  }
+`
 export const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -123,6 +139,10 @@ export const InfoDetails = styled.div`
   line-height: 16px;
   color: ${theme.PRIMARYBLACKCOLOR};
   text-transform: capitalize;
+  li {
+    list-style: none;
+    padding: 0;
+  }
 `
 export const DriverInfoDetails = styled(InfoDetails)`
   text-transform: unset;

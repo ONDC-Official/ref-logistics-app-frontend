@@ -1,10 +1,7 @@
 import React from 'react'
 import { Steps } from 'antd'
 import moment from 'moment'
-
-interface IssueTrackingProps {
-  singleIssueDetail: any
-}
+import { IssueTrackingProps } from 'interfaces/views'
 
 const ActionStepper: React.FC<IssueTrackingProps> = ({ singleIssueDetail }) => {
   const outputFormat = 'ddd DD MMM YYYY [at] h:mma'

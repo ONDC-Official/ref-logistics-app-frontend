@@ -21,7 +21,11 @@ const MENU = {
 
     {
       title: 'Issues',
-      links: '/complaints',
+      link: '/complaints',
+    },
+    {
+      title: 'Hubs',
+      link: '/hubs',
     },
   ],
   [ROLES.ADMIN]: [
@@ -35,13 +39,17 @@ const MENU = {
       link: '/driver',
     },
     {
-      title: 'Tasks',
+      title: 'Orders',
       link: '/tasks',
     },
 
     {
       title: 'Issues',
       link: '/complaints',
+    },
+    {
+      title: 'Hubs',
+      link: '/hubs',
     },
   ],
   [ROLES.DRIVER]: [

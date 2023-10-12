@@ -51,7 +51,10 @@ export const AGENTDETAILSVALIDATION_SCHEMA = Yup.object().shape({
 })
 
 export const AGENTKYCDETAILSVALIDATION_SCHEMA = Yup.object().shape({
-  panNumber: Yup.string(),
+  panNumber: Yup.string()
+    .required('Pan Number is required')
+    .matches(/^[A-Za-z]{5}[0-9]{4}[A-Za-z]$/, 'A valid Pan Number is required'),
+
   aadhaarNumber: Yup.string()
     .required('Driving Licence number is required')
     .matches(
@@ -127,6 +130,32 @@ const DRIVER_DETAIL_SCHEMA = Yup.object().shape({
   state: Yup.string(),
   locality: Yup.string().required('Please select the locality'),
 })
+const HUBS_DETAIL_SCHEMA = Yup.object().shape({
+  name: Yup.string()
+    .required('Please enter the hub name')
+    .matches(/^(?! )[a-zA-Z ]+$/, 'This field only accepts alphabetical characters'),
+
+  building: Yup.string().required('Please enter the building'),
+  pincode: Yup.string()
+    .required('Please enter the pincode')
+    .matches(/^\d{6,6}$/, 'A valid pincode is required'),
+  serviceablePincode: Yup.string()
+    .required('Please enter the serviceable pincode')
+    .matches(/^\d{6,6}$/, 'A valid pincode is required'),
+
+  city: Yup.string(),
+  state: Yup.string(),
+  locality: Yup.string().required('Please select the locality'),
+})
+
+export const PIN_ACTION_SCHEMA = Yup.object().shape({
+  pincode: Yup.string()
+    .required('Please enter the pincode')
+    .matches(/^\d{6,6}$/, 'A valid pincode is required'),
+})
+export const CANCEL_ACTION_SCHEMA = Yup.object().shape({
+  description: Yup.string().required('Please Select Reason for Cancellation'),
+})
 export const UPDATE_DRIVER_DETAIL_SCHEMA = Yup.object().shape({
   firstName: Yup.string()
     .required('Please enter the first name ')
@@ -167,7 +196,7 @@ export const UPDATE_DRIVER_DETAIL_SCHEMA = Yup.object().shape({
     .typeError('Please enter the max. weight capacity')
     .required('Weight is required')
     .max(1000, 'Weight cannot be greater than 1000'),
-  deliveryType: Yup.array().required('Please select the delivery methods'),
+  deliveryType: Yup.array().nullable().of(Yup.string()).required('Please select the delivery methods'),
 })
 
-export { DRIVER_DETAIL_SCHEMA }
+export { DRIVER_DETAIL_SCHEMA, HUBS_DETAIL_SCHEMA }

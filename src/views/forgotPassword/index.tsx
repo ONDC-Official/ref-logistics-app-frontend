@@ -26,6 +26,7 @@ import {
 
 const ForgotPasswordSection = () => {
   const [emailSent, setEmailSent] = useState<boolean>(false)
+  const { mutateAsync } = usePost()
 
   const {
     handleSubmit,
@@ -39,8 +40,6 @@ const ForgotPasswordSection = () => {
       email: '',
     },
   })
-
-  const { mutateAsync } = usePost()
 
   const submitData = async (data: IPayloadData) => {
     const payload = data

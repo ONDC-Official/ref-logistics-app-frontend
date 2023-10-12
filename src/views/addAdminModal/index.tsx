@@ -2,11 +2,12 @@ import { useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import usePost from 'hooks/usePost'
-import APIS from 'constants/api'
-import { IAdminsData, IFormValues } from 'interfaces/views'
 import { AGENTDETAILSVALIDATION_SCHEMA } from 'validations/agentDetailsValidation'
+import APIS from 'constants/api'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
+import { IAdminsData, IFormValues } from 'interfaces/views'
+import { IShowModalProps } from 'interfaces'
 import CloseIcon from 'assets/svg/CloseIcon'
 import { ErrorMessage, TextWrapper } from 'styles/views/signin'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
@@ -22,16 +23,13 @@ import {
   AddFormContainer,
 } from 'styles/views/successfulModal'
 
-export interface IModalProps {
-  showModal(value: boolean): void
-}
 export const inviteData = [
   {
     id: 1,
   },
 ]
 
-const AddAdminModal = ({ showModal }: IModalProps) => {
+const AddAdminModal = ({ showModal }: IShowModalProps) => {
   const { mutateAsync } = usePost()
   const {
     handleSubmit,

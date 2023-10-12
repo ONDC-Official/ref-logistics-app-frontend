@@ -5,6 +5,7 @@ import zxcvbn from 'zxcvbn'
 import { yupResolver } from '@hookform/resolvers/yup'
 import usePost from 'hooks/usePost'
 import APIS from 'constants/api'
+import { DashboardRoute } from 'constants/routes'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
 import { VALIDATION_SCHEMA_CHANGE } from 'validations/loginValidation'
@@ -12,7 +13,6 @@ import EyeIcon from 'assets/svg/EyeIcon'
 import CloseEyeIcon from 'assets/svg/CloseEyeIcon'
 import RadioButton from 'assets/svg/RadioButton'
 import CheckedICon from 'assets/svg/CheckedICon'
-import { DashboardRoute } from 'constants/routes'
 
 import {
   ChangePasswordWrapper,

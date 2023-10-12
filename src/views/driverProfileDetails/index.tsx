@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { CopyOutlined } from '@ant-design/icons'
 import { message } from 'antd'
-import APIS from 'constants/api'
 import useGet from 'hooks/useGet'
+import APIS from 'constants/api'
 import Button from 'components/Button'
 import Modal from 'components/Modal'
-import AddDriverModal from 'views/addDriverModal'
 import { IParamId } from 'interfaces/pages'
+import AddDriverModal from 'views/addDriverModal'
 import AvatarImage from 'assets/images/avatar_image.png'
 import CloseEyeIcon from 'assets/svg/CloseEyeIcon'
 import EyeIcon from 'assets/svg/EyeIcon'
@@ -39,6 +39,7 @@ import {
 
 const DriverProfileDetails = () => {
   const [showPan, setShowPan] = useState(false)
+  const [updateDriver, setUpdateDriver] = useState(false)
 
   const { id }: IParamId = useParams()
   const { refetch: getDriverDetails, data: singleDriverDetail } = useGet(
@@ -50,6 +51,7 @@ const DriverProfileDetails = () => {
     window.open(item, '_blank')
   }
   const [messageApi, contextHolder] = message.useMessage()
+
   const Success = () => {
     messageApi.open({
       type: 'success',
@@ -57,19 +59,17 @@ const DriverProfileDetails = () => {
       duration: 1,
     })
   }
-  const [updateDriver, setUpdateDriver] = useState(false)
 
   const updateDriverDetail = () => {
     setUpdateDriver(true)
   }
-
-  const agentDetails = singleDriverDetail?.data?.agentDetails
 
   const handleCopy = () => {
     navigator.clipboard.writeText(`${agentDetails?._id}`)
     Success()
   }
 
+  const agentDetails = singleDriverDetail?.data?.agentDetails
   const panDetails = agentDetails?.KYCDetails?.PANdetails
 
   const maskPan = (pan: string) => {
@@ -104,11 +104,11 @@ const DriverProfileDetails = () => {
               </TaskDetailWrapper>
               <TaskDetailWrapper>
                 <TaskDetail>{singleDriverDetail?.data?.totalTasksCount}</TaskDetail>
-                <TaskTitle>Total Tasks</TaskTitle>
+                <TaskTitle>Total Orders</TaskTitle>
               </TaskDetailWrapper>
               <TaskDetailWrapper>
                 <TaskDetail>{singleDriverDetail?.data?.completedTasks}</TaskDetail>
-                <TaskTitle>Completed Tasks</TaskTitle>
+                <TaskTitle>Completed Orders</TaskTitle>
               </TaskDetailWrapper>
             </DriverTaskWrapper>
           </DriverDetailsWrapper>
@@ -126,7 +126,7 @@ const DriverProfileDetails = () => {
               </InfoWrapper>
               <InfoWrapper>
                 <InfoTitle>Email</InfoTitle>
-                <InfoDetails>{agentDetails?.userId?.email}</InfoDetails>
+                <DriverInfoDetails>{agentDetails?.userId?.email}</DriverInfoDetails>
               </InfoWrapper>
               <InfoWrapper>
                 <InfoTitle>Mobile Number</InfoTitle>

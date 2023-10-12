@@ -9,7 +9,7 @@ const Sidebar = () => (
       <BasicLinksContainer>
         {MENU[ROLES.ADMIN].map((item, index) => (
           <DataWrapper key={index}>
-            <NavLink className="title" to={`${item.link}`}>
+            <NavLink className="title" to={`${item?.link}`}>
               <NavItems>{item?.title}</NavItems>
             </NavLink>
           </DataWrapper>

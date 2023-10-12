@@ -7,8 +7,8 @@ import { IDataProps, IItemProps } from 'interfaces'
 import { HomeRoutes } from 'constants/routes'
 import APIS from 'constants/api'
 import { inputsFields } from 'pages/driverHome/inputData'
-import Button from 'components/Button'
 import { OTP_LOGIN_VALIDATION } from 'validations/driverDetails'
+import Button from 'components/Button'
 import TextInput from 'components/TextInput'
 import OndcLogo from 'assets/images/ondc_logo.png'
 import {
@@ -75,9 +75,6 @@ const OTPLogin = () => {
 
   useEffect(() => {
     let countdownTimer: string | number | NodeJS.Timeout | undefined
-    // if (localStorage.getItem('online') !== '') {
-    //   router.push(HomeRoutes.path)
-    // }
 
     if (isActive) {
       countdownTimer = setInterval(() => {

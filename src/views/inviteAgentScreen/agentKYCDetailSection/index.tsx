@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { message } from 'antd'
-import APIS from 'constants/api'
-import { AppContext } from 'context/payloadContext'
 import usePost from 'hooks/usePost'
 import { AGENTKYCDETAILSVALIDATION_SCHEMA } from 'validations/agentDetailsValidation'
+import { AppContext } from 'context/payloadContext'
+import APIS from 'constants/api'
 import DragFile from 'components/Drag'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
@@ -186,7 +186,7 @@ const KYCDetails = ({ next }: IKYCDetailsProps) => {
               </TextWrapper>
             </InputWrapper>
             <PanInputWrapper error={errors.panNumber}>
-              <Label>Pan Number</Label>
+              <Label>Pan Number*</Label>
               <TextWrapper>
                 <TextInput
                   placeholder="Enter Pan Number"

@@ -18,6 +18,32 @@ const rollout = keyframes`
   }
 `
 
+export const CallWrapper = styled.div`
+  /* width: 40%; */
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-family: 'Inter';
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  color: ${theme.SVGBLACKCOLOR};
+  > a {
+    /* width: 20%; */
+    border: 1px solid #196aab;
+    color: #196aab;
+    /* background-color: #196aab; */
+    border-radius: 12px;
+    padding: 4px 8px;
+    text-decoration: none;
+    :hover {
+      background-color: #196aab;
+      color: #fff;
+    }
+  }
+`
+
 export const DriverLayoutWrapperWrapper = styled.div`
   display: flex;
   animation: 0.4s ${rollout} ease-in-out;
@@ -300,6 +326,12 @@ export const StatusWrapper = styled.div`
   flex-direction: column;
   gap: 10px;
 `
+
+export const SwitchStatusWrapper = styled(StatusWrapper)`
+  justify-content: space-between;
+  align-items: flex-start;
+`
+
 export const OrderDetailContainer = styled.div`
   display: flex;
   /* justify-content: center; */
@@ -774,7 +806,6 @@ export const CompletionWrapper = styled.div`
   }
 `
 export const OrderStateWrapper = styled.div`
-  max-width: 767px;
   width: 100%;
   margin: 0 auto;
   #map {
@@ -786,6 +817,11 @@ export const OrderStateWrapper = styled.div`
       max-width: 898px;
     }
   }
+`
+export const TrackOrderStateWrapper = styled.div`
+  max-width: 767px;
+  width: 100%;
+  margin: 0 auto;
 `
 export const MapWrapper = styled(OrderStateWrapper)``
 export const ViewMapWrapper = styled.div`
@@ -1033,4 +1069,22 @@ export const TimeStamp = styled.div`
   font-size: 14px;
   line-height: 20px;
   color: ${theme.GREYCOLOR};
+`
+export const SwitchContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  > div {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .ant-switch {
+    width: 20px;
+  }
 `

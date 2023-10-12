@@ -32,12 +32,6 @@ import {
 } from 'styles/views/inviteAgentScreen/agentDetailSection'
 import { ErrorMessage } from 'styles/views/signin'
 
-interface FormValues {
-  addressProof: string
-  IDproof: string
-  PANcard: string
-}
-
 const KYCDocuments = ({ next }: IKYCDetailsProps) => {
   const [ispreview, setIsPreviewed] = useState<{ [key: string]: boolean }>({})
   const [viewModal, setViewModal] = useState(false)

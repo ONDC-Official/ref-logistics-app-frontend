@@ -40,6 +40,7 @@ const DriverLogin: React.FC<Props> = () => {
       mobile: '',
     },
   })
+
   const submitData = async (data: IPayloadData) => {
     const payload = data
     const res = await mutateAsync({

@@ -1,6 +1,6 @@
 import usePost from 'hooks/usePost'
-import Button from 'components/Button'
 import APIS from 'constants/api'
+import Button from 'components/Button'
 import CloseIcon from 'assets/svg/CloseIcon'
 import DeleteBinIcon from 'assets/svg/DeleteBinIcon'
 import { IDeleteModalProps } from 'interfaces/views'
@@ -39,7 +39,7 @@ const DeleteTaskModal = ({ showModal, id, fetchDrivers }: IDeleteModalProps) => 
 
         <ContentWrapper>
           <HeadingWrapper>Delete Driver</HeadingWrapper>
-          <Description>Are you sure, you want to delete this Driver.</Description>
+          <Description>Are you sure you want to delete this Driver?</Description>
         </ContentWrapper>
         <ButtonWrap>
           <Button label="Cancel" variant="contained" onClick={() => showModal(false)} className="cancel" />

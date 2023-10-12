@@ -1,27 +1,8 @@
-import { ReactElement, useEffect, useState } from 'react'
-import { Controller, FieldError } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { Controller } from 'react-hook-form'
 import { Select } from 'antd'
+import { SelectFieldProps } from 'interfaces'
 import { SelectWrapper } from 'styles/components/SelectField'
-
-interface SelectFieldProps {
-  options: any[]
-  defaultValue?: any
-  control: any
-  name: string
-  onFocus?: () => any
-  props?: any
-  mode?: string
-  loading?: boolean
-  onSearch?: (value: string) => void
-  placeholder?: string
-  handleValue?: (value: any) => void
-  error?: FieldError
-  value?: string
-  suffixIcon?: ReactElement
-  onChange?: any
-  disabled?: boolean
-  showSearch?: boolean
-}
 
 const SelectField = ({
   options,
@@ -41,6 +22,7 @@ const SelectField = ({
   showSearch,
 }: SelectFieldProps) => {
   const [selectOptions, setSelectOptions] = useState(options)
+
   useEffect(() => {
     setSelectOptions(options)
   }, [options])

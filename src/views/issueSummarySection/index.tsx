@@ -35,7 +35,9 @@ import {
   DescriptionHeading,
   Description,
   ActionTakenDetails,
+  // ImageWrapper,
 } from 'styles/views/issueSummarySection'
+// import { OrderImageWrapper } from 'styles/views/orderTracking'
 
 const IssueSummarySection = () => {
   const [actionModal, setActionModal] = useState(false)
@@ -53,7 +55,6 @@ const IssueSummarySection = () => {
 
   const data = singleIssueDetail?.data?.issue?.sub_category
   const subCategoryCode = data ? ISSUE_TYPES[data as keyof typeof ISSUE_TYPES] : ''
-
   return (
     <>
       <IssueSummaryContainer>
@@ -152,7 +153,34 @@ const IssueSummarySection = () => {
             <DescriptionHeading>Long Description</DescriptionHeading>
             <Description>{singleIssueDetail?.data?.issue?.description?.long_desc}</Description>
           </OrderDescription>
+          {/* ----need this */}
+          {/* <ImageWrapper>
+            {singleIssueDetail?.data?.issue?.description?.images?.map((imageUrl: string[], index: number) => (
+              <OrderImageWrapper key={index}>
+                <img src={imageUrl} alt="product-image" />
+              </OrderImageWrapper>
+            ))}
+          </ImageWrapper> */}
         </OrderDetails>
+        {/* <OrderDetails>
+          <CustomerHeading>Resolution</CustomerHeading>
+          <CustomerInfoContainer>
+            <CustomerInfo>
+              <Description>Test</Description>
+              <Description>Test</Description>
+            </CustomerInfo>
+            <CustomerInfo>
+              <CustomerInfoHeading>Refund Amount:</CustomerInfoHeading>
+              <OrderInfoDetails>100</OrderInfoDetails>
+            </CustomerInfo>
+          </CustomerInfoContainer>
+          <CustomerInfoContainer>
+            <CustomerInfo>
+              <CustomerInfoHeading>Action:</CustomerInfoHeading>
+              <OrderInfoDetails>Refund</OrderInfoDetails>
+            </CustomerInfo>
+          </CustomerInfoContainer>
+        </OrderDetails> */}
         <ActionTakenDetails>
           <CustomerHeading>Action Taken</CustomerHeading>
           <ActionStepper singleIssueDetail={singleIssueDetail} />

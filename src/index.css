@@ -22,7 +22,7 @@ code {
 .ReactModal__Overlay {
   transition: all 500ms !important;
   background: rgba(0, 0, 0, 0.9) !important;
-  z-index: 100;
+  z-index: 999 !important;
 }
 .ReactModal__Content.ReactModal__Content--after-open {
   inset: 0 !important;
@@ -132,4 +132,7 @@ div#mLogo0 {
 .ant-dropdown-menu {
   max-height: 400px;
   overflow-y: auto;
+}
+.maplibregl-ctrl-fullscreen.mapboxgl-ctrl-fullscreen {
+  display: none;
 }

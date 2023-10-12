@@ -2,16 +2,16 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import AdminPrivateLayout from 'components/Layouts/adminPrivateLayout'
 import TextInput from 'components/TextInput'
-import IssuesData from 'views/adminDashboard/issuesTable'
-import SearchIcon from 'assets/svg/SearchIcon'
 import useGet from 'hooks/useGet'
 import APIS from 'constants/api'
+import IssuesData from 'views/adminDashboard/issuesTable'
+import SearchIcon from 'assets/svg/SearchIcon'
 import {
   HeadingWrapper,
   MainContainer,
   MainHeading,
   ActivityWrapper,
-  TitleWrapper,
+  SearchWrapper,
   InputWrapper,
 } from 'styles/views/dashboard'
 
@@ -35,6 +35,7 @@ const IssuesDetails = () => {
 
   const { control } = useForm()
   const handleInputChange = (e: any) => {
+    setCurrentPage(0)
     setSearchedText(e.target.value)
   }
 
@@ -45,7 +46,7 @@ const IssuesDetails = () => {
           <MainHeading>Issues</MainHeading>
         </HeadingWrapper>
         <ActivityWrapper>
-          <TitleWrapper>
+          <SearchWrapper>
             <InputWrapper>
               <TextInput
                 placeholder="Search "
@@ -55,7 +56,7 @@ const IssuesDetails = () => {
                 handleInputChange={handleInputChange}
               />
             </InputWrapper>
-          </TitleWrapper>
+          </SearchWrapper>
           <IssuesData
             scroll={430}
             searchedText={searchedText}

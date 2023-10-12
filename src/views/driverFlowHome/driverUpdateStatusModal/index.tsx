@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { message } from 'antd'
+import { message, Switch } from 'antd'
 import { AppContext } from 'context/payloadContext'
 import APIS from 'constants/api'
 import usePost from 'hooks/usePost'
@@ -12,12 +12,15 @@ import Button from 'components/Button'
 import Modal from 'components/Modal'
 import { dragData } from 'components/Drag/data'
 import SelectField from 'components/SelectField'
+import { IDriverUpdateStatusModalProps } from 'interfaces/views'
 import DocumentViewModal from 'views/documentViewModal'
+import { filterOptions, p2h2pFilterOptions } from 'views/driverFlowHome/driverUpdateStatusModal/data'
+import { calculateDistance } from 'utils/calculateDistance'
 import EyeIcon from 'assets/svg/EyeIcon'
 import DeleteIcon from 'assets/svg/DeleteIcon'
 import CloseIcon from 'assets/svg/CloseIcon'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
-import { ResendText, ExpiredOtp } from 'styles/views/driverFlowHome'
+import { ResendText, ExpiredOtp, SwitchContainer } from 'styles/views/driverFlowHome'
 import { ErrorMessage, TextWrapper, FileName, FileWrapper } from 'styles/views/signin'
 import {
   Label,
@@ -29,23 +32,39 @@ import {
   FormWrapper,
   ButtonWrapper,
 } from 'styles/views/successfulModal'
+import { toast } from 'react-toastify'
 
-export interface IModalProps {
-  showModal(value: boolean): void
-  handleClick: (e: any) => void
-  orderDetail: string
-  task: any
-  getTask: () => void
-}
-
-const DriverUpdateStatusModal = ({ showModal, handleClick, orderDetail, task, getTask }: IModalProps) => {
+const DriverUpdateStatusModal = ({
+  showModal,
+  handleClick,
+  orderDetail,
+  task,
+  getTask,
+  taskStatus,
+}: IDriverUpdateStatusModalProps) => {
   const [countdown, setCountdown] = useState(59) // Set initial countdown time in seconds
+  const [isToggle, setIsToggle] = useState(true)
   const [isActive, setIsActive] = useState(true)
   const [viewModal, setViewModal] = useState(false)
   const [filePath, setFilePath] = useState('')
   const [ispreview, setIsPreviewed] = useState<boolean>(false)
+  const [distance, setDistance] = useState<number>(0)
   const { payloadData, setPayloadData } = useContext(AppContext)
   const { mutateAsync } = usePost()
+
+  const endPoints = task?.fulfillments[0]?.end?.location?.gps.split(',')
+  const floatCoordinates = endPoints?.map((coord: string) => parseFloat(coord))
+  const { userInfo } = useContext(AppContext)
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords
+        const ans = calculateDistance(latitude, floatCoordinates[0], longitude, floatCoordinates[1])
+        setDistance(Math.floor(ans))
+      })
+    }
+  }, [])
 
   const {
     handleSubmit,
@@ -62,11 +81,23 @@ const DriverUpdateStatusModal = ({ showModal, handleClick, orderDetail, task, ge
 
   const values = getValues()
   const submitData = async (data: any) => {
+    if (data?.status === 'Order-delivered' && isToggle) {
+      if (distance <= 100) {
+        toast.success('You are inside the delivery radius')
+      } else {
+        toast.error(
+          ` You are ${distance}m away from your delivery location. Please be with in 100m range to deliver your packet.`,
+        )
+        return
+      }
+    }
+
     const payload = {
       taskId: task._id,
       status: data?.status,
       link: data?.uploadImage,
       description: data?.description || '',
+      agentId: userInfo?.agentId,
     }
 
     if (data) {
@@ -81,20 +112,20 @@ const DriverUpdateStatusModal = ({ showModal, handleClick, orderDetail, task, ge
     getTask()
   }
 
-  const filterOptions = [
-    { value: 'Order-picked-up', label: 'Out for order Pickup', disabled: true },
-    { value: 'Out-for-delivery', label: 'Out for delivery' },
-    { value: 'Order-delivered', label: 'Delivered' },
-    { value: 'Cancelled', label: 'Cancelled' },
-  ]
-
   const RTOFilterOption = [{ value: 'RTO-Delivered', label: 'RTO Delivered' }]
 
-  const index = filterOptions.findIndex((element) => {
-    if (element.value === task?.status) {
-      return true
-    }
-  })
+  const index =
+    task.items[0]?.descriptor?.code === 'P2H2P'
+      ? p2h2pFilterOptions.findIndex((element) => {
+          if (element.value === taskStatus[taskStatus.length - 1]?.status) {
+            return true
+          }
+        })
+      : filterOptions.findIndex((element) => {
+          if (element.value === task?.status) {
+            return true
+          }
+        })
 
   useEffect(() => {
     let countdownTimer: string | number | NodeJS.Timeout | undefined
@@ -190,6 +221,16 @@ const DriverUpdateStatusModal = ({ showModal, handleClick, orderDetail, task, ge
   }
   const fileUrl = getValues('uploadImage')
 
+  const handleSwitch = () => {
+    if (isToggle) {
+      setIsToggle(false)
+      toast.warn('Disabled 100 meter range delivery')
+    } else {
+      setIsToggle(true)
+      toast.success('Enabled 100 meter range delivery')
+    }
+  }
+
   return (
     <>
       <ModalContainer>
@@ -207,6 +248,13 @@ const DriverUpdateStatusModal = ({ showModal, handleClick, orderDetail, task, ge
                     options={
                       task?.status === 'RTO-Initiated'
                         ? RTOFilterOption
+                        : task.items[0]?.descriptor?.code === 'P2H2P'
+                        ? p2h2pFilterOptions.map((_e, i) => {
+                            return {
+                              ..._e,
+                              disabled: _e.value !== 'Cancelled' && _e.value !== 'Customer-not-found' && i != index + 1,
+                            }
+                          })
                         : filterOptions.map((_e, i) => {
                             return {
                               ..._e,
@@ -265,6 +313,10 @@ const DriverUpdateStatusModal = ({ showModal, handleClick, orderDetail, task, ge
                 </InputWrapper>
               )}
             </AddFormContainer>
+            <SwitchContainer>
+              <div>Proximaty check</div>
+              <Switch checked={isToggle} onChange={handleSwitch} />
+            </SwitchContainer>
             <ButtonWrapper>
               <Button label="Cancel" variant="contained" className="cancel" onClick={() => showModal(false)} />
               <Button label="Update Status" variant="contained" type="submit" />

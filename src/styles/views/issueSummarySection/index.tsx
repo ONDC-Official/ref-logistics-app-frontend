@@ -55,6 +55,10 @@ export const ButtonWrapper = styled.div`
 
   button {
     width: 134px;
+    :hover {
+      background-color: ${theme.PRIMARYCOLOR};
+      color: ${theme.WHITE};
+    }
   }
   .cancel {
     background-color: ${theme.NEUTRALGREYCOLOR};
@@ -151,6 +155,10 @@ export const Description = styled.div`
   font-weight: 500;
   line-height: 16px;
   padding-top: 7px;
+`
+export const ImageWrapper = styled.div`
+  display: flex;
+  gap: 20px;
 `
 export const ActionTakenDetails = styled.div`
   display: flex;

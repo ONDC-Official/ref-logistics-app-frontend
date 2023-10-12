@@ -405,6 +405,14 @@ export const FileIconWrapper = styled.div`
   gap: 10px;
   align-items: center;
 `
+export const UploadedFileName = styled.div`
+  color: ${theme.PRIMARYBLACKCOLOR};
+  font-weight: 400;
+  font-family: 'Inter';
+  font-size: 12px;
+  line-height: 16px;
+`
+
 export const FileName = styled.span`
   color: ${theme.PRIMARYBLACKCOLOR};
   font-weight: 400;
@@ -421,6 +429,10 @@ export const Label = styled.div`
   line-height: 20px;
   padding-bottom: 4px;
   color: ${theme.PRIMARYBLACKCOLOR};
+`
+export const ChargeLabel = styled(Label)`
+  width: 100%;
+  max-width: 167px;
 `
 
 export const ConditionalWrapper = styled.div`

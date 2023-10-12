@@ -4,9 +4,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Radio } from 'antd'
 import usePost from 'hooks/usePost'
 import APIS from 'constants/api'
-import { ACTION_SCHEMA } from 'validations/driverDetails'
+import { ACTION_SCHEMA, ACTION_SCHEMA_2 } from 'validations/driverDetails'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
+import { IActionModalProps, IActionIssueModal } from 'interfaces/views'
+
 import CloseIcon from 'assets/svg/CloseIcon'
 import { ErrorMessage, TextWrapper } from 'styles/views/signin'
 
@@ -22,20 +24,9 @@ import {
 } from 'styles/views/successfulModal'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
 
-export interface IIssueModal {
-  shortDescription?: string
-  longDescription?: string
-  actionTriggered?: string
-  refundAmount?: string
-}
-export interface IModalProps {
-  showModal(value: boolean): void
-  id?: string
-  getIssues: () => void
-}
-
-const ActionModal = ({ showModal, id, getIssues }: IModalProps) => {
-  const [updateValue, setUpdateValue] = useState('')
+const ActionModal = ({ showModal, id, getIssues }: IActionModalProps) => {
+  const [updateValue, setUpdateValue] = useState('NO-ACTION')
+  const selectedSchema = updateValue !== 'REFUND' ? ACTION_SCHEMA : ACTION_SCHEMA_2
 
   const { mutateAsync } = usePost()
   const {
@@ -46,10 +37,10 @@ const ActionModal = ({ showModal, id, getIssues }: IModalProps) => {
   } = useForm({
     mode: 'all',
     reValidateMode: 'onChange',
-    resolver: yupResolver(ACTION_SCHEMA),
+    resolver: yupResolver(selectedSchema),
   })
 
-  const submitData = async (data: IIssueModal) => {
+  const submitData = async (data: IActionIssueModal) => {
     const payload = {
       action_triggered: data?.actionTriggered,
       short_desc: data?.shortDescription,
@@ -89,6 +80,7 @@ const ActionModal = ({ showModal, id, getIssues }: IModalProps) => {
                     setValue('refundAmount', '')
                   }}
                   value={field.value}
+                  defaultValue="NO-ACTION"
                 >
                   <Radio value="NO-ACTION">No Action</Radio>
                   <Radio value="CANCEL">Cancel</Radio>
@@ -100,7 +92,7 @@ const ActionModal = ({ showModal, id, getIssues }: IModalProps) => {
           <InputWrapper error={false}>
             <Label>Short Description*</Label>
             <TextWrapper>
-              <TextInput placeholder="Enter Description" control={control} name="shortDescription" />
+              <TextInput placeholder="Enter Short Description" control={control} name="shortDescription" />
               <ErrorMessage>{errors?.shortDescription?.message}</ErrorMessage>
             </TextWrapper>
           </InputWrapper>
@@ -109,7 +101,7 @@ const ActionModal = ({ showModal, id, getIssues }: IModalProps) => {
               <InputWrapper error={false}>
                 <Label>Long Description</Label>
                 <TextWrapper>
-                  <TextInput placeholder="Enter Description" control={control} name="longDescription" />
+                  <TextInput placeholder="Enter Long Description" control={control} name="longDescription" />
                   <ErrorMessage>{errors?.longDescription?.message}</ErrorMessage>
                 </TextWrapper>
               </InputWrapper>
@@ -117,7 +109,7 @@ const ActionModal = ({ showModal, id, getIssues }: IModalProps) => {
           ) : (
             <>
               <InputWrapper error={false}>
-                <Label>Refund Amount</Label>
+                <Label>Refund Amount*</Label>
                 <TextWrapper>
                   <TextInput placeholder="Enter Amount" control={control} name="refundAmount" />
                   <ErrorMessage>{errors?.refundAmount?.message}</ErrorMessage>

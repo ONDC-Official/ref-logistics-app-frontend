@@ -8,10 +8,10 @@ import dayjs, { Dayjs } from 'dayjs'
 import moment from 'moment'
 import axios from 'axios'
 import { DashboardRoute, InviteAgentRoute } from 'constants/routes'
-import { AppContext } from 'context/payloadContext'
 import useFormPost from 'hooks/useFormPost'
 import { DRIVER_DETAIL_SCHEMA } from 'validations/agentDetailsValidation'
 import SelectField from 'components/SelectField'
+import { AppContext } from 'context/payloadContext'
 import Button from 'components/Button'
 import TextInput from 'components/TextInput'
 import Modal from 'components/Modal'
@@ -39,6 +39,7 @@ import {
   NotificationContainer,
   NotificationTitle,
   SwitchButton,
+  DatePickerWrap,
 } from 'styles/views/inviteAgentScreen/driverDetailsSection'
 import { ButtonWrapper } from 'styles/views/successfulModal'
 
@@ -106,14 +107,18 @@ const DriverDetails = ({ next, showModal, ref }: any) => {
       if (response.data[0]?.Status === 'Error') {
         toast.error('Invalid Pin code')
         setLoader(false)
+        setValue('locality', '')
+        setValue('state', '')
+        setValue('city', '')
+        setValue('country', '')
       } else if (response.data && response.data[0] && response.data[0].PostOffice) {
-        const { State, Block, Country } = response.data[0].PostOffice[0]
+        const { State, Block, Country, District } = response.data[0].PostOffice[0]
         const postOffices = response.data[0].PostOffice
         const nameList = postOffices.map((postOffice: { Name: string }) => postOffice.Name)
         setLocality(nameList)
         setValue('locality', nameList[0])
         setValue('state', State)
-        setValue('city', Block)
+        setValue('city', Block === 'NA' ? District : Block)
         setValue('country', Country)
         clearErrors('locality')
         clearErrors('state')
@@ -219,27 +224,29 @@ const DriverDetails = ({ next, showModal, ref }: any) => {
             </InputWrapper>
             <InputWrapper error={errors.dob}>
               <Label>DOB*</Label>
-              <Controller
-                control={control}
-                name="dob"
-                render={({ field }) => {
-                  return (
-                    <DatePicker
-                      {...field}
-                      picker="date"
-                      format={'DD-MM-YYYY'}
-                      disabledDate={(current) => disabledDate(dayjs(current))}
-                      onChange={(value: any) => {
-                        setValue('dob', `${moment(value.$d).format('DD-MM-YYYY')}`)
-                        trigger('dob')
-                      }}
-                      value={dobWatchValue ? dayjs(dobWatchValue, 'DD-MM-YYYY') : null}
-                      placeholder="Select DOB"
-                    />
-                  )
-                }}
-              />
-              <ErrorMessage>{errors?.dob?.message}</ErrorMessage>
+              <DatePickerWrap error={errors.dob}>
+                <Controller
+                  control={control}
+                  name="dob"
+                  render={({ field }) => {
+                    return (
+                      <DatePicker
+                        {...field}
+                        picker="date"
+                        format={'DD-MM-YYYY'}
+                        disabledDate={(current) => disabledDate(dayjs(current))}
+                        onChange={(value: any) => {
+                          setValue('dob', `${moment(value.$d).format('DD-MM-YYYY')}`)
+                          trigger('dob')
+                        }}
+                        value={dobWatchValue ? dayjs(dobWatchValue, 'DD-MM-YYYY') : null}
+                        placeholder="Select DOB"
+                      />
+                    )
+                  }}
+                />
+                <ErrorMessage>{errors?.dob?.message}</ErrorMessage>
+              </DatePickerWrap>
             </InputWrapper>
             <SelectWrapper error={errors.deliveryExperience}>
               <Label>Years of experience in delivery*</Label>
@@ -270,7 +277,14 @@ const DriverDetails = ({ next, showModal, ref }: any) => {
             </InputWrapper>
             <InputWrapper error={errors.pincode}>
               <Label>Pincode*</Label>
-              <TextInput placeholder="Enter Pincode" control={control} name="pincode" error={errors.pincode} />
+              <TextInput
+                placeholder="Enter Pincode"
+                control={control}
+                name="pincode"
+                error={errors.pincode}
+                type="number"
+                maxLength={6}
+              />
               <ErrorMessage>{errors?.pincode?.message}</ErrorMessage>
             </InputWrapper>
             <SelectWrapper error={errors.locality}>
