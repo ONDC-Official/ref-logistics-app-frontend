@@ -31,9 +31,15 @@ const HubsDetails = () => {
     `${APIS.HUBS_LIST}?skip=${currentPage}&search=${searchedText}&limit=${pageSize}`,
   )
 
+  // const { refetch: getDashboard, data: dashboardDetails } = useGet('get-dashboard', `${APIS.USERS_DASHBOARD}`)
+
+  // useEffect(() => {
+  //   getDashboard()
+  // }, [getDashboard])
+
   useEffect(() => {
     getHubs()
-  }, [pageSize, currentPage, getHubs, searchedText])
+  }, [pageSize, currentPage, searchedText])
 
   const addAdmin = () => {
     setAdminModal(true)
@@ -70,6 +76,7 @@ const HubsDetails = () => {
             </InputWrapper>
           </SearchWrapper>
           <HubsData
+            scroll={430}
             hubsDetails={hubsDetails?.data}
             getHubs={getHubs}
             setCurrentPage={setCurrentPage}
@@ -82,7 +89,7 @@ const HubsDetails = () => {
         </ActivityWrapper>
       </MainContainer>
       <Modal isOpen={adminModal}>
-        <AddHubsModal showModal={(value: boolean) => setAdminModal(value)} />
+        <AddHubsModal showModal={(value: boolean) => setAdminModal(value)} getHubs={getHubs} />
       </Modal>
     </AdminPrivateLayout>
   )

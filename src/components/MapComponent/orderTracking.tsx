@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { mappls } from 'mappls-web-maps'
 import APIS from 'constants/api'
 import useGet from 'hooks/useGet'
-import { ICoordinates } from 'interfaces'
+import { IOrderTrackingCoordinates } from 'interfaces'
 import { OrderStateWrapper, MapLocationImage } from 'styles/views/driverFlowHome'
 
-const OrderTrackingMapComponent = ({ taskEndpoints }: ICoordinates) => {
+const OrderTrackingMapComponent = ({ taskEndpoints }: IOrderTrackingCoordinates) => {
   const { refetch, data: mmiToken } = useGet('mmi-token', `${APIS.MMI_TOKEN}`)
   const floatCoordinates = taskEndpoints?.map((coord: string) => parseFloat(coord))
   const [mapObject, setMapObject] = useState<any>(null)

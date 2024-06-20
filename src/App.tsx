@@ -61,7 +61,7 @@ const App = () => {
           onError: async (error: any) => {
             switch (error?.response?.status) {
               case ERROR_CODE.UN_AUTHORIZED_ACCESS:
-                showError(error?.response?.data?.error)
+                showError(error?.response?.data?.error, true)
                 return
               default:
                 showError(error?.response?.data?.error)

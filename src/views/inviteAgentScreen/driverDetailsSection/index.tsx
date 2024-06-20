@@ -15,6 +15,7 @@ import { AppContext } from 'context/payloadContext'
 import Button from 'components/Button'
 import TextInput from 'components/TextInput'
 import Modal from 'components/Modal'
+import NumberInput from 'components/NumberInput'
 import MapComponent from 'components/MapComponent/index'
 import Spinner from 'components/Loader'
 import { IDriverDetails } from 'interfaces/views'
@@ -47,6 +48,7 @@ const DriverDetails = ({ next, showModal, ref }: any) => {
   const [successModal, setSuccessModal] = useState(false)
   const [loader, setLoader] = useState(false)
   const [locality, setLocality] = useState([{}])
+  const [inputValue, setInputValue] = useState<string>('')
 
   const { payloadData, setPayloadData } = useContext(AppContext)
   const {
@@ -133,10 +135,10 @@ const DriverDetails = ({ next, showModal, ref }: any) => {
   }
 
   useEffect(() => {
-    if (pincode?.length === 6) {
+    if (inputValue?.length === 6) {
       getAddressDetails()
     }
-  }, [pincode])
+  }, [inputValue])
   const localities = []
 
   for (let i = 0; i < locality.length; i++) {
@@ -158,7 +160,7 @@ const DriverDetails = ({ next, showModal, ref }: any) => {
         city: data?.city,
         state: data?.state,
         country: data?.country,
-        pincode: data?.pincode,
+        pincode: data?.pincode.toString(),
       },
       email: data?.email,
       mobile: data?.mobile,
@@ -187,6 +189,17 @@ const DriverDetails = ({ next, showModal, ref }: any) => {
 
     // Disable dates that are after the maximum allowed date
     return !!current && current.isAfter(maxDate, 'day')
+  }
+
+  const handleFormatter = (value: any) => {
+    const numericValue = value.replace(/[e.+\\-]/g, '')
+    setInputValue(value)
+
+    if (numericValue.length > 6) {
+      return numericValue.slice(0, 6)
+    }
+
+    return numericValue
   }
 
   return (
@@ -277,13 +290,13 @@ const DriverDetails = ({ next, showModal, ref }: any) => {
             </InputWrapper>
             <InputWrapper error={errors.pincode}>
               <Label>Pincode*</Label>
-              <TextInput
+              <NumberInput
                 placeholder="Enter Pincode"
                 control={control}
                 name="pincode"
-                error={errors.pincode}
-                type="number"
                 maxLength={6}
+                formatter={handleFormatter}
+                error={errors.pincode}
               />
               <ErrorMessage>{errors?.pincode?.message}</ErrorMessage>
             </InputWrapper>

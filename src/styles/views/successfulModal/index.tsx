@@ -371,6 +371,12 @@ export const OptionWrapper = styled.div`
     height: 20px;
   }
 `
+export const EditPinWrapper = styled.div`
+  input {
+    width: 200px;
+    height: 30px;
+  }
+`
 export const Options = styled.div`
   display: flex;
   justify-content: center;

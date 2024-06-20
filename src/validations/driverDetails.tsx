@@ -36,9 +36,16 @@ export const UPDATE_SCHEMA = Yup.object().shape({
 })
 export const DRIVER_UPDATE_SCHEMA = Yup.object().shape({
   status: Yup.string().required('Please select status'),
+  uploadImage: Yup.string(),
+  otp: Yup.string(),
+})
+
+export const DRIVER_UPDATE_SCHEMA_P2H2P = Yup.object().shape({
+  status: Yup.string().required('Please select status'),
   uploadImage: Yup.string().required('Attachment is required'),
   otp: Yup.string(),
 })
+
 export const PERSONAL_DETAILS_SCHEMA = Yup.object().shape({
   name: Yup.string()
     .required('Please enter name')

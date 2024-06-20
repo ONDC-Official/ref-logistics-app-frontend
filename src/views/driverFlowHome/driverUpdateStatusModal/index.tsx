@@ -5,7 +5,7 @@ import { message, Switch } from 'antd'
 import { AppContext } from 'context/payloadContext'
 import APIS from 'constants/api'
 import usePost from 'hooks/usePost'
-import { DRIVER_UPDATE_SCHEMA } from 'validations/driverDetails'
+import { DRIVER_UPDATE_SCHEMA, DRIVER_UPDATE_SCHEMA_P2H2P } from 'validations/driverDetails'
 import DragFile from 'components/Drag'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
@@ -47,14 +47,23 @@ const DriverUpdateStatusModal = ({
   const [isActive, setIsActive] = useState(true)
   const [viewModal, setViewModal] = useState(false)
   const [filePath, setFilePath] = useState('')
+  const [showChecklist, setShowChecklist] = useState(false)
   const [ispreview, setIsPreviewed] = useState<boolean>(false)
   const [distance, setDistance] = useState<number>(0)
   const { payloadData, setPayloadData } = useContext(AppContext)
+  const selectSchema =
+    task?.items[0]?.descriptor?.code === 'P2P'
+      ? DRIVER_UPDATE_SCHEMA
+      : ['Order-picked-up', 'In-transit'].includes(taskStatus[taskStatus?.length - 1]?.status)
+      ? DRIVER_UPDATE_SCHEMA
+      : DRIVER_UPDATE_SCHEMA_P2H2P
   const { mutateAsync } = usePost()
 
   const endPoints = task?.fulfillments[0]?.end?.location?.gps.split(',')
   const floatCoordinates = endPoints?.map((coord: string) => parseFloat(coord))
   const { userInfo } = useContext(AppContext)
+
+  const deliveryType = task && task?.fulfillments[task?.fulfillments.length - 1]?.type
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -76,31 +85,40 @@ const DriverUpdateStatusModal = ({
   } = useForm({
     mode: 'all',
     reValidateMode: 'onChange',
-    resolver: yupResolver(DRIVER_UPDATE_SCHEMA),
+    resolver: yupResolver(selectSchema),
   })
 
   const values = getValues()
   const submitData = async (data: any) => {
-    if (data?.status === 'Order-delivered' && isToggle) {
-      if (distance <= 100) {
-        toast.success('You are inside the delivery radius')
-      } else {
-        toast.error(
-          ` You are ${distance}m away from your delivery location. Please be with in 100m range to deliver your packet.`,
-        )
-        return
-      }
-    }
-
     const payload = {
       taskId: task._id,
       status: data?.status,
-      link: data?.uploadImage,
+      link: data.uploadImage,
       description: data?.description || '',
       agentId: userInfo?.agentId,
     }
 
     if (data) {
+      if (
+        task?.items[0]?.descriptor?.code === 'P2P' &&
+        !payload.link &&
+        ['Out-for-delivery', 'Order-delivered'].includes(payload?.status)
+      ) {
+        toast.error('Please upload Proof.')
+        return
+      }
+
+      if (data?.status === 'Order-delivered' && isToggle) {
+        if (distance <= 100) {
+          toast.success('You are inside the delivery radius')
+        } else {
+          toast.error(
+            ` You are ${distance}m away from your delivery location. Please be with in 100m range to deliver your packet.`,
+          )
+          return
+        }
+      }
+
       setPayloadData(payload)
       await mutateAsync({
         url: `${APIS.CREATE_TASK_STATUS}`,
@@ -111,18 +129,21 @@ const DriverUpdateStatusModal = ({
     showModal(false)
     getTask()
   }
-
-  const RTOFilterOption = [{ value: 'RTO-Delivered', label: 'RTO Delivered' }]
+  let RTOFilterOption = [{ value: 'RTO-Delivered', label: 'RTO Delivered' }]
+  const tags = task?.fulfillments[0]?.tags.filter((obj: any) => obj?.code === 'rto_action')
+  if (tags[0]?.list[0]?.value === 'no') {
+    RTOFilterOption = [{ value: 'RTO-Disposed', label: 'RTO Disposed' }]
+  }
 
   const index =
-    task.items[0]?.descriptor?.code === 'P2H2P'
-      ? p2h2pFilterOptions.findIndex((element) => {
-          if (element.value === taskStatus[taskStatus.length - 1]?.status) {
+    task?.items[0]?.descriptor?.code === 'P2H2P'
+      ? p2h2pFilterOptions?.findIndex((element) => {
+          if (element?.value === taskStatus[taskStatus?.length - 1]?.status) {
             return true
           }
         })
       : filterOptions.findIndex((element) => {
-          if (element.value === task?.status) {
+          if (element?.value === task?.status) {
             return true
           }
         })
@@ -209,27 +230,35 @@ const DriverUpdateStatusModal = ({
     }
     setViewModal(true)
     setFilePath(file.url)
-    handlePreview(file)
+    // handlePreview(file)
   }
 
-  const handlePreview = async (file: any) => {
-    if (!file.url && !file.preview) {
-      return
-    }
+  // const handlePreview = async (file: any) => {
+  //   if (!file.url && !file.preview) {
+  //     return
+  //   }
 
-    window.open(file?.url, '_blank')
-  }
+  //   window.open(file?.url)
+  // }
   const fileUrl = getValues('uploadImage')
 
   const handleSwitch = () => {
     if (isToggle) {
       setIsToggle(false)
+      toast.dismiss()
       toast.warn('Disabled 100 meter range delivery')
     } else {
       setIsToggle(true)
+      toast.dismiss()
       toast.success('Enabled 100 meter range delivery')
     }
   }
+
+  useEffect(() => {
+    if (values?.status === 'Order-picked-up' && deliveryType === 'Return') {
+      setShowChecklist(true)
+    }
+  }, [values?.status])
 
   return (
     <>
@@ -270,30 +299,56 @@ const DriverUpdateStatusModal = ({
                   <ErrorMessage>{errors?.status?.message}</ErrorMessage>
                 </TextWrapper>
               </InputWrapper>
-              {orderDetail !== 'delivered' && (
-                <InputWrapper error={false}>
-                  <Label>Upload Image (Attachment)*</Label>
-                  <TextWrapper>
-                    <DragFile name="uploadImage" Upload={Upload} dragData={dragData.photoUpload} />
-                    {payloadData?.uploadImage ? (
-                      <FileName>{payloadData?.uploadImage}</FileName>
-                    ) : (
-                      <FileWrapper>
-                        <FileName>{fileUrl}</FileName>
-                        {ispreview && (
-                          <div>
-                            <EyeIcon onClick={handlePreviewClick} />
-                            <DeleteIcon onClick={() => handleRemove('uploadImage')} />
-                          </div>
+              {task?.items[0]?.descriptor?.code !== 'P2P'
+                ? ['Order-picked-up', 'Out-for-pickup', 'Out-for-delivery', 'Order-delivered'].includes(
+                    orderDetail,
+                  ) && (
+                    <InputWrapper error={false}>
+                      <Label>Upload Image (Attachment)*</Label>
+                      <TextWrapper>
+                        <DragFile name="uploadImage" Upload={Upload} dragData={dragData?.photoUpload} />
+                        {payloadData?.uploadImage ? (
+                          <FileName>{payloadData?.uploadImage}</FileName>
+                        ) : (
+                          <FileWrapper>
+                            <FileName>{fileUrl}</FileName>
+                            {ispreview && (
+                              <div>
+                                <EyeIcon onClick={handlePreviewClick} />
+                                <DeleteIcon onClick={() => handleRemove('uploadImage')} />
+                              </div>
+                            )}
+                          </FileWrapper>
                         )}
-                      </FileWrapper>
-                    )}
-                    <ErrorMessage>{errors?.uploadImage?.message}</ErrorMessage>
-                  </TextWrapper>
-                </InputWrapper>
-              )}
+                        <ErrorMessage>{errors?.uploadImage?.message}</ErrorMessage>
+                      </TextWrapper>
+                    </InputWrapper>
+                  )
+                : ['Out-for-delivery', 'Order-delivered'].includes(orderDetail) && (
+                    <InputWrapper error={false}>
+                      <Label>Upload Image (Attachment)*</Label>
+                      <TextWrapper>
+                        <DragFile name="uploadImage" Upload={Upload} dragData={dragData?.photoUpload} />
+                        {payloadData?.uploadImage ? (
+                          <FileName>{payloadData?.uploadImage}</FileName>
+                        ) : (
+                          <FileWrapper>
+                            <FileName>{fileUrl}</FileName>
+                            {ispreview && (
+                              <div>
+                                <EyeIcon onClick={handlePreviewClick} />
+                                <DeleteIcon onClick={() => handleRemove('uploadImage')} />
+                              </div>
+                            )}
+                          </FileWrapper>
+                        )}
+                        <ErrorMessage>{errors?.uploadImage?.message}</ErrorMessage>
+                      </TextWrapper>
+                    </InputWrapper>
+                  )}
+
               {orderDetail === 'delivered' && (
-                <InputWrapper error={errors.otp}>
+                <InputWrapper error={errors?.otp}>
                   <Label>Enter OTP*</Label>
                   <TextWrapper>
                     <TextInput placeholder="0000" control={control} name="otp" />
@@ -311,6 +366,16 @@ const DriverUpdateStatusModal = ({
                     <ErrorMessage>{errors?.otp?.message}</ErrorMessage>
                   </TextWrapper>
                 </InputWrapper>
+              )}
+
+              {showChecklist && (
+                <a
+                  href={task?.fulfillments[0]?.start?.instructions?.additional_desc?.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <p>click the link below</p>
+                </a>
               )}
             </AddFormContainer>
             <SwitchContainer>

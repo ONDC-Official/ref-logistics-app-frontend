@@ -14,6 +14,7 @@ import { IParamId } from 'interfaces/pages'
 import APIS from 'constants/api'
 import TextInput from 'components/TextInput'
 import Spinner from 'components/Loader'
+import NumberInput from 'components/NumberInput'
 import SelectField from 'components/SelectField'
 import Button from 'components/Button'
 import CloseIcon from 'assets/svg/CloseIcon'
@@ -34,6 +35,7 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
   const { id }: IParamId = useParams()
   const [loader, setLoader] = useState(false)
   const [locality, setLocality] = useState([{}])
+  const [inputValue, setInputValue] = useState<string>('')
 
   const { mutateAsync } = usePost()
   const agentDetails = singleDriverDetail?.data?.agentDetails
@@ -128,10 +130,10 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
   }, [agentDetails])
 
   useEffect(() => {
-    if (pincode?.length === 6) {
+    if (inputValue?.length === 6) {
       getAddressDetails()
     }
-  }, [pincode])
+  }, [inputValue])
 
   const localities = []
 
@@ -213,7 +215,7 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
 
   const deliveryMethods = [
     { value: 'Express Delivery', label: 'Express Delivery' },
-    { value: 'Standard Delivery', label: 'Standard Delivery' },
+    // { value: 'Standard Delivery', label: 'Standard Delivery' },
     { value: 'Immediate Delivery', label: 'Immediate Delivery' },
     { value: 'Same Day Delivery', label: 'Same Day Delivery' },
     { value: 'Next Day Delivery', label: 'Next Day Delivery' },
@@ -226,6 +228,17 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
   // Disable years in the future
   const disabledDate = (current: { year: () => number }) => {
     return current && current.year() > moment().year()
+  }
+
+  const handleFormatter = (value: any) => {
+    const numericValue = value.replace(/[e.+\\-]/g, '')
+    setInputValue(value)
+
+    if (numericValue.length > 6) {
+      return numericValue.slice(0, 6)
+    }
+
+    return numericValue
   }
 
   return (
@@ -285,13 +298,13 @@ const UpdateDriverModal = ({ showModal, singleDriverDetail, getDriverDetails }: 
                 </InputWrapper>
                 <InputWrapper error={errors.pincode}>
                   <Label>Pincode*</Label>
-                  <TextInput
+                  <NumberInput
                     placeholder="Enter Pincode"
                     control={control}
                     name="pincode"
-                    error={errors.pincode}
-                    type="number"
                     maxLength={6}
+                    formatter={handleFormatter}
+                    error={errors.pincode}
                   />
                   <ErrorMessage>{errors?.pincode?.message}</ErrorMessage>
                 </InputWrapper>

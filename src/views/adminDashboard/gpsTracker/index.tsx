@@ -5,7 +5,7 @@ import moment from 'moment'
 import useGet from 'hooks/useGet'
 import APIS from 'constants/api'
 import LiveTrackingMap from 'components/MapComponent/liveTracking'
-import { MapWrapper } from 'styles/pages/gpsTracker'
+import { ButtonWrapper, MapWrapper } from 'styles/pages/gpsTracker'
 import {
   OrderMainWrapper,
   MainWrapper,
@@ -18,11 +18,14 @@ import {
   AddressDetail,
   OrderDetailWrapper,
   LocationOrderDetailWrapper,
-  // ItemsWrapper,
+  OrderDetailHeadWrapper,
 } from 'styles/views/adminDashboard/gpsTracker'
 import { TaskStatusWrapper } from 'styles/views/adminDashboard/tableDescription'
+import Button from 'components/Button'
+import { useHistory } from 'react-router-dom'
 
 const OrderDetail = ({ details }: any) => {
+  const history = useHistory()
   const assigneeId = details?.data?.task?.assignee?._id
   const startDuration = moment.duration(details?.data?.task?.fulfillments[0]?.start?.time?.duration)
   const formattedStartTime = moment.utc(startDuration.asMilliseconds()).format('hh:mm a')
@@ -76,7 +79,7 @@ const OrderDetail = ({ details }: any) => {
 
   function addValues(newVal: any) {
     const sum = newVal?.reduce((total: any, item: any) => {
-      const value = parseInt(item?.price?.value)
+      const value = parseInt(item?.price?.value) * item?.quantity?.count
       if (!isNaN(value)) {
         total += value
       }
@@ -88,19 +91,59 @@ const OrderDetail = ({ details }: any) => {
   }
 
   const totalPrice = addValues(details?.data?.task?.linked_order?.items)
+  const test = details?.data?.task?.fulfillments
+  const type = details?.data?.task?.fulfillments[test?.length - 1]?.type
+
+  const getTatDuration = (isoDuration: string) => {
+    if (isoDuration) {
+      const duration = moment.duration(isoDuration)
+      const days = duration.days()
+      const hours = duration.hours()
+      const minutes = duration.minutes()
+
+      return (
+        <DataWrapper>
+          <Title>Turn Around Time</Title>
+          {days !== 0 ? <p>Days: {days}</p> : hours !== 0 ? <p>Hours: {hours}</p> : <p>Minutes: {minutes}</p>}
+        </DataWrapper>
+      )
+    }
+  }
 
   return (
     <MainWrapper>
       <OrderMainWrapper style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
         <MainWrapper>
           <OrderDetailWrapper>
-            <Heading>Order Details</Heading>
+            <OrderDetailHeadWrapper>
+              <Heading>Order Details</Heading>
+              {/* <ButtonWrapper>
+                <Button
+                  type="button"
+                  label="See Logs"
+                  variant="outline"
+                  onClick={() => history.push(`/request-log/${details?.data?.task?.transaction_id}`)}
+                />
+              </ButtonWrapper> */}
+            </OrderDetailHeadWrapper>
             <DataWrapper>
-              <Title>Order ID</Title> <Detail>{details?.data?.task?._id}</Detail>
+              <Title>Order ID</Title> <Detail>{details?.data?.task?.linked_order?.order?.id}</Detail>
+            </DataWrapper>
+            <DataWrapper>
+              <Title>Order Type</Title>
+              <Detail>{type === 'Prepaid' ? 'Delivery' : type === 'Reverse QC' ? 'Return' : type}</Detail>
+            </DataWrapper>
+            <DataWrapper>
+              <Title>Seller Name</Title>
+              <Detail>{details?.data?.task?.billing?.name}</Detail>
             </DataWrapper>
             <DataWrapper>
               <Title>Status</Title>
               <TaskStatusWrapper status={details?.data?.task?.status}>{details?.data?.task?.status}</TaskStatusWrapper>
+            </DataWrapper>
+            <DataWrapper>
+              <Title>Payment</Title>
+              <Detail>{details?.data?.task?.payment?.type}</Detail>
             </DataWrapper>
             <DetailContainer>
               <DataWrapper>
@@ -109,28 +152,14 @@ const OrderDetail = ({ details }: any) => {
                   {moment(details?.data?.task?.createdAt).format('DD MMM YYYY')} ({formattedStartTime})
                 </Detail>
               </DataWrapper>
+              <DataWrapper>
+                <Detail>
+                  {getTatDuration(details?.data?.task?.items[0]?.time?.duration)}
+                  {/* {moment.duration(details?.data?.task?.items[0]?.time?.duration).asMinutes()} */}
+                </Detail>
+              </DataWrapper>
             </DetailContainer>
-            {/* <DetailContainer> */}
-            {/* {details?.data?.task?.linked_order?.items?.map((item: any) => {
-              return (
-                <ItemsWrapper key={item._id}>
-                  <DataWrapper>
-                    <Title>Items Name</Title>
-                    <Detail>{item?.descriptor?.name}</Detail>
-                  </DataWrapper>
-                  <DataWrapper>
-                    <Title>Items Price</Title>{' '}
-                    <Detail>
-                      {item?.price?.value} {item?.price?.currency}
-                    </Detail>
-                  </DataWrapper>
-                  <DataWrapper>
-                    <Title>Quantity</Title>
-                    <Detail>{item?.quantity?.count}</Detail>
-                  </DataWrapper>
-                </ItemsWrapper>
-              )
-            })} */}
+
             <TableWrapper>
               <Table
                 columns={columns}
@@ -150,23 +179,6 @@ const OrderDetail = ({ details }: any) => {
                   }),
                 )}
                 pagination={false}
-                // dataSource={details?.data?.task?.linked_order?.items}
-                // locale={{ emptyText: <NoRecords /> }}
-                // pagination={
-                //   totalCount > 5 && {
-                //     pageSizeOptions: ['5', '10', '20'],
-                //     showSizeChanger: true,
-                //     locale: { items_per_page: 'Records Per Page' },
-                //     current: Math.ceil(currentPage / pageSize) + 1,
-                //     pageSize: pageSize,
-                //     total: totalCount,
-                //     onChange: (currentPage, pageSize) => {
-                //       const newSkipValue = (currentPage - 1) * pageSize
-                //       setCurrentPage(newSkipValue)
-                //       setPageSize(pageSize)
-                //     },
-                //   }
-                // }
                 size="middle"
                 tableLayout="auto"
               />
@@ -180,6 +192,16 @@ const OrderDetail = ({ details }: any) => {
               </DataWrapper>
               <DataWrapper>
                 <Title>Total Number of Items</Title> <Detail>{details?.data?.task?.linked_order?.items?.length}</Detail>
+              </DataWrapper>
+              <DataWrapper>
+                <Title>Weight</Title>{' '}
+                <Detail>
+                  {details?.data?.task?.linked_order?.order?.weight?.value}
+                  {details?.data?.task?.linked_order?.order?.weight?.unit === 'kilogram' ||
+                    details?.data?.task?.linked_order?.order?.weight?.unit === 'Kilogram'
+                    ? 'kg'
+                    : details?.data?.task?.linked_order?.order?.weight?.unit}
+                </Detail>
               </DataWrapper>
             </DetailContainer>
           </OrderDetailWrapper>
@@ -202,6 +224,7 @@ const OrderDetail = ({ details }: any) => {
         </MainWrapper>
 
         <MapWrapper>
+          {/* <MapOrderComponent taskStartPoints={orderStartPoint} taskEndPoints={orderEndPoint} /> */}
           <LiveTrackingMap liveAgentTracking={agentLiveCoordinates?.data} taskDetails={details} />
         </MapWrapper>
       </OrderMainWrapper>
@@ -209,16 +232,13 @@ const OrderDetail = ({ details }: any) => {
         <LocationOrderDetailWrapper>
           <Heading>Pick-Up Location</Heading>
           <DataWrapper>
-            <Title>Person Name</Title> <Detail>{details?.data?.task?.fulfillments[0]?.start?.person?.name}</Detail>
+            <Title>Store Name</Title> <Detail>{details?.data?.task?.fulfillments[0]?.start?.person?.name}</Detail>
           </DataWrapper>
-          {/* <DataWrapper>
-            <Title>Person Mobile Number</Title>
-            <Detail>{details?.data?.task?.fulfillments[0]?.start?.contact?.phone}</Detail>
-          </DataWrapper> */}
+
           <DataWrapper>
             <Title>Address</Title>
             <AddressDetail>
-              {details?.data?.task?.fulfillments[0]?.start?.location?.address?.store}
+              {details?.data?.task?.fulfillments[0]?.start?.location?.address?.name},
               {details?.data?.task?.fulfillments[0]?.start?.location?.address?.building},<br />
               {details?.data?.task?.fulfillments[0]?.start?.location?.address?.city},
               {details?.data?.task?.fulfillments[0]?.start?.location?.address?.state},
@@ -233,14 +253,11 @@ const OrderDetail = ({ details }: any) => {
           <DataWrapper>
             <Title>Person Name</Title> <Detail>{details?.data?.task?.fulfillments[0]?.end?.person?.name}</Detail>
           </DataWrapper>
-          {/* <DataWrapper>
-            <Title>Person Mobile Number</Title>
-            <Detail>{details?.data?.task?.fulfillments[0]?.end?.contact?.phone}</Detail>
-          </DataWrapper> */}
+
           <DataWrapper>
             <Title>Address</Title>
             <AddressDetail>
-              {details?.data?.task?.fulfillments[0]?.end?.location?.address?.store}
+              {details?.data?.task?.fulfillments[0]?.end?.location?.address?.name},
               {details?.data?.task?.fulfillments[0]?.end?.location?.address?.building},<br />
               {details?.data?.task?.fulfillments[0]?.end?.location?.address?.city},
               {details?.data?.task?.fulfillments[0]?.end?.location?.address?.state},
@@ -262,10 +279,10 @@ const OrderDetail = ({ details }: any) => {
                 {details?.data?.task?.fulfillments[0]?.start?.instructions?.code === '1'
                   ? 'buyer contact no (for self-pickup)'
                   : details?.data?.task?.fulfillments[0]?.start?.instructions?.code === '2'
-                  ? 'merchant order no'
-                  : details?.data?.task?.fulfillments[0]?.start?.instructions?.code === '4'
-                  ? 'other pickup confirmation code'
-                  : 'OTP'}
+                    ? 'merchant order no'
+                    : details?.data?.task?.fulfillments[0]?.start?.instructions?.code === '4'
+                      ? 'other pickup confirmation code'
+                      : 'OTP'}
               </span>
               <br />
               Short Description: <span>{details?.data?.task?.fulfillments[0]?.start?.instructions?.short_desc}</span>
@@ -289,8 +306,8 @@ const OrderDetail = ({ details }: any) => {
                 {details?.data?.task?.fulfillments[0]?.end?.instructions?.code === '1'
                   ? 'OTP'
                   : details?.data?.task?.fulfillments[0]?.end?.instructions?.code === '2'
-                  ? 'other DCC'
-                  : 'no delivery code'}{' '}
+                    ? 'other DCC'
+                    : 'no delivery code'}{' '}
               </span>
               <br />
               Short Description:

@@ -30,7 +30,7 @@ import {
   ButtonContainer,
   ErrorMessageWrapper,
 } from 'styles/views/inviteAgentScreen/agentDetailSection'
-import { ErrorMessage } from 'styles/views/signin'
+import { ErrorMessage, UploadedFileName } from 'styles/views/signin'
 
 const KYCDocuments = ({ next }: IKYCDetailsProps) => {
   const [ispreview, setIsPreviewed] = useState<{ [key: string]: boolean }>({})
@@ -162,6 +162,12 @@ const KYCDocuments = ({ next }: IKYCDetailsProps) => {
     }))
   }
 
+  const showFileName = (fileUrl: any) => {
+    const parts = fileUrl.split('/')
+    const fileName = parts[parts.length - 1]
+    return fileName
+  }
+
   return (
     <>
       <AgentDetailWrapper>
@@ -191,6 +197,7 @@ const KYCDocuments = ({ next }: IKYCDetailsProps) => {
                       <OptionWrapper>
                         <EyeIcon onClick={() => handlePreviewClick(item?.name)} />
                         <DeleteIcon onClick={() => handleRemove(item?.name)} />
+                        <UploadedFileName>{showFileName(values?.[item?.name])}</UploadedFileName>
                       </OptionWrapper>
                     ) : null}
                   </UploadContainer>

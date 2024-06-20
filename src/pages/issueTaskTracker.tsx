@@ -6,7 +6,6 @@ import useGet from 'hooks/useGet'
 import APIS from 'constants/api'
 import Modal from 'components/Modal'
 import AdminPrivateLayout from 'components/Layouts/adminPrivateLayout'
-import MapComponent from 'components/MapComponent/index'
 import UpdateStatus from 'views/updateModal'
 import OrderDetail from 'views/adminDashboard/gpsTracker'
 import {
@@ -16,7 +15,6 @@ import {
   MainHeading,
   DetailContainer,
   DetailSection,
-  MapWrapper,
 } from 'styles/pages/gpsTracker'
 
 const GPSIssueTracker = () => {
@@ -55,9 +53,6 @@ const GPSIssueTracker = () => {
         <DetailContainer>
           <DetailSection>
             <OrderDetail details={trackIssue} />
-            <MapWrapper>
-              <MapComponent />
-            </MapWrapper>
           </DetailSection>
         </DetailContainer>
       </MainWrapper>

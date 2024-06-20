@@ -15,6 +15,7 @@ import DeleteHubModal from 'views/deleteHubModal'
 import HubStatusModal from 'views/hubStatusModal'
 
 const HubsData = ({
+  scroll,
   hubsDetails,
   getHubs,
   totalCount,
@@ -189,6 +190,7 @@ const HubsData = ({
             },
           }
         }
+        scroll={{ x: 900, y: scroll === undefined ? 250 : scroll }}
         size="middle"
         tableLayout="auto"
       />
@@ -216,7 +218,7 @@ const HubsData = ({
           showModal={(value: boolean) => setHubStatusModal(value)}
           id={hubId}
           title={value === 'Active' ? 'Active' : 'Inactive'}
-          subTitle={value === 'Active' ? 'Activate' : 'Inactivate'}
+          subTitle={value === 'Active' ? 'activate' : 'inactivate'}
           value={value === 'Active' ? 'Active' : 'Inactive'}
           singleHubDetail={() => {
             getHubs()

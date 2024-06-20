@@ -81,21 +81,24 @@ const AssignTasksModal = ({ showModal, activeTask, refetchTask }: IAssignModalPr
   }
 
   const submitData = async () => {
-    if (driversData.length !== 0) {
-      if (checkedDriver != null) {
-        await mutateAsync({
-          url: `${APIS.ASSIGNE_AGENT}`,
-          payload: {
-            taskId: activeTask,
-            agentId: checkedDriver,
-          },
-        })
-      } else {
-        toast.dismiss()
-        toast.error('Please Select Driver')
+    try {
+      if (driversData.length !== 0) {
+        if (checkedDriver != null) {
+          const res = await mutateAsync({
+            url: `${APIS.ASSIGNE_AGENT}`,
+            payload: {
+              taskId: activeTask,
+              agentId: checkedDriver,
+            },
+          })
+          if (res) refetchTask()
+        } else {
+          toast.dismiss()
+          toast.error('Please Select Driver')
+        }
       }
-
-      refetchTask()
+    } catch (err) {
+      err
     }
   }
 
@@ -111,7 +114,7 @@ const AssignTasksModal = ({ showModal, activeTask, refetchTask }: IAssignModalPr
             <Label>Pick up Location</Label>
             <TextWrapper>
               <TextInput
-                placeholder={`${data?.data?.task?.fulfillments[0]?.start?.location?.address?.name}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.city}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.state}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.area_code}`}
+                placeholder={`${data?.data?.task?.fulfillments[0]?.start?.location?.address?.name},${data?.data?.task?.fulfillments[0]?.start?.location?.address?.building}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.city}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.state}, ${data?.data?.task?.fulfillments[0]?.start?.location?.address?.area_code}`}
                 control={control}
                 name="pickUpLocation"
                 disabled
@@ -122,7 +125,7 @@ const AssignTasksModal = ({ showModal, activeTask, refetchTask }: IAssignModalPr
             <Label>Delivery Location</Label>
             <TextWrapper>
               <TextInput
-                placeholder={`${data?.data?.task?.fulfillments[0]?.end?.location?.address?.name}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.city}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.state}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.area_code}`}
+                placeholder={`${data?.data?.task?.fulfillments[0]?.end?.location?.address?.name},${data?.data?.task?.fulfillments[0]?.end?.location?.address?.building}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.city}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.state}, ${data?.data?.task?.fulfillments[0]?.end?.location?.address?.area_code}`}
                 control={control}
                 name="deliveryLocation"
                 disabled

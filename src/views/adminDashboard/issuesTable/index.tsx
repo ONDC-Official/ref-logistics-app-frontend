@@ -154,6 +154,19 @@ const IssuesTable = ({
       },
     },
     {
+      title: 'Modified At',
+      dataIndex: 'updated_at',
+      width: 100,
+      key: 'updated_at',
+      render: (data) => {
+        const inputDateTime = data
+        const outputFormat = 'DD MMM YYYY h:mma'
+        const convertedDateTime = moment(inputDateTime).format(outputFormat)
+
+        return <LocationWrapper>{convertedDateTime}</LocationWrapper>
+      },
+    },
+    {
       title: 'Status',
       dataIndex: 'status',
       width: 100,
@@ -164,6 +177,7 @@ const IssuesTable = ({
         }
       },
     },
+
     {
       title: 'Action',
       dataIndex: '_id',

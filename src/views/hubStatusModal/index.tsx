@@ -36,7 +36,7 @@ const HubStatusModal = ({ showModal, singleHubDetail, value, id, title, subTitle
       <ContentContainer>
         <ContentWrapper>
           <HeadingWrapper>{title} Hub</HeadingWrapper>
-          <Description>Are you sure you want to {subTitle} hub?</Description>
+          <Description>Are you sure you want to {subTitle?.toLocaleLowerCase()} hub?</Description>
         </ContentWrapper>
         <ButtonWrap>
           <Button label="No" variant="contained" onClick={() => showModal(false)} className="cancel" />

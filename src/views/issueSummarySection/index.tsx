@@ -11,7 +11,7 @@ import ActionStepper from 'views/issueSummarySection/actionStepper'
 import { IParamId } from 'interfaces/pages'
 import BadFeedbackIcon from 'assets/svg/BadFeedbackIcon'
 import GoodFeedbackIcon from 'assets/svg/GoodFeedbackIcon'
-
+import NoImageFound from 'assets/images/no-image-found.png'
 import {
   IssueSummaryContainer,
   IssueDetailsWrapper,
@@ -35,9 +35,9 @@ import {
   DescriptionHeading,
   Description,
   ActionTakenDetails,
-  // ImageWrapper,
+  ImageWrapper,
 } from 'styles/views/issueSummarySection'
-// import { OrderImageWrapper } from 'styles/views/orderTracking'
+import { OrderImageWrapper } from 'styles/views/orderTracking'
 
 const IssueSummarySection = () => {
   const [actionModal, setActionModal] = useState(false)
@@ -66,7 +66,6 @@ const IssueSummarySection = () => {
           <ButtonWrapper>
             {singleIssueDetail?.data?.issue?.status === 'CLOSED' && (
               <>
-                {' '}
                 {singleIssueDetail?.data?.issue?.rating === 'THUMBS-DOWN' ? (
                   <FeedBackWrapper>
                     <BadFeedbackIcon />
@@ -153,14 +152,28 @@ const IssueSummarySection = () => {
             <DescriptionHeading>Long Description</DescriptionHeading>
             <Description>{singleIssueDetail?.data?.issue?.description?.long_desc}</Description>
           </OrderDescription>
-          {/* ----need this */}
-          {/* <ImageWrapper>
-            {singleIssueDetail?.data?.issue?.description?.images?.map((imageUrl: string[], index: number) => (
-              <OrderImageWrapper key={index}>
-                <img src={imageUrl} alt="product-image" />
-              </OrderImageWrapper>
-            ))}
-          </ImageWrapper> */}
+          <OrderDescription>
+            <DescriptionHeading>Attachments</DescriptionHeading>
+            <ImageWrapper>
+              {singleIssueDetail?.data?.issue?.description?.images.length > 0 ? (
+                singleIssueDetail?.data?.issue?.description?.images?.map((imageUrl: string, index: number) => {
+                  return (
+                    <OrderImageWrapper key={index}>
+                      <img
+                        src={imageUrl}
+                        alt="product-image"
+                        onError={(e: any) => {
+                          e.target.src = NoImageFound
+                        }}
+                      />
+                    </OrderImageWrapper>
+                  )
+                })
+              ) : (
+                <Description>No Attachments</Description>
+              )}
+            </ImageWrapper>
+          </OrderDescription>
         </OrderDetails>
         {/* <OrderDetails>
           <CustomerHeading>Resolution</CustomerHeading>

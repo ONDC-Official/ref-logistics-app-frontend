@@ -48,6 +48,8 @@ const DriverAllTasks = ({ data, isActive }: IDriverDataData) => {
     setHeight(window.innerHeight)
   }, [])
 
+  // console.log('data', data?.data?.tasks)
+
   return (
     <div>
       {!isActive ? (
@@ -58,7 +60,7 @@ const DriverAllTasks = ({ data, isActive }: IDriverDataData) => {
         <AssignedTaskContainer>
           {data?.data?.tasks.map((item: any, index: number) => {
             let fulfillment: any = {}
-            if (item?.items[0]?.category_id === 'Express Delivery') {
+            if (item?.items[0]?.descriptor?.code === 'P2H2P') {
               fulfillment = item?.otherFulfillments?.find((i: any) => i?.assignee === userInfo?.agentId)
             } else {
               fulfillment = item?.fulfillments[0]
@@ -84,19 +86,11 @@ const DriverAllTasks = ({ data, isActive }: IDriverDataData) => {
                 >
                   <OrderWrapper>
                     <NameWrapper>
-                      <OrderName>{item?.items[0]?.category_id}</OrderName>
-                      {size < 400 && (
-                        <OrderNumber>
-                          {item?._id?.length > 17 ? `${item?._id?.slice(0, 4)}... ${item?._id?.slice(-8)}` : item?._id}
-                          <span>{moment(`${item?.createdAt}`).fromNow()}</span>
-                        </OrderNumber>
-                      )}
-                      {size > 400 && (
-                        <OrderNumber>
-                          {item?.task_id.toUpperCase().substring(0, 8)}
-                          <span>{moment(`${item?.createdAt}`).fromNow()}</span>
-                        </OrderNumber>
-                      )}
+                      <OrderName>{item?.items[0]?.category_id} </OrderName>
+                      <OrderNumber>
+                        {item?.linked_order?.order?.id}
+                        <span>{moment(`${item?.createdAt}`).fromNow()}</span>
+                      </OrderNumber>
                     </NameWrapper>
                     <Status status={item?.status}>{item?.status}</Status>
                   </OrderWrapper>

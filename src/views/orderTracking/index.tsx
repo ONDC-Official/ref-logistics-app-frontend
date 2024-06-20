@@ -23,22 +23,18 @@ import { TaskStatusWrapper } from 'styles/views/adminDashboard/tableDescription'
 import Button from 'components/Button'
 import Modal from 'components/Modal'
 import LiveTrackingModal from 'views/liveTrackingmModal'
+import { useHistory } from 'react-router-dom'
 
 const OrderTracking: React.FC<IOrderTrackingProps> = ({ trackingDetails }) => {
   const [open, setOpen] = useState(false)
+
+  const router = useHistory()
+
   const TaskBreadcrumb: React.FC = () => (
-    <Breadcrumb
-      separator=">"
-      items={[
-        {
-          title: 'Order',
-          href: '/dashboard',
-        },
-        {
-          title: 'Order-Tracking',
-        },
-      ]}
-    />
+    <Breadcrumb separator=">">
+      <Breadcrumb.Item onClick={() => router.goBack()}>Order</Breadcrumb.Item>
+      <Breadcrumb.Item>Order-Tracking</Breadcrumb.Item>
+    </Breadcrumb>
   )
 
   const details = trackingDetails?.data?.taskStatus

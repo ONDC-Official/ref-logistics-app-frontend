@@ -123,38 +123,46 @@ const DRIVER_DETAIL_SCHEMA = Yup.object().shape({
     .max(35, 'Experience cannot be greater than 35')
     .required('Experience is required'),
   building: Yup.string().required('Please enter the building'),
-  pincode: Yup.string()
-    .required('Please enter the pincode')
-    .matches(/^\d{6,6}$/, 'A valid pincode is required'),
+  pincode: Yup.number().required('Please enter the pincode').typeError('This field cannot be empty.'),
   city: Yup.string(),
   state: Yup.string(),
   locality: Yup.string().required('Please select the locality'),
 })
+
 const HUBS_DETAIL_SCHEMA = Yup.object().shape({
+  name: Yup.string()
+    .required('Please enter the hub name')
+    .matches(/^(?! )[a-zA-Z ]+$/, 'This field only accepts alphabetical characters'),
+  building: Yup.string().required('Please enter the building'),
+  pincode: Yup.number().required('Please enter the pincode').typeError('This field cannot be empty.'),
+  serviceablePincode: Yup.number()
+    .required('Please enter the serviceable pincode')
+    .typeError('This field cannot be empty.'),
+  city: Yup.string(),
+  state: Yup.string(),
+  locality: Yup.string().required('Please select the locality'),
+})
+
+const HUBS_UPDATE_SCHEMA = Yup.object().shape({
   name: Yup.string()
     .required('Please enter the hub name')
     .matches(/^(?! )[a-zA-Z ]+$/, 'This field only accepts alphabetical characters'),
 
   building: Yup.string().required('Please enter the building'),
-  pincode: Yup.string()
-    .required('Please enter the pincode')
-    .matches(/^\d{6,6}$/, 'A valid pincode is required'),
-  serviceablePincode: Yup.string()
+  pincode: Yup.number().required('Please enter the pincode').typeError('This field cannot be empty.'),
+  serviceablePincode: Yup.number()
     .required('Please enter the serviceable pincode')
-    .matches(/^\d{6,6}$/, 'A valid pincode is required'),
-
+    .typeError('This field cannot be empty.'),
   city: Yup.string(),
   state: Yup.string(),
   locality: Yup.string().required('Please select the locality'),
 })
 
 export const PIN_ACTION_SCHEMA = Yup.object().shape({
-  pincode: Yup.string()
-    .required('Please enter the pincode')
-    .matches(/^\d{6,6}$/, 'A valid pincode is required'),
+  pincode: Yup.number().required('Please enter the pincode').typeError('This field cannot be empty.'),
 })
 export const CANCEL_ACTION_SCHEMA = Yup.object().shape({
-  description: Yup.string().required('Please Select Reason for Cancellation'),
+  description: Yup.string().required('Please select reason for cancellation'),
 })
 export const UPDATE_DRIVER_DETAIL_SCHEMA = Yup.object().shape({
   firstName: Yup.string()
@@ -182,9 +190,7 @@ export const UPDATE_DRIVER_DETAIL_SCHEMA = Yup.object().shape({
   bankName: Yup.string().required('Please enter the bank name'),
   branchName: Yup.string().required('Please enter the branch name'),
   building: Yup.string().required('Please enter the building'),
-  pincode: Yup.string()
-    .required('Please enter the pincode')
-    .matches(/^\d{6,6}$/, 'A valid pincode is required'),
+  pincode: Yup.number().required('Please enter the pincode').typeError('This field cannot be empty.'),
   city: Yup.string(),
   state: Yup.string(),
   locality: Yup.string().required('Please select the locality'),
@@ -194,9 +200,9 @@ export const UPDATE_DRIVER_DETAIL_SCHEMA = Yup.object().shape({
   makeYear: Yup.string().required('Make Year is required'),
   weight: Yup.number()
     .typeError('Please enter the max. weight capacity')
-    .required('Weight is required')
+    .required('Max. weight capacity is required')
     .max(1000, 'Weight cannot be greater than 1000'),
   deliveryType: Yup.array().nullable().of(Yup.string()).required('Please select the delivery methods'),
 })
 
-export { DRIVER_DETAIL_SCHEMA, HUBS_DETAIL_SCHEMA }
+export { DRIVER_DETAIL_SCHEMA, HUBS_DETAIL_SCHEMA, HUBS_UPDATE_SCHEMA }

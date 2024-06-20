@@ -128,7 +128,7 @@ const VehicleDetails = ({ next, showModal }: VehicleDetailsProps) => {
 
   const deliveryMethods = [
     { value: 'Express Delivery', label: 'Express Delivery' },
-    { value: 'Standard Delivery', label: 'Standard Delivery' },
+    // { value: 'Standard Delivery', label: 'Standard Delivery' },
     { value: 'Immediate Delivery', label: 'Immediate Delivery' },
     { value: 'Same Day Delivery', label: 'Same Day Delivery' },
     { value: 'Next Day Delivery', label: 'Next Day Delivery' },

@@ -159,6 +159,7 @@ export const Description = styled.div`
 export const ImageWrapper = styled.div`
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 `
 export const ActionTakenDetails = styled.div`
   display: flex;

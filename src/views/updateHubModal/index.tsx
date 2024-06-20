@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { toast, ToastContainer } from 'react-toastify'
-// import { CloseCircleOutlined } from '@ant-design/icons'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import usePost from 'hooks/usePost'
 import useFormPost from 'hooks/useFormPost'
-import { HUBS_DETAIL_SCHEMA } from 'validations/agentDetailsValidation'
+import { HUBS_UPDATE_SCHEMA } from 'validations/agentDetailsValidation'
 import APIS from 'constants/api'
+import NumberInput from 'components/NumberInput'
 import TextInput from 'components/TextInput'
 import Button from 'components/Button'
 import HubMapComponent from 'components/MapComponent/hubMap'
@@ -36,8 +37,12 @@ import { LocationWrapper, Title } from 'styles/views/inviteAgentScreen/driverDet
 const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalProps) => {
   const [loader, setLoader] = useState(false)
   const [locality, setLocality] = useState([{}])
-  // const [inputValue, setInputValue] = useState<string>('')
-  // const [myArray, setMyArray] = useState<number[]>([])
+  const [inputValue, setInputValue] = useState<string>('')
+  const [isValidPincode, setisValidPincode] = useState(true)
+  const [servicableInputValue, setServicableInputValue] = useState<string>('')
+  const [dragPincode, setDragPincode] = useState('')
+  const [updatedServiceablePincodes, setUpdatedServiceablePincodes] = useState<number[]>([])
+  dragPincode
 
   const {
     handleSubmit,
@@ -49,7 +54,7 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
   } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
-    resolver: yupResolver(HUBS_DETAIL_SCHEMA),
+    resolver: yupResolver(HUBS_UPDATE_SCHEMA),
     defaultValues: {
       name: `${hubDetails?.name}`,
       building: `${hubDetails?.addressDetails?.building}`,
@@ -64,7 +69,7 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
 
   const { mutateAsync } = usePost()
 
-  const { pincode, city } = watch()
+  const { pincode, city, serviceablePincode } = watch()
 
   const getAddressDetails = async () => {
     try {
@@ -98,11 +103,41 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
     }
   }
 
+  const getPinDetails = async () => {
+    try {
+      setLoader(true)
+      const response = await axios.get(`https://api.postalpincode.in/pincode/${serviceablePincode}`)
+      if (response.data[0]?.Status === 'Error') {
+        toast.dismiss()
+        toast.error('Invalid Pin code')
+        setLoader(false)
+        setisValidPincode(true)
+      } else if (response.data && response.data[0] && response.data[0].PostOffice) {
+        setLoader(false)
+        setisValidPincode(false)
+      }
+    } catch (err: any) {
+      toast.dismiss()
+      toast.error(`${err.response.data.error}`)
+    }
+  }
+
   useEffect(() => {
-    if (pincode?.length === 6) {
+    setUpdatedServiceablePincodes(hubDetails?.serviceablePincode)
+  }, [])
+
+  useEffect(() => {
+    if (inputValue?.length === 6) {
       getAddressDetails()
     }
-  }, [pincode])
+  }, [inputValue])
+
+  useEffect(() => {
+    if (servicableInputValue?.length === 6) {
+      getPinDetails()
+    }
+  }, [servicableInputValue])
+
   const localities = []
 
   for (let i = 0; i < locality.length; i++) {
@@ -114,7 +149,7 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
 
   const submitData = async (data: IHubsDetails) => {
     const payload: any = {
-      ...hubDetails,
+      status: hubDetails?.status,
       addressDetails: {
         location: {
           coordinates: [30.733315, 76.779419],
@@ -124,14 +159,14 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
         city: data?.city,
         state: data?.state,
         country: data?.country,
-        pincode: data?.pincode,
+        pincode: data?.pincode.toString(),
       },
       name: data?.name,
-      serviceablePincode: data?.serviceablePincode,
+      serviceablePincode: updatedServiceablePincodes,
 
-      currentLocation: {
-        coordinates: [30.733315, 76.779419],
-      },
+      // currentLocation: {
+      //   coordinates: [30.733315, 76.779419],
+      // },
     }
     const res = await mutateAsync({
       url: `${APIS.UPDATE_HUB}/${id}`,
@@ -143,29 +178,43 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
     }
   }
 
-  // const onAddPincodes = () => {
-  //   const newValue = parseInt(inputValue)
-  //   if (!isNaN(newValue)) {
-  //     const updatedArray = [...myArray, newValue]
-  //     setMyArray(updatedArray)
-  //   }
+  const onAddPincodes = () => {
+    const newValue = parseInt(inputValue)
 
-  //   setInputValue('')
-  // }
+    // Check if the entered value is a valid 6-digit number
+    if (!isNaN(newValue) && inputValue.length === 6) {
+      if (!updatedServiceablePincodes.includes(newValue)) {
+        const updatedArray = [...updatedServiceablePincodes, newValue]
+        setUpdatedServiceablePincodes(updatedArray)
+        setInputValue('')
+      } else {
+        toast.error('Pincode already exists.')
+      }
+    }
+  }
 
-  // const handleInputChange = (e: any) => {
-  //   setInputValue(e.target.value)
-  // }
-
-  // function handleDeleteItem(index: any) {
-  //   getHubs()
-  //   const updatedPincodes = [...myArray]
-  //   updatedPincodes.splice(index, 1)
-  //   setMyArray(updatedPincodes)
-  // }
+  function handleDeleteItem(index: any) {
+    getHubs()
+    const updatedPincodes = [...updatedServiceablePincodes]
+    updatedPincodes.splice(index, 1)
+    setUpdatedServiceablePincodes(updatedPincodes)
+  }
 
   const formPost = useFormPost()
   formPost
+
+  const handleFormatter = (value: any) => {
+    setInputValue(value)
+    const numericValue = value.replace(/[e.+\\-]/g, '')
+    if (pincode) setInputValue(value)
+    if (serviceablePincode) setServicableInputValue(value)
+
+    if (numericValue.length > 6) {
+      return numericValue.slice(0, 6)
+    }
+
+    return numericValue
+  }
 
   return (
     <ModalContainer>
@@ -186,7 +235,7 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
                   <ErrorMessage>{errors?.name?.message}</ErrorMessage>
                 </InputWrapper>
                 <Title>Location Details</Title>
-                <HubMapComponent />
+                <HubMapComponent setDragPincode={setDragPincode} />
               </LocationWrapper>
               <HubInfoContainer>
                 <InputWrapper error={errors.building}>
@@ -201,13 +250,13 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
                 </InputWrapper>
                 <InputWrapper error={errors.pincode}>
                   <Label>Pincode*</Label>
-                  <TextInput
+                  <NumberInput
                     placeholder="Enter Pincode"
                     control={control}
                     name="pincode"
-                    error={errors.pincode}
-                    type="number"
                     maxLength={6}
+                    formatter={handleFormatter}
+                    error={errors.pincode}
                   />
                   <ErrorMessage>{errors?.pincode?.message}</ErrorMessage>
                 </InputWrapper>
@@ -238,25 +287,33 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
 
                 <InputWrapper error={false}>
                   <Label>Serviceable Pincode*</Label>
-                  {hubDetails?.serviceablePincode.length !== 0 ? (
+                  <InputWrapper error={errors.serviceablePincode}>
+                    <NumberInput
+                      placeholder="Enter Serviceable Pincode"
+                      control={control}
+                      name="serviceablePincode"
+                      maxLength={6}
+                      value={inputValue}
+                      formatter={handleFormatter}
+                      error={errors.serviceablePincode}
+                    />
+                    <ErrorMessage>
+                      {errors?.serviceablePincode?.message || updatedServiceablePincodes.length === 0
+                        ? errors?.serviceablePincode?.message
+                        : null}
+                    </ErrorMessage>
+                  </InputWrapper>
+                  {updatedServiceablePincodes.length !== 0 ? (
                     <ul>
-                      {hubDetails?.serviceablePincode.map((items: any) => (
+                      {updatedServiceablePincodes.map((items: any, index: number) => (
                         <li key={items._id}>
                           {items}
-                          {/* <span
+                          <span
                             style={{ cursor: 'pointer', marginLeft: '5px', color: 'red' }}
                             onClick={() => handleDeleteItem(index)}
                           >
                             <CloseCircleOutlined rev={undefined} />
-                          </span> */}
-                          {/*  <span
-                            style={{ cursor: 'pointer', marginLeft: '5px', color: 'blue' }}
-                            onClick={() => handleDeleteItem(index)}
-                          >
-                            <EditOutlined rev={undefined} />
-                          </span> */}
-                          {/* <button onClick={() => handleEdit(item)}>Edit</button> */}
-                          {/* <button onClick={() => handleDelete(item)}>Delete</button> */}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -264,47 +321,13 @@ const UpdateHubsModal = ({ showModal, id, getHubs, hubDetails }: IUpdateModalPro
                     'NA'
                   )}
                 </InputWrapper>
-
-                {/* <></>
-
-                <InputWrapper error={errors.serviceablePincode}>
-                  <TextInput
-                    placeholder="Enter Serviceable Pincode"
-                    control={control}
-                    name="serviceablePincode"
-                    type="number"
-                    handleInputChange={handleInputChange}
-                  />
-                  <ErrorMessage>{errors?.serviceablePincode?.message}</ErrorMessage>
-                </InputWrapper>
                 <Button
                   type="button"
                   label="Add Pincode"
-                  variant="outline"
+                  variant={isValidPincode ? 'disabled' : 'outline'}
                   onClick={onAddPincodes}
                   className="addPin"
                 />
-
-                {myArray.length !== 0 && (
-                  <>
-                    <Title>Added Serviceable Pincode List</Title>
-                    <Label>
-                      <ul>
-                        {myArray.map((item, index) => (
-                          <li key={index}>
-                            {item}
-                            <span
-                              style={{ cursor: 'pointer', marginLeft: '5px', color: 'red' }}
-                              onClick={() => handleDeleteItem(index)}
-                            >
-                              <CloseCircleOutlined rev={undefined} />
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </Label>
-                  </>
-                )} */}
               </HubInfoContainer>
             </DriverInfoWrapper>
           </UpdateDriverDetailContainer>
