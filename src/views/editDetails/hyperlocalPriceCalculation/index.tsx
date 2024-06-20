@@ -168,7 +168,7 @@ const HyperlocalPriceCalculation = () => {
             <ChargeLabel>CGST & SGST (%) *</ChargeLabel>
             <TextInput
               type="number"
-              placeholder="Enter CGST & SGST"
+              placeholder="Enter CGST & SGST (%)"
               control={control}
               name="cgst_sgst"
               error={errors.cgst_sgst}

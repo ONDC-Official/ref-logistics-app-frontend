@@ -7,6 +7,7 @@ import { InviteAgentRoute } from 'constants/routes'
 import CommonTabs from 'components/Tabs'
 import Modal from 'components/Modal'
 import Button from 'components/Button'
+import HubsData from 'views/adminDashboard/hubsTable'
 import { TabItem } from 'interfaces'
 import RecordSection from 'views/recordsSection'
 import UsersData from 'views/adminDashboard/usersTable'
@@ -69,6 +70,15 @@ const DashboardDetail = () => {
   )
 
   const { refetch: getDashboard, data: dashboardDetails } = useGet('get-dashboard', `${APIS.USERS_DASHBOARD}`)
+
+  const { refetch: getHubs, data: hubsDetails } = useGet(
+    'get-hub',
+    `${APIS.HUBS_LIST}?skip=${currentPage}&limit=${pageSize}`,
+  )
+
+  useEffect(() => {
+    getHubs()
+  }, [pageSize, currentPage])
 
   useEffect(() => {
     getIssues()
@@ -174,6 +184,22 @@ const DashboardDetail = () => {
           pageSize={adminsPageSize}
           setPageSize={setAdminsPageSize}
           totalCount={admins?.data?.count}
+        />
+      ),
+    },
+    {
+      key: 'hubs',
+      label: 'Hubs',
+      children: (
+        <HubsData
+          scroll={430}
+          hubsDetails={hubsDetails?.data}
+          getHubs={getHubs}
+          setCurrentPage={setCurrentPage}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          currentPage={currentPage}
+          totalCount={hubsDetails?.data?.hubCount}
         />
       ),
     },

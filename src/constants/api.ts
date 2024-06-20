@@ -50,5 +50,6 @@ enum APIS {
   CREATE_HUB = '/v1/hub/create',
   DELETE_HUB = '/v1/hub/delete',
   UPDATE_AGENT_TOGGLE_STATUS = '/v1/agent/updateAgentStatus',
+  REQUEST_LOGS = '/v1/ondcRequest',
 }
 export default APIS

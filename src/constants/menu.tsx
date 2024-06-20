@@ -27,6 +27,10 @@ const MENU = {
       title: 'Hubs',
       link: '/hubs',
     },
+    // {
+    //   title: 'Request Logs',
+    //   link: '/request-log/new',
+    // },
   ],
   [ROLES.ADMIN]: [
     {
@@ -51,6 +55,10 @@ const MENU = {
       title: 'Hubs',
       link: '/hubs',
     },
+    // {
+    //   title: 'Request Logs',
+    //   link: '/request-log/new',
+    // },
   ],
   [ROLES.DRIVER]: [
     {

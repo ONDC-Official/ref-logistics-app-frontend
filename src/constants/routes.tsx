@@ -33,6 +33,7 @@ import DriverProfile from 'pages/driverProfile'
 import GPSIssueTracker from 'pages/issueTaskTracker'
 import HUbsDetails from 'pages/hubsData'
 import HubDetail from 'pages/hubDetail'
+import RequestLogs from 'pages/requestLogs'
 
 export const LoginRoute = {
   component: Login,
@@ -239,6 +240,12 @@ export const HubsProfileDetails = {
   exact: true,
   restricted: true,
 }
+export const RequestLogsDetails = {
+  component: RequestLogs,
+  path: '/request-log/:id',
+  exact: true,
+  restricted: true,
+}
 
 const ROUTES = [
   LoginRoute,
@@ -275,6 +282,7 @@ const ROUTES = [
   IssuesSummaryRoute,
   DriverProfileRoute,
   HubsProfileDetails,
+  RequestLogsDetails,
 ]
 
 export default ROUTES

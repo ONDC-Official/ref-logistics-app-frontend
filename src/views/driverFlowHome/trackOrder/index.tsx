@@ -28,8 +28,10 @@ import {
   OrderDescriptionWrapper,
   OrderDescription,
   QuantityHeading,
+  WeigthHeading,
   QuantityWeightWrapper,
   ItemsName,
+  QuantityName,
   OrderDescriptiontext,
   QuantityWeight,
   ResultWrapper,
@@ -37,6 +39,7 @@ import {
   DownloadButtonSection,
   UpdateButtonWrapper,
   CallWrapper,
+  PaymentWrapper,
 } from 'styles/views/driverFlowHome'
 
 const { Panel } = Collapse
@@ -74,7 +77,8 @@ const TrackOrder = ({ buttonStatus }: IButtonData) => {
     }
   }
 
-  let total = 0
+  // let total = 0
+  let totalAmount = 0
 
   const query = () => {
     setSize(window?.innerWidth)
@@ -92,39 +96,30 @@ const TrackOrder = ({ buttonStatus }: IButtonData) => {
   //   const taskData = taskDetails?.data?.taskStatus?.filter((obj: any) => obj?.agentId === userInfo?.agentId)
   //   setTaskData(taskData)
   // }, [userInfo])
-
   return (
     <>
       <TrackOrderWrapper>
         <OrderWrapper>
           <NameWrapper>
             <TaskDetailsWrap>
-              <TaskID>Task ID:</TaskID>
+              <TaskID>Order ID:</TaskID>
               <TaskID>
-                {size < 400 && (
-                  <span>
-                    {taskDetails?.data?.task?._id?.length > 17
-                      ? `${taskDetails?.data?.task?._id?.slice(0, 4)}... ${taskDetails?.data?.task?._id?.slice(-8)}`
-                      : taskDetails?.data?.task?._id}
-                  </span>
-                )}
-                {size > 400 && <span>{taskDetails?.data?.task?.task_id.toUpperCase().substring(0, 8)}</span>}
+                <span>{taskDetails?.data?.task?.linked_order?.order?.id}</span>
               </TaskID>
               <TaskAssigned>{moment(`${taskDetails?.data?.task?.createdAt}`).startOf('hour').fromNow()}</TaskAssigned>
+              <PaymentWrapper>Payment : {taskDetails?.data?.task?.payment?.type} </PaymentWrapper>
             </TaskDetailsWrap>
             <CallWrapper>
               {maskMobileNumber(taskDetails?.data?.task?.fulfillments[0]?.end?.contact?.phone)}
               <a href={`tel:+91${taskDetails?.data?.task?.fulfillments[0]?.end?.contact?.phone}`}>📞 Call </a>
             </CallWrapper>
           </NameWrapper>
-          <Status status={taskDetails?.data?.taskStatus.at(-1).status}>
-            {taskDetails?.data?.taskStatus.at(-1).status}
-          </Status>
+          <Status status={taskDetails?.data?.task?.status}>{taskDetails?.data?.task?.status}</Status>
           {/* {userInfo?.agentId && (
             <Status status={taskData[taskData?.length - 1]?.status}>{taskData[taskData?.length - 1]?.status}</Status>
           )} */}
         </OrderWrapper>
-        {userInfo?.agentId && <OrderStepper taskData={taskDetails?.data} agentId={userInfo.agentId} />}
+        {userInfo?.agentId && <OrderStepper taskData={taskDetails?.data} agentId={userInfo?.agentId} />}
         <HistoryScreenWrapper>
           <Collapse collapsible="header" defaultActiveKey={['1']}>
             <Panel
@@ -137,24 +132,30 @@ const TrackOrder = ({ buttonStatus }: IButtonData) => {
             >
               <OrderDescriptionWrapper>
                 <OrderDescription>
-                  <OrderDescriptiontext>Description </OrderDescriptiontext>
+                  <OrderDescriptiontext>Name </OrderDescriptiontext>
                   <QuantityHeading>Qty</QuantityHeading>
+                  <WeigthHeading>Weight</WeigthHeading>
                 </OrderDescription>
-
                 {taskDetails?.data?.task?.linked_order?.items.map((item: any, index: React.Key | null | undefined) => {
-                  total += parseFloat(item?.quantity?.measure?.value)
+                  // total += parseFloat(item?.quantity?.measure?.value)
+                  totalAmount += parseFloat(item?.price?.value)
                   return (
                     <QuantityWeightWrapper key={index}>
                       <ItemsName>{item?.descriptor?.name}</ItemsName>
+                      <QuantityName>{item?.quantity?.measure?.value}</QuantityName>
                       <QuantityWeight>
                         {item?.quantity?.measure?.value} {item?.quantity?.measure?.unit}
                       </QuantityWeight>
                     </QuantityWeightWrapper>
                   )
                 })}
-                <ResultWrapper>
+                {/* <ResultWrapper>
                   <OrderText>Total Qty</OrderText>
                   <TotalOrder>{total} kilogram</TotalOrder>
+                </ResultWrapper> */}
+                <ResultWrapper>
+                  <OrderText>Total Price</OrderText>
+                  <TotalOrder>{totalAmount} INR</TotalOrder>
                 </ResultWrapper>
               </OrderDescriptionWrapper>
             </Panel>
@@ -167,8 +168,8 @@ const TrackOrder = ({ buttonStatus }: IButtonData) => {
             <Button
               label="Update Status"
               variant={
-                ['Order-delivered', 'Cancelled', 'RTO-Delivered', 'RTO-Disposed', 'In-transit', 'Completed'].includes(
-                  taskDetails?.data?.taskStatus.at(-1).status,
+                ['Order-delivered', 'Cancelled', 'RTO-Delivered', 'RTO-Disposed', 'Completed'].includes(
+                  taskDetails?.data?.task?.status,
                 )
                   ? 'disabled'
                   : 'contained'

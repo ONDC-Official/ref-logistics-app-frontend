@@ -5,6 +5,7 @@ import { OrderStateRoutes } from 'constants/routes'
 import { IDriverDataData } from 'interfaces/views'
 import NoTaskSection from 'views/driverFlowHome/noTask'
 import OfflineSection from 'views/driverFlowHome/offlineSection'
+import { maskMobileNumber } from 'utils/maskMobileNumber'
 import PickupPointIcon from 'assets/svg/PickupPointIcon'
 import DeliveryPointIcon from 'assets/svg/DeliveryPointIcon'
 import {
@@ -76,15 +77,13 @@ const DriverAssignedTask = ({ data, isActive }: IDriverDataData) => {
                         <OrderName>{item?.items[0]?.category_id}</OrderName>
                         {size < 400 && (
                           <OrderNumber>
-                            {item?._id?.length > 17
-                              ? `${item?._id?.slice(0, 4)}... ${item?._id?.slice(-8)}`
-                              : item?._id}
+                            {item?.linked_order?.order?.id}
                             <span>{moment(`${item?.createdAt}`).fromNow()}</span>
                           </OrderNumber>
                         )}
                         {size > 400 && (
                           <OrderNumber>
-                            {item?.task_id.toUpperCase().substring(0, 8)}
+                            {item?.linked_order?.order?.id}
                             <span>{moment(`${item?.createdAt}`).fromNow()}</span>
                           </OrderNumber>
                         )}
@@ -96,7 +95,7 @@ const DriverAssignedTask = ({ data, isActive }: IDriverDataData) => {
                         <PickupPointIcon />
                         <LocationWrapper>
                           <PickupName>
-                            {item?.fulfillments[0]?.start?.location?.address?.name} <span>Warehouser Pickup</span>
+                            {item?.fulfillments[0]?.start?.location?.address?.name} <span>Pickup</span>
                           </PickupName>
                           <LocationAddress>
                             {item?.fulfillments[0]?.start?.location?.address?.building},
@@ -105,7 +104,9 @@ const DriverAssignedTask = ({ data, isActive }: IDriverDataData) => {
                             {item?.fulfillments[0]?.start?.location?.address?.area_code},
                             {item?.fulfillments[0]?.start?.location?.address?.country}
                           </LocationAddress>
-                          <LocationAddress>{item?.fulfillments[0]?.start?.contact?.phone}</LocationAddress>
+                          <LocationAddress>
+                            {maskMobileNumber(item?.fulfillments[0]?.start?.contact?.phone)}
+                          </LocationAddress>
 
                           <PickupTimeStamp>{item?.fulfillments[0]?.start?.location?.address?.city}</PickupTimeStamp>
                         </LocationWrapper>
@@ -121,7 +122,9 @@ const DriverAssignedTask = ({ data, isActive }: IDriverDataData) => {
                             {item?.fulfillments[0]?.end?.location?.address?.area_code},
                             {item?.fulfillments[0]?.end?.location?.address?.country}
                           </LocationAddress>
-                          <LocationAddress>{item?.fulfillments[0]?.end?.contact?.phone}</LocationAddress>
+                          <LocationAddress>
+                            {maskMobileNumber(item?.fulfillments[0]?.end?.contact?.phone)}
+                          </LocationAddress>
 
                           <DropTimeStamp>{item?.fulfillments[0]?.end?.location?.address?.city}</DropTimeStamp>
                         </LocationWrapper>

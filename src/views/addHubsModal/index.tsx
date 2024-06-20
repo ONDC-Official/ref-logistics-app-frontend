@@ -11,10 +11,11 @@ import usePost from 'hooks/usePost'
 import { HUBS_DETAIL_SCHEMA } from 'validations/agentDetailsValidation'
 import APIS from 'constants/api'
 import TextInput from 'components/TextInput'
+import NumberInput from 'components/NumberInput'
 import Button from 'components/Button'
 import HubMapComponent from 'components/MapComponent/hubMap'
 import { AppContext } from 'context/payloadContext'
-import { IShowModalProps } from 'interfaces'
+import { IAddHUbModalProps } from 'interfaces'
 import CloseIcon from 'assets/svg/CloseIcon'
 import { ErrorMessage } from 'styles/views/signin'
 import { InputWrapper } from 'styles/views/inviteAgentScreen/agentDetailSection'
@@ -34,11 +35,14 @@ import {
 } from 'styles/views/successfulModal'
 import { LocationWrapper, Title } from 'styles/views/inviteAgentScreen/driverDetailsSection'
 
-const AddHubsModal = ({ showModal }: IShowModalProps) => {
+const AddHubsModal = ({ showModal, getHubs }: IAddHUbModalProps) => {
   const [loader, setLoader] = useState(false)
+  const [dragPincode, setDragPincode] = useState('')
   const [locality, setLocality] = useState([{}])
+  const [isValidPincode, setisValidPincode] = useState(true)
   const [myArray, setMyArray] = useState<number[]>([])
   const [inputValue, setInputValue] = useState<string>('')
+  const [servicableInputValue, setServicableInputValue] = useState<string>('')
 
   const { payloadData, setPayloadData } = useContext(AppContext)
   const { mutateAsync } = usePost()
@@ -80,7 +84,7 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
 
   const { pincode, city, serviceablePincode } = watch()
 
-  const getAddressDetails = async () => {
+  const getAddressDetails = async (pincode: string) => {
     try {
       setLoader(true)
       const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`)
@@ -117,28 +121,36 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
       setLoader(true)
       const response = await axios.get(`https://api.postalpincode.in/pincode/${serviceablePincode}`)
       if (response.data[0]?.Status === 'Error') {
+        toast.dismiss()
         toast.error('Invalid Pin code')
         setLoader(false)
+        setisValidPincode(true)
       } else if (response.data && response.data[0] && response.data[0].PostOffice) {
         setLoader(false)
+        setisValidPincode(false)
       }
     } catch (err: any) {
+      toast.dismiss()
       toast.error(`${err.response.data.error}`)
-      err.response.data.error
     }
   }
 
   useEffect(() => {
-    if (pincode?.length === 6) {
-      getAddressDetails()
+    if (inputValue?.length === 6) {
+      getAddressDetails(inputValue)
     }
-  }, [pincode])
+
+    if (dragPincode?.length === 6) {
+      getAddressDetails(dragPincode)
+    }
+  }, [inputValue, dragPincode])
 
   useEffect(() => {
-    if (serviceablePincode?.length === 6) {
+    if (servicableInputValue?.length === 6) {
       getPinDetails()
     }
-  }, [serviceablePincode])
+  }, [servicableInputValue])
+
   const localities = []
 
   for (let i = 0; i < locality.length; i++) {
@@ -163,10 +175,6 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
     }
   }
 
-  const handleInputChange = (e: any) => {
-    setInputValue(e.target.value)
-  }
-
   const submitData = async (data: IHubsDetails) => {
     const payload: any = {
       addressDetails: {
@@ -178,7 +186,7 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
         city: data?.city,
         state: data?.state,
         country: data?.country,
-        pincode: data?.pincode,
+        pincode: data?.pincode.toString(),
       },
       name: data?.name,
       status: 'Inactive',
@@ -191,6 +199,7 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
     })
     if (res) {
       showModal(false)
+      getHubs()
     }
 
     reset()
@@ -204,6 +213,19 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
 
   const formPost = useFormPost()
   formPost
+
+  const handleFormatter = (value: any) => {
+    setInputValue(value)
+    const numericValue = value.replace(/[e.+\\-]/g, '')
+    if (pincode) setInputValue(value)
+    if (serviceablePincode) setServicableInputValue(value)
+
+    if (numericValue.length >= 6) {
+      return numericValue.slice(0, 6)
+    }
+
+    return numericValue
+  }
 
   return (
     <ModalContainer>
@@ -224,7 +246,7 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
                   <ErrorMessage>{errors?.name?.message}</ErrorMessage>
                 </InputWrapper>
                 <Title>Location Details</Title>
-                <HubMapComponent />
+                <HubMapComponent setDragPincode={setDragPincode} />
               </LocationWrapper>
               <HubInfoContainer>
                 <InputWrapper error={errors.building}>
@@ -239,12 +261,13 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
                 </InputWrapper>
                 <InputWrapper error={errors.pincode}>
                   <Label>Pincode*</Label>
-                  <TextInput
+                  <NumberInput
                     placeholder="Enter Pincode"
-                    type="number"
-                    maxLength={6}
                     control={control}
                     name="pincode"
+                    value={inputValue}
+                    maxLength={6}
+                    formatter={handleFormatter}
                     error={errors.pincode}
                   />
                   <ErrorMessage>{errors?.pincode?.message}</ErrorMessage>
@@ -276,14 +299,14 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
                 <InputWrapper error={errors.serviceablePincode}>
                   <Label>Serviceable Pincode*</Label>
                   <InputWrapper error={errors.serviceablePincode}>
-                    <TextInput
+                    <NumberInput
                       placeholder="Enter Serviceable Pincode"
                       control={control}
                       name="serviceablePincode"
-                      type="number"
                       maxLength={6}
-                      handleInputChange={handleInputChange}
                       value={inputValue}
+                      formatter={handleFormatter}
+                      error={errors.serviceablePincode}
                     />
                     <ErrorMessage>
                       {errors?.serviceablePincode?.message || myArray.length === 0
@@ -295,7 +318,7 @@ const AddHubsModal = ({ showModal }: IShowModalProps) => {
                 <Button
                   type="button"
                   label="Add Pincode"
-                  variant={inputValue === '' ? 'disabled' : 'outline'}
+                  variant={isValidPincode ? 'disabled' : 'outline'}
                   onClick={onAddPincodes}
                   className="addPin"
                 />

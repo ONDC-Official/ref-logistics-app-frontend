@@ -18,6 +18,7 @@ import {
   Name,
   DriverStatusConatiner,
   DriverStatusWrapper,
+  // DriverStateWrapper,
   BlockDriverStatusWrapper,
   StatusButton,
   StatusOffline,
@@ -65,29 +66,43 @@ const UsersData = ({
     index: number,
   ) => {
     return (
-      <ContentWrapper onClick={() => handleActionClick(index)}>
-        <Title
-          onClick={() => {
-            router.push(`${DriverProfileRoute.path.replace(':id', id)}`, { state: { userId: item?.userId._id } })
-          }}
-        >
-          Profile
-        </Title>
-        {item?.userId?.enabled !== 2 ? (
-          <Title onClick={() => deactivateDriver(id, 2)} id={id}>
-            Deactivate
-          </Title>
+      <>
+        {item?.userId?.enabled === 0 ? (
+          <ContentWrapper onClick={() => handleActionClick(index)}>
+            <Title
+              onClick={() => {
+                router.push(`${DriverProfileRoute.path.replace(':id', id)}`, { state: { userId: item?.userId._id } })
+              }}
+            >
+              Profile
+            </Title>
+          </ContentWrapper>
         ) : (
-          <Title onClick={() => deactivateDriver(id, 1)} id={id}>
-            Activate
-          </Title>
+          <ContentWrapper onClick={() => handleActionClick(index)}>
+            <Title
+              onClick={() => {
+                router.push(`${DriverProfileRoute.path.replace(':id', id)}`, { state: { userId: item?.userId._id } })
+              }}
+            >
+              Profile
+            </Title>
+            {item?.userId?.enabled !== 2 ? (
+              <Title onClick={() => deactivateDriver(id, 2)} id={id}>
+                Inactive
+              </Title>
+            ) : (
+              <Title onClick={() => deactivateDriver(id, 1)} id={id}>
+                Active
+              </Title>
+            )}
+            {item?.userId?.enabled === 2 && item?.userId?.isAccountLocked !== true ? (
+              <Title onClick={() => deleteData(id)} id={id}>
+                Delete
+              </Title>
+            ) : null}
+          </ContentWrapper>
         )}
-        {item?.userId?.enabled === 2 && item?.userId?.isAccountLocked !== true ? (
-          <Title onClick={() => deleteData(id)} id={id}>
-            Delete
-          </Title>
-        ) : null}
-      </ContentWrapper>
+      </>
     )
   }
 
@@ -120,15 +135,15 @@ const UsersData = ({
   const columns: ColumnsType<any> = [
     {
       title: 'Name',
-      dataIndex: 'userId',
+      // dataIndex: 'userId',
       key: 'name',
-      width: 115,
+      width: 175,
       fixed: 'left',
       render: (info) => {
         return (
           <DriverInfoWrapper>
             <img src={UserImage} alt="user" />
-            <Name>{info?.name}</Name>
+            <Name>{`${info?.firstName} ${info?.lastName}`}</Name>
           </DriverInfoWrapper>
         )
       },
@@ -168,14 +183,23 @@ const UsersData = ({
               <BlockDriverStatusWrapper status={data?.isAccountLocked}>Blocked</BlockDriverStatusWrapper>
             ) : (
               <DriverStatusWrapper status={data?.enabled}>
-                {data?.enabled === 1 ? 'Available' : data?.enabled === 2 ? 'Inactive' : 'Ongoing'}
-                {/* {data?.enabled === 1 ? 'Onboarded' : data?.enabled === 2 ? 'Inactive' : 'Ongoing'} */}
+                {data?.enabled === 1 ? 'Active' : data?.enabled === 2 ? 'Inactive' : 'Ongoing'}
               </DriverStatusWrapper>
             )}
           </DriverStatusConatiner>
         )
       },
     },
+    // {
+    //   title: 'Driver State',
+    //   dataIndex: 'driverCurrentStatus',
+    //   key: 'driverState',
+    //   width: 135,
+
+    //   render: (info) => {
+    //     return <DriverStateWrapper status={info}>{info}</DriverStateWrapper>
+    //   },
+    // },
     {
       title: 'Online/Offline',
       dataIndex: 'isOnline',
@@ -253,7 +277,6 @@ const UsersData = ({
         }
         rowKey="userId"
       />
-
       <Modal isOpen={deleteModal}>
         <DeleteTaskModal
           showModal={(value: boolean) => setDeleteModal(value)}

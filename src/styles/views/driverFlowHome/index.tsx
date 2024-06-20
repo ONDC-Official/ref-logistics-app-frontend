@@ -414,6 +414,14 @@ export const TaskID = styled.div`
     color: ${theme.PRIMARYBLACKCOLOR};
   }
 `
+export const PaymentWrapper = styled.div`
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  color: ${theme.TITLECOLOR};
+`
+
 export const TaskAssigned = styled.div`
   font-family: 'Inter';
   font-weight: 500;
@@ -619,25 +627,29 @@ export const OrderDescriptionWrapper = styled.div`
 `
 export const OrderDescription = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto;
 `
 export const QuantityHeading = styled.div`
   font-family: 'Inter';
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;
+  text-align: center;
+`
+export const WeigthHeading = styled(QuantityHeading)`
   text-align: right;
 `
 export const QuantityWeightWrapper = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto;
 `
-export const OrderDescriptiontext = styled.div`
-  font-family: 'Inter';
+export const OrderDescriptiontext = styled(QuantityHeading)`
+  /* font-family: 'Inter';
   font-weight: 600;
   font-size: 14px;
-  line-height: 17px;
-  color: ${theme.LIGHTGREYCOLOR};
+  line-height: 17px; */
+  /* color: ${theme.LIGHTGREYCOLOR}; */
+  text-align: left;
 `
 export const ItemsName = styled.div`
   font-family: 'Inter';
@@ -647,15 +659,20 @@ export const ItemsName = styled.div`
   line-height: 15px;
   color: ${theme.GREYCOLOR};
 `
-export const QuantityWeight = styled.div`
-  font-family: 'Inter';
+export const QuantityWeight = styled(ItemsName)`
+  /* font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
-  line-height: 15px;
+  line-height: 15px; */
   text-align: right;
-  color: #2c2c2c;
+  /* color: ${theme.GREYCOLOR}; */
 `
+export const QuantityName = styled(QuantityWeight)`
+  text-align: center;
+  padding-left: 15px;
+`
+
 export const ResultWrapper = styled.div`
   display: grid;
   grid-template-columns: auto auto;

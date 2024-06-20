@@ -188,6 +188,25 @@ export const DriverStatusWrapper = styled(StatusWrapper)<IProps>`
     ${(props) => (props.status == '1' ? theme.PRIMARYCOLOR : props.status == '2' ? theme.ERROR : theme.WARNING)};
   color: ${(props) => (props.status == '1' ? theme.PRIMARYCOLOR : props.status == '2' ? theme.ERROR : theme.WARNING)};
 `
+export const DriverStateWrapper = styled(StatusWrapper)<IProps>`
+  border: 1.5px solid
+    ${(props) =>
+      props.status == 'Soft Lock'
+        ? theme.PRIMARYGREENCOLOR
+        : props.status == 'Available'
+        ? theme.PRIMARYCOLOR
+        : props.status == 'Locked'
+        ? theme.WARNING
+        : theme.ERROR};
+  color: ${(props) =>
+    props.status == 'Soft Lock'
+      ? theme.PRIMARYGREENCOLOR
+      : props.status == 'Available'
+      ? theme.PRIMARYCOLOR
+      : props.status == 'Locked'
+      ? theme.WARNING
+      : theme.ERROR};
+`
 export const BlockDriverStatusWrapper = styled(StatusWrapper)<IProps>`
   border: 1.5px solid ${(props) => (props.status == true ? theme.ERROR : theme.PRIMARYCOLOR)};
   color: ${(props) => (props.status == true ? theme.ERROR : theme.PRIMARYCOLOR)};

@@ -73,11 +73,13 @@ const LiveTrackingComponent = ({ liveAgentTracking, taskDetails }: ILiveTracking
           map: mapObject,
           layer: geoLayer,
           cType: 0, // Specify the layer type as needed
+          fitbounds: true,
         })
 
         mapClassObject?.removeLayer({
           map: mapObject,
           layer: markerLayer,
+          fitbounds: true,
           // cType: 0, // Specify the layer type as needed
         })
       }

@@ -26,6 +26,11 @@ export interface IShowModalProps {
   showModal(value: boolean): void
   singleHubDetail?: any
 }
+export interface IAddHUbModalProps {
+  showModal(value: boolean): void
+  singleHubDetail?: any
+  getHubs: () => void
+}
 export interface IUpdateModalProps {
   showModal(value: boolean): void
   id: string
@@ -96,6 +101,16 @@ export interface ITeaxtinputContainer {
   onKeyUp?: any
   autocomplete?: string
 }
+export interface INumberInputContainer {
+  placeholder: string
+  control: any
+  name: string
+  error?: FieldError
+  className?: string
+  maxLength?: number
+  formatter?: any
+  value?: any
+}
 export interface ITableDetails {
   title?: string
   content?: string
@@ -106,10 +121,19 @@ export interface ITableData {
 }
 
 // Map Component
+export interface IOrderMap {
+  taskStartPoints: any
+  taskEndPoints: any
+}
 export interface ICoordinates {
   liveAgentTracking?: any
   taskEndpoints?: any
 }
+
+export interface IOrderTrackingCoordinates {
+  taskEndpoints?: any
+}
+
 export interface IDriverData {
   id: number
   driverImage: string
@@ -229,4 +253,32 @@ export interface IRoute {
   path: string
   exact: boolean
   restricted: boolean
+}
+export interface ItemData {
+  key: string
+  name: string
+  age: string
+  address: string
+}
+
+export interface EditableRowProps {
+  index: number
+}
+
+export interface DataType {
+  key: React.Key
+  lesEq_1: number
+  lesEq_3: number
+  lesEq_5: number
+  lesEq_7: number
+  lesEq_10: number
+  gtr_10: number
+}
+export interface EditableCellProps {
+  title: React.ReactNode
+  editable: boolean
+  children: React.ReactNode
+  dataIndex: keyof ItemData
+  record: ItemData
+  handleSave: (record: ItemData) => void
 }

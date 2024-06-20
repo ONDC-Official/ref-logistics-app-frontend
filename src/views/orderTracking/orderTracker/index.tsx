@@ -22,7 +22,6 @@ const OrderStepper: React.FC<OrderStepperProps> = ({ trackingDetails }) => {
                   ? 'Confirm'
                   : trackingDetails?.data?.taskStatus[index]?.status
               }
-              imgSrc={trackingDetails?.data?.taskStatus[index]?.link}
             />
           )
 

@@ -213,7 +213,7 @@ export interface IIssuesData {
   setCurrentPage?: any
 }
 export interface IHubsData {
-  // scroll?: number
+  scroll?: number
   hubsDetails?: any
   getHubs: () => void
   pageSize: number

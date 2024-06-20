@@ -5,11 +5,12 @@ import { OrderStepperWrapper } from 'styles/views/driverFlowHome'
 const { Step } = Steps
 
 const OrderStepper = ({ taskData, agentId }: any) => {
+  agentId
   const outputFormat = 'ddd DD MMM YYYY [at] h:mma'
   const index = taskData?.taskStatus
-    ?.filter((obj: any) => obj.agentId === agentId)
+    ?.filter((obj: any) => obj.status != 'Pending')
     .findIndex((element: any) => {
-      if (element.status === taskData?.taskStatus[taskData?.taskStatus.length - 1]?.status) {
+      if (element.status === taskData?.task?.status) {
         return true
       }
     })
@@ -18,7 +19,7 @@ const OrderStepper = ({ taskData, agentId }: any) => {
     <OrderStepperWrapper>
       <Steps direction="vertical" current={index + 1}>
         {taskData?.taskStatus
-          .filter((obj: any) => obj.agentId === agentId)
+          .filter((obj: any) => obj.status != 'Pending')
           .map((stepObj: any) => (
             <Step
               key={taskData?.taskStatus?.length}

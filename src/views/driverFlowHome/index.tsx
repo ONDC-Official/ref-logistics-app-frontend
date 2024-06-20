@@ -116,7 +116,12 @@ const DriverFlowHome = () => {
 
         (error) => {
           toast.dismiss()
-          toast.error(`${error.message}`)
+          toast.error(
+            `${error.message.replace(
+              'Network error. Check DevTools console for more information.',
+              'You are currently offline. Please check your internet connection.',
+            )}`,
+          )
         },
         options,
       )
@@ -126,39 +131,33 @@ const DriverFlowHome = () => {
   const handleChange = async (checked: any) => {
     let intervalId: any
 
-    try {
-      if (checked) {
-        intervalId = setInterval(fetchCoordinates, 5000)
-        setIsActive(checked)
+    if (checked) {
+      intervalId = setInterval(fetchCoordinates, 5000)
+      setIsActive(checked)
 
-        await mutateAsync({
-          url: `${APIS.AGENT_TOGGLE_STATUS}`,
-          payload: {
-            isOnline: checked,
-          },
-        })
+      await mutateAsync({
+        url: `${APIS.AGENT_TOGGLE_STATUS}`,
+        payload: {
+          isOnline: checked,
+        },
+      })
 
-        localStorage.setItem('online', 'true')
-        toast.dismiss()
-        toast.success('Location tracker is activated')
-      } else {
-        setIsActive(checked)
-        clearInterval(intervalId)
+      localStorage.setItem('online', 'true')
+    } else {
+      setIsActive(checked)
+      clearInterval(intervalId)
 
-        await mutateAsync({
-          url: `${APIS.AGENT_TOGGLE_STATUS}`,
-          payload: checked,
-        })
+      await mutateAsync({
+        url: `${APIS.AGENT_TOGGLE_STATUS}`,
+        payload: {
+          isOnline: checked,
+        },
+      })
 
-        localStorage.removeItem('online')
-        toast.dismiss()
-        toast.error('Location tracker is deactivated')
-      }
-
-      window.location.reload()
-    } catch (error) {
-      toast.error(`Something went wrong due to ${error}`)
+      localStorage.removeItem('online')
     }
+
+    window.location.reload()
   }
 
   const onHandleClick = () => {

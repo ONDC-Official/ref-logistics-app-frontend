@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import usePost from 'hooks/usePost'
 import APIS from 'constants/api'
 import { PIN_ACTION_SCHEMA } from 'validations/agentDetailsValidation'
-import TextInput from 'components/TextInput'
+import NumberInput from 'components/NumberInput'
 import Button from 'components/Button'
 import { IHubActionModalProps } from 'interfaces/views'
 
@@ -56,6 +56,16 @@ const AddPinModal = ({ showModal, id, singleHubDetail, getHubDetails }: IHubActi
     }
   }
 
+  const handleFormatter = (value: any) => {
+    const numericValue = value.replace(/[e.+\\-]/g, '')
+
+    if (numericValue.length > 6) {
+      return numericValue.slice(0, 6)
+    }
+
+    return numericValue
+  }
+
   return (
     <ModalContainer>
       <HeadingContainer>
@@ -67,7 +77,13 @@ const AddPinModal = ({ showModal, id, singleHubDetail, getHubDetails }: IHubActi
           <InputWrapper error={errors.pincode}>
             <Label>Pincode</Label>
             <TextWrapper>
-              <TextInput placeholder="Enter Pincode" control={control} name="pincode" type="number" maxLength={6} />
+              <NumberInput
+                placeholder="Enter Pincode"
+                control={control}
+                name="pincode"
+                maxLength={6}
+                formatter={handleFormatter}
+              />
               <ErrorMessage>{errors?.pincode?.message}</ErrorMessage>
             </TextWrapper>
           </InputWrapper>

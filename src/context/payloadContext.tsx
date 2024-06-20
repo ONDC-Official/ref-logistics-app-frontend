@@ -10,20 +10,21 @@ const AppProvider = ({ children }: any) => {
   const [urls, setUrls] = useState<any>([])
 
   useEffect(() => {
-    const eventSource = new EventSource(`${process.env.REACT_APP_BASE_URL}${APIS.AGENT_SSE}`)
-    eventSource.addEventListener('on_live_update', (event) => {
-      const data = JSON.parse(event.data)
-      setSse(data)
-    })
+    if (localStorage.getItem('accessToken')) {
+      const eventSource = new EventSource(`${process.env.REACT_APP_BASE_URL}${APIS.AGENT_SSE}`)
+      eventSource.addEventListener('on_live_update', (event) => {
+        const data = JSON.parse(event.data)
+        setSse(data)
+      })
+      eventSource.onerror = () => {
+        eventSource.close()
+      }
 
-    eventSource.onerror = () => {
-      eventSource.close()
+      return () => {
+        eventSource.close()
+      }
     }
-
-    return () => {
-      eventSource.close()
-    }
-  }, [])
+  }, [localStorage.getItem('accessToken')])
 
   return (
     <AppContext.Provider

@@ -87,7 +87,12 @@ const Navbar = () => {
                     key: index,
                   }
                 }),
-              } || []
+              } || [
+                {
+                  key: '1',
+                  label: <NotificationTitle>Data Not Found</NotificationTitle>,
+                },
+              ]
             }
             trigger={['click']}
           >

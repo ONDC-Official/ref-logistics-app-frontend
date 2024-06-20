@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import APIS from 'constants/api'
 import TextInput from 'components/TextInput'
 import NoRecords from 'components/RecordNotFound'
+import { maskMobileNumber } from 'utils/maskMobileNumber'
 import { OrderStateRoutes } from 'constants/routes'
 import PickupPointIcon from 'assets/svg/PickupPointIcon'
 import DeliveryPointIcon from 'assets/svg/DeliveryPointIcon'
@@ -61,12 +62,13 @@ const HistoryScreenSection = () => {
           handleInputChange={handleInputChange}
         />
       </InputWrapper>
-      {HistoryData?.data?.length === 0 ||
-      !HistoryData?.data.filter(
+
+      {HistoryData?.data &&
+      HistoryData.data.filter(
         (item: any) =>
           item?.status?.toLowerCase().includes(filterInput.toLowerCase()) ||
           item?._id?.toLowerCase().includes(filterInput.toLowerCase()),
-      ) ? (
+      ).length === 0 ? (
         <NoRecords />
       ) : (
         <HistoryScreenWrapper>
@@ -114,7 +116,9 @@ const HistoryScreenSection = () => {
                             {item?.fulfillments[0]?.start?.location?.address?.area_code},
                             {item?.fulfillments[0]?.start?.location?.address?.country}
                           </LocationAddress>
-                          <LocationAddress>{item?.fulfillments[0]?.start?.contact?.phone}</LocationAddress>
+                          <LocationAddress>
+                            {maskMobileNumber(item?.fulfillments[0]?.start?.contact?.phone)}
+                          </LocationAddress>
 
                           <PickupTimeStamp>{item?.fulfillments[0]?.start?.location?.address?.city}</PickupTimeStamp>
                         </LocationWrapper>
@@ -130,7 +134,9 @@ const HistoryScreenSection = () => {
                             {item?.fulfillments[0]?.end?.location?.address?.area_code},
                             {item?.fulfillments[0]?.end?.location?.address?.country}
                           </LocationAddress>
-                          <LocationAddress>{item?.fulfillments[0]?.end?.contact?.phone}</LocationAddress>
+                          <LocationAddress>
+                            {maskMobileNumber(item?.fulfillments[0]?.end?.contact?.phone)}
+                          </LocationAddress>
 
                           <DropTimeStamp>{item?.fulfillments[0]?.end?.location?.address?.city}</DropTimeStamp>
                         </LocationWrapper>

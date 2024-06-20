@@ -98,7 +98,7 @@ export const AddressDetail = styled.pre`
   font-family: 'Inter';
   font-weight: 600;
   font-size: 14px;
-  line-height: 16px;
+  line-height: 20px;
   color: ${theme.PRIMARYBLACKCOLOR};
   span {
     font-weight: 400;
@@ -112,6 +112,12 @@ export const OrderDetailWrapper = styled.div`
   gap: 28px;
   padding: 18px 0;
 `
+export const OrderDetailHeadWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
 export const LocationOrderDetailWrapper = styled.div`
   display: flex;
   flex-direction: column;

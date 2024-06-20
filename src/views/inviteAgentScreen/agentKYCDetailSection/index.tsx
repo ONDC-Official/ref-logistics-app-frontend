@@ -16,7 +16,7 @@ import DocumentViewModal from 'views/documentViewModal'
 import EyeIcon from 'assets/svg/EyeIcon'
 import DeleteIcon from 'assets/svg/DeleteIcon'
 import CloseEyeIcon from 'assets/svg/CloseEyeIcon'
-import { ErrorMessage, TextWrapper, FileWrapper, FileIconWrapper } from 'styles/views/signin'
+import { ErrorMessage, TextWrapper, FileWrapper, FileIconWrapper, UploadedFileName } from 'styles/views/signin'
 import {
   AgentDetailWrapper,
   FormWrapper,
@@ -126,15 +126,17 @@ const KYCDetails = ({ next }: IKYCDetailsProps) => {
       }
     }
   }
-  const fileUrl = getValues('drivingLicense')
+  // const fileUrl = getValues('drivingLicense')
+  const values = getValues()
   const handlePreview = async (file: any) => {
     if (!file.url && !file.preview) {
       return
     }
   }
   const handlePreviewClick = () => {
+    values?.drivingLicense
     const file: any = {
-      url: fileUrl,
+      url: values?.drivingLicense,
     }
     setViewModal(true)
     setFilePath(file.url)
@@ -149,6 +151,12 @@ const KYCDetails = ({ next }: IKYCDetailsProps) => {
   const handlePreviewClose = () => {
     setViewModal(false)
     setFilePath('')
+  }
+
+  const showFileName = (fileUrl: any) => {
+    const parts = fileUrl.split('/')
+    const fileName = parts[parts.length - 1]
+    return fileName
   }
 
   return (
@@ -231,6 +239,7 @@ const KYCDetails = ({ next }: IKYCDetailsProps) => {
                   <FileIconWrapper>
                     <EyeIcon onClick={handlePreviewClick} />
                     <DeleteIcon onClick={() => handleRemove('drivingLicense')} />
+                    <UploadedFileName>{showFileName(values?.drivingLicense)}</UploadedFileName>
                   </FileIconWrapper>
                 ) : null}
               </FileWrapper>

@@ -19,7 +19,7 @@ import { IAccData } from 'interfaces/views'
 import DocumentViewModal from 'views/documentViewModal'
 import EyeIcon from 'assets/svg/EyeIcon'
 import DeleteIcon from 'assets/svg/DeleteIcon'
-import { ErrorMessage, TextWrapper } from 'styles/views/signin'
+import { ErrorMessage, TextWrapper, UploadedFileName } from 'styles/views/signin'
 import {
   AgentDetailWrapper,
   FormWrapper,
@@ -201,6 +201,12 @@ const AgentBankDetails = () => {
     }
   }
 
+  const showFileName = (fileUrl: any) => {
+    const parts = fileUrl.split('/')
+    const fileName = parts[parts.length - 1]
+    return fileName
+  }
+
   return (
     <>
       <AgentDetailWrapper>
@@ -278,6 +284,7 @@ const AgentBankDetails = () => {
                 <OptionWrapper>
                   <EyeIcon onClick={handlePreviewClick} />
                   <DeleteIcon onClick={() => handleRemove('cancelledCheque')} />
+                  <UploadedFileName>{showFileName(values?.cancelledCheque)}</UploadedFileName>
                 </OptionWrapper>
               )}
             </UploadButtonWrapper>

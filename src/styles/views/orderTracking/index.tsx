@@ -6,6 +6,11 @@ export const TrackingDetailWrapper = styled.div`
   flex-direction: column;
   gap: 25px;
   padding: 0 140px 126px 140px;
+  li {
+    span {
+      cursor: pointer;
+    }
+  }
 `
 export const HeadingWrapper = styled.div`
   display: flex;
@@ -222,8 +227,8 @@ export const SubTitle = styled.div`
   color: ${theme.GREYCOLOR};
 `
 export const OrderImageWrapper = styled.div`
-  max-width: 300px;
-  min-height: 200px;
+  max-width: 140px;
+  min-height: 100px;
   width: 100%;
   overflow-y: auto;
 
@@ -231,5 +236,6 @@ export const OrderImageWrapper = styled.div`
     max-width: 300px;
     min-height: 200px;
     width: 100%;
+    margin: 10px 0;
   }
 `

@@ -80,17 +80,38 @@ const TasksData = ({
 
   const columns1: ColumnsType<any> = [
     {
-      title: 'Order No.',
-      dataIndex: 'task_id',
-      key: 'task_id',
+      title: 'Order ID',
+      dataIndex: 'linked_order',
+      key: 'linked_order',
       width: 145,
       fixed: 'left',
-      render: (data: string) => {
-        return <NumberWrapper>{data.toUpperCase().substring(0, 8)}</NumberWrapper>
+      render: (data: { order: { id: string } }) => {
+        return <NumberWrapper>{data?.order?.id}</NumberWrapper>
+        // return <NumberWrapper>{data.toUpperCase().substring(0, 8)}</NumberWrapper>
       },
 
       onFilter: (value: any, record) => {
         return String(record?.status).toLowerCase().includes(value.toLowerCase())
+      },
+    },
+    {
+      title: 'Buyer Name',
+      dataIndex: 'billing',
+      key: 'billing',
+      width: 145,
+      // fixed: 'left',
+      render: (data: { name: string }) => {
+        return <NumberWrapper>{data?.name}</NumberWrapper>
+      },
+    },
+    {
+      title: 'Seller Name',
+      dataIndex: 'linked_order',
+      key: 'linked_order',
+      width: 145,
+      // fixed: 'left',
+      render: (data) => {
+        return <NumberWrapper>{data?.provider?.descriptor?.name}</NumberWrapper>
       },
     },
     {
@@ -101,16 +122,22 @@ const TasksData = ({
       // fixed: 'left',
       render: (data: any) => {
         const type = data?.length ? data[data?.length - 1]?.type : ''
-        return <NumberWrapper>{type}</NumberWrapper>
+        return (
+          <NumberWrapper>{type === 'Prepaid' ? 'Delivery' : type === 'Reverse QC' ? 'Return' : type}</NumberWrapper>
+        )
       },
     },
     {
-      title: 'Items Quantity',
+      title: 'Quantity',
       dataIndex: 'linked_order',
       key: 'linked_order',
       width: 115,
       render: (data: { items: [] }) => {
-        return <QuantityWrapper>{data?.items?.length}</QuantityWrapper>
+        let qty = 0
+        data.items.forEach((value: any) => {
+          qty = qty + value?.quantity?.count || 1
+        })
+        return <QuantityWrapper>{qty}</QuantityWrapper>
       },
       onFilter: (value: any, record) => {
         return (
@@ -127,7 +154,10 @@ const TasksData = ({
       render: (data: { order: { weight: { unit: string; value: string } } }) => {
         return (
           <NumberWrapper>
-            {data?.order?.weight?.value} {data?.order?.weight?.unit === 'kilogram' ? 'kg' : data?.order?.weight?.unit}
+            {data?.order?.weight?.value}{' '}
+            {data?.order?.weight?.unit === 'kilogram' || data?.order?.weight?.unit === 'Kilogram'
+              ? 'kg'
+              : data?.order?.weight?.unit}
           </NumberWrapper>
         )
       },
@@ -184,17 +214,37 @@ const TasksData = ({
 
   const columns2: ColumnsType<any> = [
     {
-      title: 'Order No.',
-      dataIndex: 'task_id',
-      key: 'task_id',
+      title: 'Order ID',
+      dataIndex: 'linked_order',
+      key: 'linked_order',
       width: 145,
       fixed: 'left',
 
-      render: (data: string) => {
-        return <NumberWrapper>{data.toUpperCase().substring(0, 8)}</NumberWrapper>
+      render: (data: { order: { id: string } }) => {
+        return <NumberWrapper>{data?.order?.id}</NumberWrapper>
       },
       onFilter: (value: any, record) => {
         return String(record?.status).toLowerCase().includes(value.toLowerCase())
+      },
+    },
+    {
+      title: 'Buyer Name',
+      dataIndex: 'billing',
+      key: 'billing',
+      width: 145,
+      // fixed: 'left',
+      render: (data: { name: string }) => {
+        return <NumberWrapper>{data?.name}</NumberWrapper>
+      },
+    },
+    {
+      title: 'Seller Name',
+      dataIndex: 'linked_order',
+      key: 'linked_order',
+      width: 145,
+      // fixed: 'left',
+      render: (data) => {
+        return <NumberWrapper>{data?.provider?.descriptor?.name}</NumberWrapper>
       },
     },
 
@@ -206,16 +256,22 @@ const TasksData = ({
       // fixed: 'left',
       render: (data: any) => {
         const type = data?.length ? data[data?.length - 1]?.type : ''
-        return <NumberWrapper>{type}</NumberWrapper>
+        return (
+          <NumberWrapper>{type === 'Prepaid' ? 'Delivery' : type === 'Reverse QC' ? 'Return' : type}</NumberWrapper>
+        )
       },
     },
     {
-      title: 'Items Quantity',
+      title: 'Quantity',
       dataIndex: 'linked_order',
       key: 'linked_order',
       width: 115,
       render: (data: { items: [] }) => {
-        return <QuantityWrapper>{data?.items?.length}</QuantityWrapper>
+        let qty = 0
+        data.items.forEach((value: any) => {
+          qty = qty + value?.quantity?.count || 1
+        })
+        return <QuantityWrapper>{qty}</QuantityWrapper>
       },
 
       onFilter: (value: any, record) => {
@@ -235,9 +291,20 @@ const TasksData = ({
         return (
           <NumberWrapper>
             {data?.order?.weight?.value}{' '}
-            {data?.order?.weight?.unit === ('kilogram' || 'Kilogram') ? 'kg' : data?.order?.weight?.unit}
+            {data?.order?.weight?.unit === 'kilogram' || data?.order?.weight?.unit === 'Kilogram'
+              ? 'kg'
+              : data?.order?.weight?.unit}
           </NumberWrapper>
         )
+      },
+    },
+    {
+      title: 'Charges',
+      // dataIndex: 'linked_order',
+      // key: 'linked_order',
+      width: 150,
+      render: (data: any) => {
+        return <NumberWrapper>{Math.abs(data?.quote?.price?.value) + ' ' + data?.quote?.price?.currency}</NumberWrapper>
       },
     },
     {
@@ -252,7 +319,7 @@ const TasksData = ({
       },
     },
     {
-      title: 'Ordered at',
+      title: 'Ordered At',
       dataIndex: 'orderConfirmedAt',
       key: 'time',
       width: 140,
@@ -354,15 +421,20 @@ const TasksData = ({
             dataSource={unassignedData}
             expandable={{
               expandedRowRender: (record) => <ItemDetails record={record} />,
-              expandIcon: ({ expanded, onExpand, record }) => {
-                record?.status !== 'Pending' ? (
-                  <span onClick={(e) => onExpand(record, e as React.MouseEvent<HTMLSpanElement, MouseEvent>)}>
-                    {expanded ? <DownArrowIcon /> : <ArrowIcon />}
-                  </span>
-                ) : (
-                  ''
-                )
-              },
+              // expandIcon: ({ expanded, onExpand, record }) => {
+              //   record?.status !== 'Pending' ? (
+              //     <span onClick={(e) => onExpand(record, e as React.MouseEvent<HTMLSpanElement, MouseEvent>)}>
+              //       {expanded ? <DownArrowIcon /> : <ArrowIcon />}
+              //     </span>
+              //   ) : (
+              //     ''
+              //   )
+              // },
+              expandIcon: ({ expanded, onExpand, record }) => (
+                <span onClick={(e) => onExpand(record, e as React.MouseEvent<HTMLSpanElement, MouseEvent>)}>
+                  {expanded ? <DownArrowIcon /> : <ArrowIcon />}
+                </span>
+              ),
             }}
             pagination={
               totalUnAssignedCount > 5 && {
