@@ -5,7 +5,7 @@ import moment from 'moment'
 import useGet from 'hooks/useGet'
 import APIS from 'constants/api'
 import LiveTrackingMap from 'components/MapComponent/liveTracking'
-import { ButtonWrapper, MapWrapper } from 'styles/pages/gpsTracker'
+import { MapWrapper } from 'styles/pages/gpsTracker'
 import {
   OrderMainWrapper,
   MainWrapper,
@@ -21,11 +21,8 @@ import {
   OrderDetailHeadWrapper,
 } from 'styles/views/adminDashboard/gpsTracker'
 import { TaskStatusWrapper } from 'styles/views/adminDashboard/tableDescription'
-import Button from 'components/Button'
-import { useHistory } from 'react-router-dom'
 
 const OrderDetail = ({ details }: any) => {
-  const history = useHistory()
   const assigneeId = details?.data?.task?.assignee?._id
   const startDuration = moment.duration(details?.data?.task?.fulfillments[0]?.start?.time?.duration)
   const formattedStartTime = moment.utc(startDuration.asMilliseconds()).format('hh:mm a')
@@ -198,7 +195,7 @@ const OrderDetail = ({ details }: any) => {
                 <Detail>
                   {details?.data?.task?.linked_order?.order?.weight?.value}
                   {details?.data?.task?.linked_order?.order?.weight?.unit === 'kilogram' ||
-                    details?.data?.task?.linked_order?.order?.weight?.unit === 'Kilogram'
+                  details?.data?.task?.linked_order?.order?.weight?.unit === 'Kilogram'
                     ? 'kg'
                     : details?.data?.task?.linked_order?.order?.weight?.unit}
                 </Detail>
@@ -279,10 +276,10 @@ const OrderDetail = ({ details }: any) => {
                 {details?.data?.task?.fulfillments[0]?.start?.instructions?.code === '1'
                   ? 'buyer contact no (for self-pickup)'
                   : details?.data?.task?.fulfillments[0]?.start?.instructions?.code === '2'
-                    ? 'merchant order no'
-                    : details?.data?.task?.fulfillments[0]?.start?.instructions?.code === '4'
-                      ? 'other pickup confirmation code'
-                      : 'OTP'}
+                  ? 'merchant order no'
+                  : details?.data?.task?.fulfillments[0]?.start?.instructions?.code === '4'
+                  ? 'other pickup confirmation code'
+                  : 'OTP'}
               </span>
               <br />
               Short Description: <span>{details?.data?.task?.fulfillments[0]?.start?.instructions?.short_desc}</span>
@@ -306,8 +303,8 @@ const OrderDetail = ({ details }: any) => {
                 {details?.data?.task?.fulfillments[0]?.end?.instructions?.code === '1'
                   ? 'OTP'
                   : details?.data?.task?.fulfillments[0]?.end?.instructions?.code === '2'
-                    ? 'other DCC'
-                    : 'no delivery code'}{' '}
+                  ? 'other DCC'
+                  : 'no delivery code'}{' '}
               </span>
               <br />
               Short Description:

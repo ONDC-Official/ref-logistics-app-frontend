@@ -38,7 +38,7 @@ export const ModalHeader = styled.div`
 export const ModalBody = styled.div`
   height: calc(100% - 114px);
   padding: 24px;
-  overflow:auto;
+  overflow: auto;
 
   .react-codemirror2 {
     height: 100%;
