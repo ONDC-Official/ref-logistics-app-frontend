@@ -89,10 +89,12 @@ const RequestLogDetail = () => {
     for await (const [index, log] of Object.entries(requestLogDetails)) {
       const jsonDataBlob = new Blob([JSON.stringify(log.request)], { type: 'application/json' })
       let name = `${Number(index) + 1}_${String(log?.action)?.toLowerCase()}.json`
-      if( String(log?.action)?.toLowerCase() === "on_status" ) {
-        name = `${Number(index) + 1}_${String(log?.action)?.toLowerCase()}_${log.request?.message?.order?.fulfillments[0]?.state?.descriptor?.code}.json`
+      if (String(log?.action)?.toLowerCase() === 'on_status') {
+        name = `${Number(index) + 1}_${String(log?.action)?.toLowerCase()}_${
+          log.request?.message?.order?.fulfillments[0]?.state?.descriptor?.code
+        }.json`
       }
-      
+
       zip.file(name, jsonDataBlob)
     }
 

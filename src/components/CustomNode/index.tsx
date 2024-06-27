@@ -29,7 +29,7 @@ const CustomNode: FC<NodeProps> = ({ data }) => {
         style={{
           minWidth: metaData ? '900px' : '100px',
         }}
-        onClick={() => ( !metaData && setModalInfo((prev) => ({ ...prev, isOpen: true, json: data.json })))}
+        onClick={() => !metaData && setModalInfo((prev) => ({ ...prev, isOpen: true, json: data.json }))}
       >
         <Handle type="target" position={Position.Top} style={{ visibility: 'hidden' }} />
         <ContentWrapper>
@@ -75,8 +75,7 @@ const CustomNode: FC<NodeProps> = ({ data }) => {
                 tabSize: 2,
               }}
             /> */}
-                <ReactJson displayDataTypes={false} name={false} theme="monokai" src={modalInfo.json?.request} />
-
+            <ReactJson displayDataTypes={false} name={false} theme="monokai" src={modalInfo.json?.request} />
           </ModalBody>
         </ModalWrapper>
       </Modal>
